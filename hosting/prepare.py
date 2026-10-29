@@ -11,4 +11,10 @@ if not data.startswith(b"\x1f\x8b"):
     wasm.write_bytes(gzip.compress(data, compresslevel=9, mtime=0))
 for name in ("index.html", "_headers"):
     shutil.copyfile(root / "hosting" / name, output / name)
+shutil.copyfile(root / "hosting/wasm-loader.js", output / "play/wasm-loader.js")
+page = output / "play/index.html"
+html = page.read_text(encoding="utf-8")
+if 'src="wasm-loader.js"' not in html:
+    html = html.replace('<script src="index.js">', '<script src="wasm-loader.js"></script>\n\t\t<script src="index.js">')
+page.write_text(html, encoding="utf-8")
 print(f"Hosting ready: WASM {wasm.stat().st_size:,} bytes; gzip header required.")
