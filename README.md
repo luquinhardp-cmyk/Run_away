@@ -47,3 +47,9 @@ A suíte tem 43 verificações e restaura o checkpoint do usuário após a execu
 Microfone e permissões Android exigem validação em aparelho real. Os limiares de áudio são **valores iniciais relativos ao piso calibrado**, não um balanceamento validado. Os perfis gráficos não constituem medição de FPS. Arte e animações são placeholders; navegação é baked ao carregar, e portas têm animação provisória de painel retrátil. A criatura pode abrir portas; paredes permanecem sólidas. Não há combate ou bateria escassa. Consulte `docs/TESTES_ANDROID.md` antes de considerar a versão pronta para distribuição.
 
 Exportação local não publica em lojas. Veja os presets e as instruções Android na documentação.
+
+## Teste pelo navegador e download
+
+O usuário autorizou publicação para testes. Cloudflare Pages: `https://run-away-ecos.pages.dev/`. O projeto Firebase selecionado é `run-away-f63e4`; a publicação depende de sessão válida na CLI. Consulte `docs/HOSPEDAGEM.md` para estado e comandos.
+
+O preset Web usa renderer Compatibility e áudio Stream para suportar processamento de captura. Não equivale ao renderer Mobile do APK. A versão Web requer WebGL 2, WebAssembly e HTTPS para o microfone. O APK de teste é distribuído nas Releases do repositório, fora do histórico Git.

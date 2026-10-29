@@ -78,7 +78,7 @@ func menu() -> void:
 	button("INICIAR NOVA SESSÃO", func(): consent_screen(false))
 	if not Game.checkpoint.is_empty(): button("CONTINUAR DO CHECKPOINT", func(): consent_screen(true))
 	button("CONFIGURAÇÕES", func(): settings_screen("menu"))
-	if not OS.has_feature("android"): button("SAIR", func(): get_tree().quit())
+	if not OS.has_feature("android") and not OS.has_feature("web"): button("SAIR", func(): get_tree().quit())
 	text("Protótipo vertical • criatura e arte 3D provisórias\nRecomendado: fones de ouvido. Sustos moderados, sem flashes.", 16)
 
 func consent_screen(resume: bool) -> void:
@@ -100,6 +100,9 @@ func start(resume: bool, microphone: bool) -> void:
 	var player := preload("res://scenes/player/player.tscn").instantiate()
 	player.position = Vector3(-7, 0.1, 0)
 	level.add_child(player)
+	player.rotation.y = 2.356
+	player.pitch = -0.56
+	player.camera.rotation.x = player.pitch
 	var enemy := preload("res://scenes/enemy/creature.tscn").instantiate()
 	enemy.position = Vector3(0, 0.1, -30)
 	level.add_child(enemy)

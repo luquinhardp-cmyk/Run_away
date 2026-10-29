@@ -1,0 +1,10 @@
+/*
+  X-Content-Type-Options: nosniff
+  Permissions-Policy: microphone=(self)
+/play/*.wasm
+  Content-Type: application/wasm
+  Content-Encoding: gzip
+/*.html
+  Cache-Control: no-cache
+/play/*.html
+  Cache-Control: no-cache

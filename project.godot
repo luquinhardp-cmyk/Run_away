@@ -21,12 +21,14 @@ window/handheld/orientation=0
 [rendering]
 renderer/rendering_method="mobile"
 renderer/rendering_method.mobile="mobile"
+renderer/rendering_method.web="gl_compatibility"
 textures/default_filters/use_nearest_mipmap_filter=false
 textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0.008, 0.012, 0.016, 1)
 
 [audio]
 driver/enable_input=true
+general/default_playback_type.web=1
 
 [input_devices]
 pointing/emulate_touch_from_mouse=false

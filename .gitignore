@@ -3,3 +3,5 @@ builds/
 *.tmp
 *.log
 export_credentials.cfg
+firebase-debug.log
+.firebase/

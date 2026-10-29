@@ -29,6 +29,7 @@ func _ready() -> void:
 	AudioServer.set_bus_mute(bus, true)
 	stream = AudioStreamPlayer.new()
 	stream.bus = "MicCapture"
+	stream.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
 	stream.stream = AudioStreamMicrophone.new()
 	add_child(stream)
 	if OS.has_feature("android"):
