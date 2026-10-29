@@ -50,6 +50,6 @@ Exportação local não publica em lojas. Veja os presets e as instruções Andr
 
 ## Teste pelo navegador e download
 
-O usuário autorizou publicação para testes. Cloudflare Pages: `https://run-away-ecos.pages.dev/`. O projeto Firebase selecionado é `run-away-f63e4`; a publicação depende de sessão válida na CLI. Consulte `docs/HOSPEDAGEM.md` para estado e comandos.
+Publicado para testes em [Cloudflare Pages](https://run-away-ecos.pages.dev/) e [Firebase Hosting](https://run-away-f63e4.web.app/). Ambos oferecem jogo no navegador e [download do APK](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.1.0-test/ecos-android.apk). Consulte `docs/HOSPEDAGEM.md` para comandos.
 
 O preset Web usa renderer Compatibility e áudio Stream para suportar processamento de captura. Não equivale ao renderer Mobile do APK. A versão Web requer WebGL 2, WebAssembly e HTTPS para o microfone. O APK de teste é distribuído nas Releases do repositório, fora do histórico Git.

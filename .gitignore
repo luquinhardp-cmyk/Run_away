@@ -5,3 +5,4 @@ builds/
 export_credentials.cfg
 firebase-debug.log
 .firebase/
+.wrangler/

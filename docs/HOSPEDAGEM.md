@@ -33,7 +33,9 @@ firebase login --reauth
 firebase deploy --only hosting --project run-away-f63e4
 ```
 
-O primeiro acesso disponível nesta sessão retornou 401 por credencial expirada. A reautenticação foi iniciada para o usuário concluir no navegador. A existência desta configuração não significa que o deploy Firebase tenha sido concluído; verificar o resultado da CLI antes de divulgar a URL como ativa.
+Reautenticação concluída e Hosting publicado em **https://run-away-f63e4.web.app/**. O Cloudflare foi publicado em **https://run-away-ecos.pages.dev/**. A pré-release e o APK estão disponíveis no GitHub. Nenhuma regra de banco, serviço Functions ou domínio personalizado foi alterado.
+
+O teste após a primeira publicação detectou que as CDNs entregavam bytes gzip residuais ao compilador WebAssembly. `wasm-loader.js` normaliza a resposta exclusiva de `index.wasm`: verifica a assinatura e descomprime os bytes residuais com DecompressionStream, preservando respostas já descomprimidas. O preparo injeta esse carregador antes do código da engine. Essa versão requer navegador com DecompressionStream (ou a resposta deve já chegar descomprimida).
 
 ## Testes e limites Web
 
