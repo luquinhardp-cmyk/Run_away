@@ -41,4 +41,6 @@ O teste após a primeira publicação detectou que as CDNs entregavam bytes gzip
 
 Chromium desktop headless carregou menu, consentimento e fase 3D sem erros JavaScript/GDScript. A captura Web usa áudio Stream porque efeitos não funcionam no modo Sample. Navegadores e SOs controlam permissão e indicadores de microfone. Entrada física de áudio, iOS/Safari e dispositivos móveis não foram validados. O jogo continua utilizável sem microfone.
 
+Na URL publicada do Cloudflare, o teste de ciclo de vida com dispositivo sintético do Chromium observou: **0 chamadas getUserMedia antes do consentimento; 1 chamada e faixa live depois de permitir; a mesma faixa ended ao pausar com Esc**. Isso valida o fluxo do navegador com dispositivo de teste, sem validar hardware acústico. Os dois hosts carregaram a engine após a correção WASM. Capturas remotas simultâneas em renderização por software sofreram timeout; a verificação de microfone foi repetida isoladamente e passou. A suíte Godot permaneceu com 43 verificações passando, 0 falhas.
+
 Fonte: [Godot: exportar para Web](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_web.html).
