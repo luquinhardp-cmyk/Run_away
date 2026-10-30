@@ -1,0 +1,192 @@
+[
+  {
+    "name": "aged_concrete",
+    "size": 512,
+    "low_size": 256,
+    "maps": [
+      "albedo",
+      "normal",
+      "orm"
+    ],
+    "orm_channels": {
+      "R": "AO",
+      "G": "roughness",
+      "B": "metallic"
+    },
+    "tileable": true,
+    "seed": 197804,
+    "source": "tools/art/generate_materials.py",
+    "origin": "original procedural authoring; no third-party source pixels"
+  },
+  {
+    "name": "damp_concrete",
+    "size": 512,
+    "low_size": 256,
+    "maps": [
+      "albedo",
+      "normal",
+      "orm"
+    ],
+    "orm_channels": {
+      "R": "AO",
+      "G": "roughness",
+      "B": "metallic"
+    },
+    "tileable": true,
+    "seed": 197804,
+    "source": "tools/art/generate_materials.py",
+    "origin": "original procedural authoring; no third-party source pixels"
+  },
+  {
+    "name": "cracked_floor",
+    "size": 512,
+    "low_size": 256,
+    "maps": [
+      "albedo",
+      "normal",
+      "orm"
+    ],
+    "orm_channels": {
+      "R": "AO",
+      "G": "roughness",
+      "B": "metallic"
+    },
+    "tileable": true,
+    "seed": 197804,
+    "source": "tools/art/generate_materials.py",
+    "origin": "original procedural authoring; no third-party source pixels"
+  },
+  {
+    "name": "peeling_plaster",
+    "size": 512,
+    "low_size": 256,
+    "maps": [
+      "albedo",
+      "normal",
+      "orm"
+    ],
+    "orm_channels": {
+      "R": "AO",
+      "G": "roughness",
+      "B": "metallic"
+    },
+    "tileable": true,
+    "seed": 197804,
+    "source": "tools/art/generate_materials.py",
+    "origin": "original procedural authoring; no third-party source pixels"
+  },
+  {
+    "name": "rusted_iron",
+    "size": 512,
+    "low_size": 256,
+    "maps": [
+      "albedo",
+      "normal",
+      "orm"
+    ],
+    "orm_channels": {
+      "R": "AO",
+      "G": "roughness",
+      "B": "metallic"
+    },
+    "tileable": true,
+    "seed": 197804,
+    "source": "tools/art/generate_materials.py",
+    "origin": "original procedural authoring; no third-party source pixels"
+  },
+  {
+    "name": "rotten_wood",
+    "size": 512,
+    "low_size": 256,
+    "maps": [
+      "albedo",
+      "normal",
+      "orm"
+    ],
+    "orm_channels": {
+      "R": "AO",
+      "G": "roughness",
+      "B": "metallic"
+    },
+    "tileable": true,
+    "seed": 197804,
+    "source": "tools/art/generate_materials.py",
+    "origin": "original procedural authoring; no third-party source pixels"
+  },
+  {
+    "name": "mud_leaves",
+    "size": 512,
+    "low_size": 256,
+    "maps": [
+      "albedo",
+      "normal",
+      "orm"
+    ],
+    "orm_channels": {
+      "R": "AO",
+      "G": "roughness",
+      "B": "metallic"
+    },
+    "tileable": true,
+    "seed": 197804,
+    "source": "tools/art/generate_materials.py",
+    "origin": "original procedural authoring; no third-party source pixels"
+  },
+  {
+    "name": "torn_fabric",
+    "size": 512,
+    "low_size": 256,
+    "maps": [
+      "albedo",
+      "normal",
+      "orm"
+    ],
+    "orm_channels": {
+      "R": "AO",
+      "G": "roughness",
+      "B": "metallic"
+    },
+    "tileable": true,
+    "seed": 197804,
+    "source": "tools/art/generate_materials.py",
+    "origin": "original procedural authoring; no third-party source pixels"
+  },
+  {
+    "name": "organic_residue",
+    "size": 512,
+    "low_size": 256,
+    "maps": [
+      "albedo",
+      "normal",
+      "orm"
+    ],
+    "orm_channels": {
+      "R": "AO",
+      "G": "roughness",
+      "B": "metallic"
+    },
+    "tileable": true,
+    "seed": 197804,
+    "source": "tools/art/generate_materials.py",
+    "origin": "original procedural authoring; no third-party source pixels"
+  },
+  {
+    "name": "creature_skin",
+    "size": 512,
+    "low_size": 256,
+    "maps": [
+      "albedo",
+      "normal",
+      "orm"
+    ],
+    "orm_channels": {
+      "R": "AO",
+      "G": "roughness",
+      "B": "metallic"
+    },
+    "tileable": true,
+    "seed": 197804,
+    "source": "tools/art/generate_materials.py",
+    "origin": "original procedural authoring; no third-party source pixels"
+  }
+]

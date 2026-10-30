@@ -6,3 +6,5 @@ export_credentials.cfg
 firebase-debug.log
 .firebase/
 .wrangler/
+*.blend1
+__pycache__/

@@ -7,27 +7,39 @@ var panel: PanelContainer
 var column: VBoxContainer
 var screen := "menu"
 var pause_was := false
+var menu_stage: Node3D
+
+func _exit_tree() -> void:
+	if is_instance_valid(menu_stage): menu_stage.set_active(false)
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	menu_stage = Node3D.new()
+	menu_stage.set_script(preload("res://scripts/systems/menu_stage.gd"))
+	add_child(menu_stage)
 	ui = CanvasLayer.new()
 	ui.layer = 20
 	add_child(ui)
 	var theme := Theme.new()
 	theme.default_font_size = 20
 	var button_style := StyleBoxFlat.new()
-	button_style.bg_color = Color(0.1, 0.19, 0.19)
-	button_style.border_color = Color(0.28, 0.5, 0.44)
+	button_style.bg_color = Color(0.075, 0.085, 0.07, 0.88)
+	button_style.border_color = Color("645b43")
 	button_style.set_border_width_all(1)
 	button_style.set_content_margin_all(12)
 	theme.set_stylebox("normal", "Button", button_style)
 	var hover := button_style.duplicate()
-	hover.bg_color = Color(0.18, 0.32, 0.28)
+	hover.bg_color = Color(0.22, 0.20, 0.14, 0.96)
 	theme.set_stylebox("hover", "Button", hover)
 	theme.set_stylebox("pressed", "Button", hover)
 	background = ColorRect.new()
 	background.color = Color(0.018, 0.035, 0.042, 0.96)
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var shader := Shader.new()
+	shader.code = "shader_type canvas_item; uniform float shade = 0.86; void fragment() { float edge = mix(shade, 0.30, smoothstep(0.25, 1.0, UV.x)); COLOR = vec4(0.025, 0.03, 0.025, edge); }"
+	var shader_mat := ShaderMaterial.new()
+	shader_mat.shader = shader
+	background.material = shader_mat
 	ui.add_child(background)
 	var scroll := ScrollContainer.new()
 	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -57,7 +69,7 @@ func text(value: String, size: int = 20) -> Label:
 	label.text = value
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.add_theme_font_size_override("font_size", size)
-	label.modulate = Color(0.73, 0.85, 0.8)
+	label.modulate = Color("c4bba2")
 	column.add_child(label)
 	return label
 
@@ -72,6 +84,7 @@ func button(value: String, callback: Callable) -> Button:
 func menu() -> void:
 	screen = "menu"
 	clear()
+	menu_stage.set_active(true)
 	text("E C O S", 68)
 	text("INSTALAÇÃO ABANDONADA", 26)
 	text("Não há armas. Há caminhos. E algo escutando.\nEncontre o fusível, restaure a energia e alcance a saída.")
@@ -79,7 +92,7 @@ func menu() -> void:
 	if not Game.checkpoint.is_empty(): button("CONTINUAR DO CHECKPOINT", func(): consent_screen(true))
 	button("CONFIGURAÇÕES", func(): settings_screen("menu"))
 	if not OS.has_feature("android") and not OS.has_feature("web"): button("SAIR", func(): get_tree().quit())
-	text("Protótipo vertical • criatura e arte 3D provisórias\nRecomendado: fones de ouvido. Sustos moderados, sem flashes.", 16)
+	text("Direção de arte 0.2 • O Escutador\nRecomendado: fones de ouvido. Sustos moderados, sem flashes.", 16)
 
 func consent_screen(resume: bool) -> void:
 	screen = "consent"
@@ -93,6 +106,7 @@ func consent_screen(resume: bool) -> void:
 
 func start(resume: bool, microphone: bool) -> void:
 	_remove_level()
+	menu_stage.set_active(false)
 	Game.begin(resume)
 	level = preload("res://scenes/levels/facility.tscn").instantiate()
 	level.process_mode = Node.PROCESS_MODE_PAUSABLE

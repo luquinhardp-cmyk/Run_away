@@ -8,6 +8,7 @@ var crouched := false
 var hidden := false
 var hide_spot: Node3D
 var exit_position := Vector3.ZERO
+var exit_look := Vector2.ZERO
 var focus: Node3D
 var pitch := 0.0
 var step_clock := 0.0
@@ -120,13 +121,23 @@ func interact() -> void:
 	if hidden:
 		hidden = false
 		global_position = exit_position
+		rotation.y = exit_look.x
+		pitch = exit_look.y
+		camera.rotation.x = pitch
 		hide_spot = null
 	elif is_instance_valid(focus): focus.interact(self)
 
 func enter_hide(spot: Node3D) -> void:
 	exit_position = global_position
+	exit_look = Vector2(rotation.y, pitch)
 	hide_spot = spot
 	hidden = true
 	velocity = Vector3.ZERO
-	global_position = spot.global_position + spot.global_basis.z * 0.15
+	# Locker origins are at body centre; camera remains at human eye height,
+	# behind the real louver gaps instead of above the cabinet.
+	global_position = spot.global_position - Vector3.UP + spot.global_basis.z * 0.10
+	rotation.y = spot.rotation.y + PI
+	pitch = 0.0
+	camera.rotation.x = 0.0
+	camera.position.y = 1.5
 	NoiseBus.emit_noise(self, 0.15, "armario", 6.0)

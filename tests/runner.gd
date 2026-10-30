@@ -43,6 +43,8 @@ func _run() -> void:
 	check(main.level.nav_ready, "navigation mesh construída")
 	var path := NavigationServer3D.map_get_path(enemy.agent.get_navigation_map(), Vector3(-7, 0.1, 0), Vector3(0, 0.1, -39), true)
 	check(path.size() > 2, "caminho navegável entre enfermaria e saída")
+	player.global_position = Vector3(0, 0.1, 0)
+	player.rotation.y = 0
 	var origin: Vector3 = player.global_position
 	Input.action_press("forward")
 	await frames(30)
@@ -120,6 +122,7 @@ func _run() -> void:
 	check(not enemy.sees_player(), "esconderijo bloqueia visão")
 	player.interact()
 	check(not player.hidden, "saída do esconderijo")
+	check(player.camera.global_position.y < 2.0, "câmera do armário permanece na altura dos olhos")
 	player.global_position = Vector3(0, 0.1, -20)
 	enemy.global_position = Vector3(0, 0.1, -24)
 	enemy.rotation.y = PI
@@ -161,7 +164,7 @@ func _run() -> void:
 	check(enemy.global_position.distance_to(before) > 0.5, "patrulha com NavigationAgent e física")
 	enemy.set_physics_process(false)
 	enemy.transition(enemy.State.ALERT)
-	enemy.timer = 1
+	enemy.timer = enemy.listen_duration + 0.1
 	enemy._physics_process(0.02)
 	check(enemy.state == enemy.State.INVESTIGATE, "alerta transita para investigação")
 	enemy.transition(enemy.State.CHASE)
@@ -175,6 +178,52 @@ func _run() -> void:
 	enemy.timer = 7
 	enemy._physics_process(0.02)
 	check(enemy.state == enemy.State.RETURN, "busca expira e retorna")
+	# Real art assets, skeletal deformation and additional navigation routes.
+	var exterior_path := NavigationServer3D.map_get_path(enemy.agent.get_navigation_map(), Vector3(0, 0.1, 0), Vector3(0, 0.1, 12), true)
+	check(exterior_path.size() > 1 and exterior_path[-1].distance_to(Vector3(0, 0.1, 12)) < 1, "pátio externo conectado à navegação")
+	var basement_path := NavigationServer3D.map_get_path(enemy.agent.get_navigation_map(), Vector3(-8, 0.1, -32), Vector3(-20, -1.7, -32), true)
+	check(basement_path.size() > 2 and basement_path[-1].distance_to(Vector3(-20, -1.7, -32)) < 1, "rampa conecta subsolo à navegação")
+	check(enemy.visual.skeleton.get_bone_count() == 29, "rig real com 29 ossos")
+	check(enemy.visual.clip_names.size() == 12, "12 animações glTF importadas")
+	var skinned_mesh: MeshInstance3D = enemy.visual.model.find_children("*", "MeshInstance3D", true, false)[0]
+	check(skinned_mesh.skin != null, "mesh associado ao Skin e Skeleton3D")
+	check(not skinned_mesh.mesh.surface_get_arrays(0)[Mesh.ARRAY_TEX_UV].is_empty(), "UVs reais no modelo")
+	check(skinned_mesh.mesh.get_aabb().size.y > 2.2 and skinned_mesh.mesh.get_aabb().size.y < 2.9, "escala da criatura cabe no corredor")
+	var anim: AnimationPlayer = enemy.visual.animator
+	var rig: Skeleton3D = enemy.visual.skeleton
+	var head := rig.find_bone("head")
+	var ear := rig.find_bone("ear_L")
+	anim.play("idle", 0)
+	anim.seek(0, true)
+	anim.advance(0)
+	var head_rest := rig.get_bone_pose_rotation(head)
+	var ear_rest := rig.get_bone_pose_rotation(ear)
+	var root_position: Vector3 = enemy.global_position
+	anim.play("listen", 0)
+	anim.seek(0.8, true)
+	anim.advance(0)
+	check(head_rest.angle_to(rig.get_bone_pose_rotation(head)) > 0.2, "escuta inclina o osso da cabeça")
+	check(ear_rest.angle_to(rig.get_bone_pose_rotation(ear)) > 0.15, "escuta articula a cartilagem auditiva")
+	check(enemy.global_position == root_position, "animação não teletransporta a criatura")
+	enemy.hearing_cooldown = 0
+	enemy.transition(enemy.State.PATROL)
+	player.global_position = enemy.global_position + Vector3(0, 0, 2)
+	NoiseBus.emit_noise(player, 0.8, "microfone", 25)
+	check(enemy.state == enemy.State.ALERT and enemy.visual.active_clip == "listen", "ruído percebido dispara apresentação de escuta")
+	enemy.timer = 0.5
+	NoiseBus.emit_noise(player, 0.8, "microfone", 25)
+	check(enemy.timer == 0.5, "ruídos repetidos não reiniciam a animação de escuta")
+	for name in HorrorArt.NAMES:
+		var mat := HorrorArt.surface(name)
+		check(mat.albedo_texture != null and mat.normal_texture != null and mat.roughness_texture != null, "PBR carregado: " + name)
+	var previous_quality: float = Game.settings.quality
+	Game.settings.quality = 0.0
+	Game.updated.emit()
+	check(enemy.visual.low and enemy.visual.skeleton.get_bone_count() == 29, "LOD baixo preserva rig e animações")
+	check(HorrorArt.surface("aged_concrete").albedo_texture.get_width() == 256 and not HorrorArt.surface("aged_concrete").normal_enabled, "perfil baixo usa mapas 256 e simplifica material")
+	Game.settings.quality = previous_quality
+	Game.updated.emit()
+	check(not enemy.visual.low and HorrorArt.surface("aged_concrete").albedo_texture.get_width() == 512, "perfil médio restaura modelo e texturas 512")
 	var outcome: Array[bool] = []
 	Game.ended.connect(func(won: bool): outcome.append(won))
 	find_item("exit").interact(player)

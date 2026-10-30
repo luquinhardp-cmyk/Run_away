@@ -28,7 +28,7 @@ func _ready() -> void:
 	danger.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(danger)
 	objective = label("", Vector2(30, 24), 19)
-	objective.modulate = Color(0.68, 0.85, 0.75)
+	objective.modulate = Color("bdb497")
 	mic_label = label("", Vector2(30, 54), 15)
 	var crosshair := label("·", Vector2.ZERO, 30)
 	crosshair.set_anchors_preset(Control.PRESET_CENTER)
@@ -54,8 +54,8 @@ func _ready() -> void:
 	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	stick.add_child(ring)
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.2, 0.35, 0.32, 0.15)
-	style.border_color = Color(0.6, 0.8, 0.7, 0.4)
+	style.bg_color = Color(0.18, 0.18, 0.13, 0.15)
+	style.border_color = Color(0.65, 0.60, 0.42, 0.4)
 	style.set_border_width_all(2)
 	style.set_corner_radius_all(75)
 	ring.add_theme_stylebox_override("panel", style)
@@ -64,7 +64,7 @@ func _ready() -> void:
 	knob.position = Vector2(47, 47)
 	knob.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var knob_style := style.duplicate()
-	knob_style.bg_color = Color(0.65, 0.85, 0.75, 0.35)
+	knob_style.bg_color = Color(0.65, 0.60, 0.42, 0.35)
 	knob.add_theme_stylebox_override("panel", knob_style)
 	stick.add_child(knob)
 	button("CORRER", Vector2(-278, -98), func(): Game.player.touch_run = not Game.player.touch_run)
@@ -112,6 +112,13 @@ func button(text: String, offset: Vector2, callback: Callable) -> void:
 	result.set_meta("offset", offset)
 	result.pressed.connect(callback)
 	result.focus_mode = Control.FOCUS_NONE
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.045, 0.055, 0.045, 0.9)
+	style.border_color = Color(0.45, 0.41, 0.28, 0.7)
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(4)
+	result.add_theme_stylebox_override("normal", style)
+	result.add_theme_color_override("font_color", Color("c4bba2"))
 	root.add_child(result)
 	result.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	actions.append(result)
@@ -178,7 +185,7 @@ func _process(delta: float) -> void:
 	objective.text = Game.objective
 	prompt.text = Game.player.prompt
 	mic_label.text = Mic.status + ("  ▰".repeat(Mic.level) if Mic.active else " · sons do jogo ativos")
-	mic_label.modulate = Color(0.96, 0.55, 0.32) if Mic.level > 1 else Color(0.6, 0.78, 0.7)
+	mic_label.modulate = Color(0.76, 0.43, 0.26) if Mic.level > 1 else Color("b19a64")
 	toast_time -= delta
 	toast.visible = toast_time > 0
 	var chased: bool = is_instance_valid(Game.enemy) and Game.enemy.state == Game.enemy.State.CHASE

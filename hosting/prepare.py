@@ -1,6 +1,9 @@
 """Run after exporting Web; compress the WASM for the Pages per-file limit."""
 import gzip
 import shutil
+import json
+import re
+import subprocess
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
@@ -17,4 +20,10 @@ html = page.read_text(encoding="utf-8")
 if 'src="wasm-loader.js"' not in html:
     html = html.replace('<script src="index.js">', '<script src="wasm-loader.js"></script>\n\t\t<script src="index.js">')
 page.write_text(html, encoding="utf-8")
+try:
+    commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+except (OSError, subprocess.CalledProcessError):
+    commit = "unknown"
+version = re.search(r'version/name="([^"]+)"', (root / "export_presets.cfg").read_text(encoding="utf-8")).group(1)
+(output / "version.json").write_text(json.dumps({"version": version, "commit": commit, "renderer": "Compatibility", "apk": "https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.2.0-art/ecos-android.apk"}), encoding="utf-8")
 print(f"Hosting ready: WASM {wasm.stat().st_size:,} bytes; gzip header required.")

@@ -13,17 +13,10 @@ var interact_script = preload("res://scripts/interactions/interactable.gd")
 var nav_ready := false
 
 func _ready() -> void:
-	wall_material = material(Color(0.18, 0.23, 0.23))
-	floor_material = material(Color(0.105, 0.135, 0.14))
-	metal = material(Color(0.23, 0.19, 0.14))
-	var noise := FastNoiseLite.new()
-	noise.frequency = 0.13
-	var texture := NoiseTexture2D.new()
-	texture.width = 256
-	texture.height = 256
-	texture.noise = noise
-	wall_material.albedo_texture = texture
-	wall_material.uv1_scale = Vector3(2, 2, 2)
+	HorrorArt.set_quality(int(Game.settings.quality))
+	wall_material = HorrorArt.surface("aged_concrete")
+	floor_material = HorrorArt.surface("cracked_floor")
+	metal = HorrorArt.surface("rusted_iron")
 	region = NavigationRegion3D.new()
 	var nav := NavigationMesh.new()
 	nav.agent_radius = 0.45
@@ -46,11 +39,20 @@ func _ready() -> void:
 	for cell in cells: _tile(cell)
 	_environment()
 	_props()
+	_annex_geometry()
 	_items()
 	# Bake with closed doors excluded: their colliders are added after baking.
 	region.bake_navigation_mesh(false)
 	nav_ready = true
 	_doors()
+	var art := Node3D.new()
+	art.set_script(preload("res://scripts/systems/facility_art.gd"))
+	add_child(art)
+	# Keep geometry collision bodies for navigation/occlusion, batch their rendering.
+	var batches := Node3D.new()
+	batches.name = "ArchitectureBatches"
+	add_child(batches)
+	HorrorArt.merge_static(geometry, batches)
 	Game.updated.connect(_quality)
 	_quality()
 
@@ -86,19 +88,26 @@ func box(pos: Vector3, size: Vector3, mat: Material, solid: bool = true, parent:
 func _tile(cell: Vector2i) -> void:
 	var center := Vector3(cell.x * 4, 0, -cell.y * 4)
 	box(center + Vector3(0, -0.15, 0), Vector3(4, 0.3, 4), floor_material)
-	box(center + Vector3(0, 3.1, 0), Vector3(4, 0.2, 4), wall_material)
+	box(center + Vector3(0, 3.1, 0), Vector3(4, 0.2, 4), HorrorArt.surface("peeling_plaster"))
 	for direction in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 		var neighbor: Vector2i = cell + direction
 		var edge := center + Vector3(direction.x * 2, 1.5, -direction.y * 2)
 		var along_x: bool = direction.x == 0
 		if not cells.has(neighbor):
+			var entrance: bool = cell == Vector2i.ZERO and direction == Vector2i(0, -1)
+			var basement: bool = cell == Vector2i(-2, 8) and direction == Vector2i(-1, 0)
+			if entrance or basement:
+				for offset in [-1.52, 1.52]:
+					box(edge + (Vector3(offset, 0, 0) if entrance else Vector3(0, 0, offset)), Vector3(0.95, 3, 0.18) if entrance else Vector3(0.18, 3, 0.95), wall_material)
+				box(edge + Vector3.UP * 1.35, Vector3(2.1, 0.3, 0.18) if entrance else Vector3(0.18, 0.3, 2.1), wall_material)
+				continue
 			box(edge, Vector3(4.1, 3, 0.18) if along_x else Vector3(0.18, 3, 4.1), wall_material)
 		elif cell.x == 0 and direction.x != 0:
 			# Doorways 1.8 m wide; same opening serves navigation and physics.
 			for z_offset in [-1.48, 1.48]: box(edge + Vector3(0, 0, z_offset), Vector3(0.18, 3, 1.05), wall_material)
 			box(edge + Vector3(0, 1.32, 0), Vector3(0.18, 0.36, 1.9), wall_material)
 			var label_pos := edge + Vector3(-direction.x * 0.16, 1.12, 0)
-			_label(cells[neighbor], label_pos, -PI / 2 if direction.x < 0 else PI / 2, 24)
+			_label(cells[neighbor], label_pos, PI / 2 if direction.x < 0 else -PI / 2, 24)
 	if cell.x == 0:
 		box(center + Vector3(-1.85, 2.72, 0), Vector3(0.1, 0.1, 4), metal, false)
 		box(center + Vector3(1.82, 0.18, 0), Vector3(0.08, 0.08, 4), metal, false)
@@ -108,12 +117,12 @@ func _tile(cell: Vector2i) -> void:
 		var light := OmniLight3D.new()
 		light.position = center + Vector3(0, 2.65, 0)
 		light.omni_range = 5.6
-		light.light_energy = 0.75
-		light.light_color = Color(0.52, 0.75, 0.68) if cell.x == 0 else Color(0.87, 0.62, 0.36)
+		light.light_energy = 1.15 if cell.x == 0 else 1.35
+		light.light_color = Color("b19a64") if cell.x == 0 else Color(0.64, 0.55, 0.39)
 		light.shadow_enabled = false
 		add_child(light)
 		lights.append(light)
-		box(center + Vector3(0, 2.98, 0), Vector3(0.9, 0.04, 0.16), material(light.light_color, true), false)
+		box(center + Vector3(0, 2.98, 0), Vector3(0.52, 0.04, 0.12), HorrorArt.solid(light.light_color, 0.5), false)
 
 func _label(text: String, pos: Vector3, angle: float = 0.0, font_size: int = 36) -> void:
 	var label := Label3D.new()
@@ -122,7 +131,7 @@ func _label(text: String, pos: Vector3, angle: float = 0.0, font_size: int = 36)
 	label.rotation.y = angle
 	label.font_size = font_size
 	label.pixel_size = 0.007
-	label.modulate = Color(0.72, 0.9, 0.8)
+	label.modulate = Color("b5ac8e")
 	label.no_depth_test = false
 	add_child(label)
 
@@ -130,14 +139,14 @@ func _environment() -> void:
 	var world := WorldEnvironment.new()
 	var environment := Environment.new()
 	environment.background_mode = Environment.BG_COLOR
-	environment.background_color = Color(0.008, 0.014, 0.018)
+	environment.background_color = Color("0b0d0c")
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	environment.ambient_light_color = Color(0.27, 0.4, 0.44)
-	environment.ambient_light_energy = 0.24
+	environment.ambient_light_color = Color(0.48, 0.49, 0.43)
+	environment.ambient_light_energy = 0.38
 	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	environment.fog_enabled = true
-	environment.fog_light_color = Color(0.04, 0.075, 0.08)
-	environment.fog_density = 0.012
+	environment.fog_light_color = Color(0.06, 0.07, 0.055)
+	environment.fog_density = 0.017
 	world.environment = environment
 	add_child(world)
 	_label("SAÍDA / 40 m   →", Vector3(0, 2.4, 1.86), PI, 32)
@@ -193,6 +202,7 @@ func interaction(kind: String, id: String, title: String, pos: Vector3, size: Ve
 	node.position = pos
 	node.notified.connect(func(text: String): message.emit(text))
 	add_child(node)
+	if not node.is_queued_for_deletion(): _decorate_interaction(node)
 	return node
 
 func _items() -> void:
@@ -202,7 +212,8 @@ func _items() -> void:
 	interaction("generator", "generator", "Instalar fusível / ligar gerador", Vector3(-8, 1.0, -32), Vector3(1.3, 2, 0.8), Color(0.3, 0.35, 0.2))
 	interaction("exit", "exit", "Usar cartão / escapar", Vector3(0, 1.3, -41.7), Vector3(1.8, 2.6, 0.2), Color(0.18, 0.37, 0.3))
 	for pos in [Vector3(-5, 1, 1.2), Vector3(-5, 1, -15), Vector3(5, 1, -7), Vector3(-5, 1, -31)]:
-		interaction("hide", "", "Esconder-se no armário", pos, Vector3(1.1, 2, 1.0), Color(0.12, 0.19, 0.21))
+		var locker := interaction("hide", "", "Esconder-se no armário", pos, Vector3(1.1, 2, 1.0), Color(0.12, 0.19, 0.21))
+		locker.rotation.y = PI / 2 if pos.x < 0 else -PI / 2
 	var document := interaction("document", "note", "Ler anotação", Vector3(-8.5, 1, -1.7), Vector3(0.6, 0.6, 0.08), Color(0.65, 0.59, 0.4))
 	document.message = "ELE ESCUTA. Fusível: manutenção. Gerador: energia. Cartão: segurança.\nUse os armários, mas não grite. Fones de ouvido são recomendados."
 	interaction("drawer", "drawer", "Abrir gaveta", Vector3(8, 0.4, -7), Vector3(1.3, 0.6, 0.65), Color(0.25, 0.2, 0.14))
@@ -214,6 +225,7 @@ func _doors() -> void:
 		door.add_to_group("doors")
 
 func _quality() -> void:
+	HorrorArt.set_quality(int(Game.settings.quality))
 	for light in lights: light.omni_range = 4.8 if Game.settings.quality < 1 else 5.6
 	get_viewport().scaling_3d_scale = [0.65, 0.85, 1.0][int(Game.settings.quality)]
 
@@ -221,9 +233,80 @@ func _process(delta: float) -> void:
 	if not Game.playing: return
 	age += delta
 	if lights.size() > 2:
-		lights[2].light_energy = 0.65 + sin(age * 17) * sin(age * 5) * 0.18
+		lights[2].light_energy = 1.15 * (0.7 if fmod(age, 17.0) > 16.6 else 1.0)
 	if not scare_done and is_instance_valid(Game.player) and Game.player.global_position.z < -12:
 		scare_done = true
 		Sound.at("metal", Vector3(-5, 1, -16), -10 - (1 - Game.settings.scares) * 22)
 		NoiseBus.emit_noise(self, 0.5, "evento_ambiental", 20)
 		message.emit("Um impacto vem do depósito. Algo se move no corredor.")
+
+func _annex_geometry() -> void:
+	# Connected additions leave all original objectives/rooms and chase widths intact.
+	box(Vector3(0, -0.16, 12), Vector3(22, 0.3, 20), HorrorArt.surface("mud_leaves"))
+	for side in [-1, 1]: box(Vector3(side * 11.1, 1.0, 12), Vector3(0.18, 2.0, 20), metal, true).visible = false
+	box(Vector3(0, 1.0, 21.2), Vector3(22, 2, 0.18), metal, true).visible = false
+	_label("INSTALAÇÃO 04 / ACESSO INTERDITADO", Vector3(0, 2.72, 2.25), 0, 23)
+	_label("PORTÃO SEM ACESSO · USE A SAÍDA DE SERVIÇO", Vector3(0, 1.6, 19.7), 0, 18)
+	var wet := HorrorArt.surface("damp_concrete")
+	var ramp := box(Vector3(-13, -1.0, -32), Vector3(6.35, 0.2, 2.0), wet)
+	ramp.rotation.z = atan(1.8 / 6.0)
+	for side in [-1, 1]:
+		var ramp_wall := box(Vector3(-13, 0.5, -32 + side * 1.1), Vector3(6.35, 3, 0.16), wet)
+		ramp_wall.rotation.z = atan(1.8 / 6.0)
+	box(Vector3(-19, -1.95, -32), Vector3(6, 0.3, 8), wet)
+	box(Vector3(-19, 1.3, -32), Vector3(6, 0.2, 8), wet)
+	for z in [-28, -36]: box(Vector3(-19, -0.3, z), Vector3(6.1, 3, 0.18), wet)
+	box(Vector3(-22, -0.3, -32), Vector3(0.18, 3, 8), wet)
+	for z in [-34.6, -29.4]: box(Vector3(-16, -0.3, z), Vector3(0.18, 3, 2.8), wet)
+	_label("SUBSOLO / DRENAGEM", Vector3(-9.86, 2.4, -32), PI / 2, 22)
+
+func _decor_box(parent: Node3D, pos: Vector3, size: Vector3, mat: Material) -> MeshInstance3D:
+	var mesh := MeshInstance3D.new()
+	var cube := BoxMesh.new()
+	cube.size = size
+	mesh.mesh = cube
+	mesh.material_override = mat
+	mesh.position = pos
+	parent.add_child(mesh)
+	return mesh
+
+func _decorate_interaction(node: StaticBody3D) -> void:
+	var mesh: MeshInstance3D = node.get_node("Mesh")
+	var rust := HorrorArt.surface("rusted_iron")
+	var dark := HorrorArt.solid(Color("191d1b"))
+	mesh.material_override = rust
+	match node.kind:
+		"pickup":
+			mesh.material_override = HorrorArt.solid(Color("b8ab7a"))
+			if node.item_id in ["lanterna", "fusivel"]:
+				var cylinder := CylinderMesh.new()
+				cylinder.height = 0.32 if node.item_id == "lanterna" else 0.18
+				cylinder.top_radius = 0.06 if node.item_id == "lanterna" else 0.035
+				cylinder.bottom_radius = cylinder.top_radius * 0.85
+				cylinder.radial_segments = 12
+				mesh.mesh = cylinder
+				mesh.rotation.z = PI / 2
+				mesh.material_override = rust
+				_decor_box(mesh, Vector3(0, 0.15, 0), Vector3(0.08, 0.014, 0.08), HorrorArt.solid(Color("b19a64"), 0.2))
+		"hide":
+			# Opaque sides + real gaps in the louvers let the player watch the corridor.
+			mesh.mesh = null
+			for x in [-0.54, 0.54]: _decor_box(mesh, Vector3(x, 0, 0), Vector3(0.04, 2, 1), rust)
+			for y in [-0.98, 0.98]: _decor_box(mesh, Vector3(0, y, 0), Vector3(1.1, 0.04, 1), rust)
+			_decor_box(mesh, Vector3(0, 0, -0.48), Vector3(1.1, 2, 0.04), rust)
+			_decor_box(mesh, Vector3(0, -0.4, 0.48), Vector3(1.1, 1.15, 0.04), rust)
+			_decor_box(mesh, Vector3(0, 0.88, 0.48), Vector3(1.1, 0.2, 0.04), rust)
+			for y in [0.22, 0.36, 0.50, 0.64, 0.78]:
+				var louver := _decor_box(mesh, Vector3(0, y, 0.48), Vector3(1.05, 0.065, 0.045), rust)
+				louver.rotation.x = -0.35
+			_decor_box(mesh, Vector3(0.4, -0.1, 0.52), Vector3(0.035, 0.17, 0.045), dark)
+		"door", "exit":
+			var x_axis: bool = node.kind == "door"
+			for sign_value in [-1, 1]:
+				_decor_box(mesh, Vector3(sign_value * 0.09, 0, 0) if x_axis else Vector3(0, 0, sign_value * 0.12), Vector3(0.03, 2.2, 0.055) if x_axis else Vector3(0.06, 2.3, 0.03), dark)
+			_decor_box(mesh, Vector3(0.12, 0, 0.55) if x_axis else Vector3(0.55, 0, 0.15), Vector3(0.08, 0.22, 0.045), dark)
+		"generator":
+			for y in [-0.65, -0.4, -0.15, 0.10]: _decor_box(mesh, Vector3(0, y, 0.42), Vector3(1.1, 0.035, 0.035), dark)
+			_decor_box(mesh, Vector3(0.25, 0.55, 0.43), Vector3(0.4, 0.5, 0.04), dark)
+		"document": mesh.material_override = HorrorArt.surface("torn_fabric")
+	if mesh.get_child_count() > 0: HorrorArt.merge_static(mesh, mesh)

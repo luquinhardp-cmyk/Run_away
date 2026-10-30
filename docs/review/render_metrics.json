@@ -1,0 +1,62 @@
+[
+	{
+		"draw_calls": 22.0,
+		"objects": 237.0,
+		"triangles": 1784.0,
+		"view": "01_menu"
+	},
+	{
+		"draw_calls": 159.0,
+		"objects": 159.0,
+		"triangles": 14298.0,
+		"view": "02_corridor"
+	},
+	{
+		"draw_calls": 33.0,
+		"objects": 33.0,
+		"triangles": 3732.0,
+		"view": "03_storage"
+	},
+	{
+		"draw_calls": 21.0,
+		"objects": 21.0,
+		"triangles": 2466.0,
+		"view": "04_workshop"
+	},
+	{
+		"draw_calls": 26.0,
+		"objects": 26.0,
+		"triangles": 2704.0,
+		"view": "05_power"
+	},
+	{
+		"draw_calls": 8.0,
+		"objects": 8.0,
+		"triangles": 408.0,
+		"view": "06_basement"
+	},
+	{
+		"draw_calls": 218.0,
+		"objects": 218.0,
+		"triangles": 16690.0,
+		"view": "07_exterior"
+	},
+	{
+		"draw_calls": 157.0,
+		"objects": 157.0,
+		"triangles": 21216.0,
+		"view": "08_escutador"
+	},
+	{
+		"draw_calls": 157.0,
+		"objects": 157.0,
+		"triangles": 21216.0,
+		"view": "09_listen"
+	},
+	{
+		"draw_calls": 63.0,
+		"objects": 63.0,
+		"triangles": 13472.0,
+		"view": "10_locker"
+	}
+]

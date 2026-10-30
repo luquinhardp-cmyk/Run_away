@@ -10,7 +10,7 @@ python hosting/prepare.py
 godot --headless --path . --export-debug Android builds/ecos-android.apk
 ```
 
-Requer export templates Godot 4.7.2 da plataforma. `builds/` é ignorado no Git. Os fontes da página de entrada e das regras de hosting ficam em `hosting/`; configs Firebase em `firebase.json` e `.firebaserc`. O APK é anexado à pré-release `v0.1.0-test` no GitHub; o link da página aponta para esse asset. A assinatura é debug, destinada a testes.
+Requer export templates Godot 4.7.2 da plataforma. `builds/` é ignorado no Git. Os fontes da página de entrada e das regras de hosting ficam em `hosting/`; configs Firebase em `firebase.json` e `.firebaserc`. O APK é anexado à pré-release `v0.2.0-art` no GitHub; o link da página aponta para esse asset. A assinatura é debug, destinada a testes.
 
 `prepare.py` comprime `index.wasm` com gzip e mantém a extensão. Isso deixa o arquivo abaixo do limite de 25 MiB por arquivo do Cloudflare Pages. **É obrigatório servir com Content-Encoding: gzip e Content-Type: application/wasm**: as regras `_headers` e Firebase já fazem isso. Não servir este pacote com `python -m http.server` puro depois da compressão; esse servidor não adiciona Content-Encoding.
 
@@ -44,3 +44,7 @@ Chromium desktop headless carregou menu, consentimento e fase 3D sem erros JavaS
 Na URL publicada do Cloudflare, o teste de ciclo de vida com dispositivo sintético do Chromium observou: **0 chamadas getUserMedia antes do consentimento; 1 chamada e faixa live depois de permitir; a mesma faixa ended ao pausar com Esc**. Isso valida o fluxo do navegador com dispositivo de teste, sem validar hardware acústico. Os dois hosts carregaram a engine após a correção WASM. Capturas remotas simultâneas em renderização por software sofreram timeout; a verificação de microfone foi repetida isoladamente e passou. A suíte Godot permaneceu com 43 verificações passando, 0 falhas.
 
 Fonte: [Godot: exportar para Web](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_web.html).
+
+## Revisão de arte 0.2
+
+A mesma autorização de publicação para testes cobre esta atualização. O APK novo usa versionCode 2 e versionName 0.2.0; a release 0.1 anterior permanece disponível. Mapas PBR e GLBs estão no pacote; fontes Blender e ferramentas de autoria ficam no repositório, excluídos do build. O relatório de arte e os 69 testes estão em `OTIMIZACAO_GRAFICA_ANDROID.md`.

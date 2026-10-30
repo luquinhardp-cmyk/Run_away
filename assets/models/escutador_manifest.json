@@ -1,0 +1,77 @@
+{
+  "name": "O Escutador",
+  "tool": "4.5.15 LTS",
+  "triangles_main": 8940,
+  "triangles_low": 4112,
+  "bones": 29,
+  "clips": [
+    {
+      "name": "idle",
+      "duration": 3.2,
+      "loop": true
+    },
+    {
+      "name": "breathe",
+      "duration": 3.6,
+      "loop": true
+    },
+    {
+      "name": "walk",
+      "duration": 1.2,
+      "loop": true
+    },
+    {
+      "name": "patrol",
+      "duration": 1.4,
+      "loop": true
+    },
+    {
+      "name": "listen",
+      "duration": 1.6,
+      "loop": false
+    },
+    {
+      "name": "investigate",
+      "duration": 1.5,
+      "loop": true
+    },
+    {
+      "name": "search",
+      "duration": 3.0,
+      "loop": true
+    },
+    {
+      "name": "run",
+      "duration": 0.72,
+      "loop": true
+    },
+    {
+      "name": "chase",
+      "duration": 0.72,
+      "loop": true
+    },
+    {
+      "name": "attack",
+      "duration": 0.65,
+      "loop": false
+    },
+    {
+      "name": "capture",
+      "duration": 0.9,
+      "loop": false
+    },
+    {
+      "name": "return",
+      "duration": 1.4,
+      "loop": true
+    }
+  ],
+  "height_m": 2.7,
+  "origin": "original procedural sculpt and armature; no copied character or third-party model",
+  "source": "tools/art/build_escutador.py",
+  "formats": [
+    "GLB",
+    "blend"
+  ],
+  "notes": "Segmented anatomical mesh with overlapping joint volumes; not hand-retopologized production sculpture."
+}

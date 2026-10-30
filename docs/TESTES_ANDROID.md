@@ -68,3 +68,7 @@ Registrar modelo, SoC/GPU, Android, RAM, renderer, perfil, resolução, duraçã
 
 ## Pendências de produção
 Balanceamento dos limiares com aparelhos reais; cancelamento de eco se necessário; mesh/rig/animações finais; revisão acústica; bake offline de iluminação/navegação; playtest de portas e perseguição; validação completa de acessibilidade, UI em recortes e performance. iOS não foi configurado ou validado.
+
+## Revisão de arte 0.2 — 30/10/2026
+
+69 verificações passaram após integrar GLBs, rig, PBRs, LOD e os anexos. Dez vistas Mobile/Vulkan foram renderizadas na Intel UHD. O microfone físico e o desempenho em aparelho continuam pendentes; nenhum dispositivo ADB estava conectado. Relatório em `OTIMIZACAO_GRAFICA_ANDROID.md`.

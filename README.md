@@ -1,6 +1,6 @@
 # ECOS — Instalação Abandonada
 
-Protótipo vertical de survival horror 3D nativo em GDScript. Projeto independente; nenhum arquivo do Desolação RPG foi alterado. Desenvolvido e testado com **Godot 4.7.2 stable**, renderer Mobile (Vulkan). Arte geométrica, criatura 3D e sons sintetizados são provisórios e originais.
+Protótipo vertical de survival horror 3D nativo em GDScript. Projeto independente; nenhum arquivo do Desolação RPG foi alterado. Desenvolvido e testado com **Godot 4.7.2 stable**, renderer Mobile (Vulkan). A versão 0.2 inclui materiais PBR originais, ambientação rural/industrial e uma criatura 3D articulada. A arte procedural ainda está em polimento.
 
 ## Executar
 
@@ -26,11 +26,11 @@ No workspace entregue, `Jogar.bat` usa a engine portátil em `../.tools/godot`, 
 - `scenes/main/main.tscn`: menu, consentimento, carregamento e término.
 - `scenes/levels/facility.tscn`: planta modular construída em tempo de execução e navigation mesh.
 - `scenes/player/player.tscn`: CharacterBody3D, câmera, lanterna e interação.
-- `scenes/enemy/creature.tscn`: criatura 3D animada por código, nove estados e NavigationAgent3D.
+- `scenes/enemy/creature.tscn`: Escutador com mesh/UV/skin, 29 ossos, 12 clipes, nove estados e NavigationAgent3D.
 - `scenes/ui/hud.tscn`: joystick, área de olhar, botões e indicadores.
 - `scripts/interactions/interactable.gd`: portas, itens, gaveta, documento, gerador, distração, saída e armários.
 - Autoloads: Game (estado/saves), NoiseBus (eventos/oclusão), Mic (captura/RMS), Sound (áudio espacial).
-- `assets/audio`: dez WAVs originais. `assets/icon.svg`: ícone original.
+- `assets/audio`: 17 WAVs originais, incluindo escuta, passos da criatura, vento e gotejamento. `assets/icon.svg`: ícone original.
 - `tests`: testes de integração e captura visual. `docs`: projeto, arquitetura e plano de validação Android.
 
 ## Testes
@@ -40,16 +40,34 @@ godot --headless --path . res://tests/runner.tscn
 godot --path . res://tests/visual.tscn
 ```
 
-A suíte tem 43 verificações e restaura o checkpoint do usuário após a execução. Testes de toque usam eventos sintéticos: não certificam touchscreen físico. Não abra uma sessão de jogo simultânea à suíte, que usa o diretório de dados do mesmo projeto. A captura visual gera `docs/menu.png` e `docs/gameplay.png`.
+A suíte tem 69 verificações e restaura o checkpoint do usuário após a execução. Testes de toque usam eventos sintéticos: não certificam touchscreen físico. Não abra uma sessão de jogo simultânea à suíte, que usa o diretório de dados do mesmo projeto. A captura visual gera `docs/menu.png` e `docs/gameplay.png`.
 
 ## Limites desta versão
 
-Microfone e permissões Android exigem validação em aparelho real. Os limiares de áudio são **valores iniciais relativos ao piso calibrado**, não um balanceamento validado. Os perfis gráficos não constituem medição de FPS. Arte e animações são placeholders; navegação é baked ao carregar, e portas têm animação provisória de painel retrátil. A criatura pode abrir portas; paredes permanecem sólidas. Não há combate ou bateria escassa. Consulte `docs/TESTES_ANDROID.md` antes de considerar a versão pronta para distribuição.
+Microfone e permissões Android exigem validação em aparelho real. Os limiares de áudio são **valores iniciais relativos ao piso calibrado**, não um balanceamento validado. Os perfis gráficos não constituem medição de FPS. O modelo é uma primeira versão artística com anatomia segmentada e animações procedurais; navegação é baked ao carregar, e portas têm animação provisória de painel retrátil. A criatura pode abrir portas; paredes permanecem sólidas. Não há combate ou bateria escassa. Consulte `docs/TESTES_ANDROID.md` antes de considerar a versão pronta para distribuição.
 
 Exportação local não publica em lojas. Veja os presets e as instruções Android na documentação.
 
 ## Teste pelo navegador e download
 
-Publicado para testes em [Cloudflare Pages](https://run-away-ecos.pages.dev/) e [Firebase Hosting](https://run-away-f63e4.web.app/). Ambos oferecem jogo no navegador e [download do APK](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.1.0-test/ecos-android.apk). Consulte `docs/HOSPEDAGEM.md` para comandos.
+Publicado para testes em [Cloudflare Pages](https://run-away-ecos.pages.dev/) e [Firebase Hosting](https://run-away-f63e4.web.app/). Ambos oferecem jogo no navegador e [download do APK](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.2.0-art/ecos-android.apk). Consulte `docs/HOSPEDAGEM.md` para comandos.
 
 O preset Web usa renderer Compatibility e áudio Stream para suportar processamento de captura. Não equivale ao renderer Mobile do APK. A versão Web requer WebGL 2, WebAssembly e HTTPS para o microfone. O APK de teste é distribuído nas Releases do repositório, fora do histórico Git.
+
+## Direção de arte 0.2
+
+- Dez materiais PBR, 60 mapas em 512²/256² e recursos editáveis em `assets/materials`.
+- Pátio rural e subsolo conectados à fase, com navegação testada; objetivos originais preservados.
+- Escutador: 8.940 triângulos no modelo principal, 4.112 no reduzido, 29 ossos, UVs, quatro materiais e 12 animações.
+- Escuta de 1,6 s: para, inclina a cabeça e abre as conchas auditivas antes de investigar. Eventos repetidos não reiniciam o gesto.
+- Armários com frestas reais e câmera interna corrigida; menu com cenário 3D original.
+
+[Guia de arte](docs/DIRECAO_ARTE_TERROR.md) · [Criatura](docs/CRIATURA_PRINCIPAL.md) · [Materiais](docs/BIBLIOTECA_MATERIAIS.md) · [Otimização e limites](docs/OTIMIZACAO_GRAFICA_ANDROID.md)
+
+```powershell
+godot --path . res://tests/art_review.tscn
+```
+
+Esse teste gera dez vistas em `docs/review` e métricas amostrais de renderização. Não constitui benchmark Android.
+
+![Escutador na animação de escuta](docs/review/09_listen.png)

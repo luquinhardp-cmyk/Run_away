@@ -1,7 +1,7 @@
 # Ouvinte / IA
 
 ## Estados
-Patrulha visita quatro pontos; ociosa espera 2,5 s; alerta vira ao estímulo por 0,7 s; investigação aproxima a última posição ou expira em 14 s; busca verifica proximidade e procura ao redor por 6,5 s; perseguição corre a 3,35 m/s; perda de alvo segue a última posição; retorno volta à patrulha; ataque tem antecipação de 0,65 s e derrota. Animação geométrica de membros e tronco diferencia movimento, corrida e ataque. Placeholder 3D original, sem rig ou animações artísticas finais.
+Patrulha visita quatro pontos; ociosa espera 2,5 s; alerta vira ao estímulo por 1,6 s; investigação aproxima a última posição ou expira em 14 s; busca verifica proximidade e procura ao redor por 6,5 s; perseguição corre a 3,35 m/s; perda de alvo segue a última posição; retorno volta à patrulha; ataque tem antecipação de 0,65 s e derrota. A versão 0.2 usa GLB com skinning e 29 ossos. O estado alerta aciona a animação listen, com cabeça inclinada e conchas articuladas. Detalhes em CRIATURA_PRINCIPAL.md.
 
 ## Audição
 Intensidade × (1 - distância/raio)^1,4. Até três barreiras por raycast: portas multiplicam intensidade por 0,55; paredes por 0,25. É um modelo barato, não simulação acústica: uma parede representada por vários corpos pode atenuar mais. Eventos somam suspeita, que decai; ruído suficiente altera estado e atualiza última posição. Sem estímulo, a criatura não recebe posição atual do jogador fora da percepção visual. Ruído intenso no armário marca possibilidade de descoberta durante busca próxima.

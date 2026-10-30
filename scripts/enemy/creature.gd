@@ -13,7 +13,10 @@ var age := 0.0
 var suspicion := 0.0
 var sound_clock := 0.0
 var body: Node3D
-var arms: Array[MeshInstance3D] = []
+var visual: Node3D
+var listen_duration := 1.6
+var hearing_cooldown := 0.0
+var foot_clock := 0.0
 var stuck_time := 0.0
 var previous := Vector3.ZERO
 var ready_navigation := false
@@ -35,43 +38,25 @@ func _ready() -> void:
 	agent.target_desired_distance = 0.45
 	agent.radius = 0.35
 	add_child(agent)
-	_build_placeholder()
+	_build_visual()
 	NoiseBus.emitted.connect(_hear)
 	previous = global_position
 
-func _build_placeholder() -> void:
-	# Original procedural 3D placeholder, animated in code; replaceable by a rig.
-	body = Node3D.new()
-	add_child(body)
-	var material := StandardMaterial3D.new()
-	material.albedo_color = Color(0.13, 0.16, 0.15)
-	material.roughness = 0.95
-	for part in [[Vector3(0, 1.4, 0), Vector3(0.52, 1.2, 0.35)], [Vector3(0, 2.18, -0.08), Vector3(0.33, 0.5, 0.32)], [Vector3(-0.2, 0.5, 0), Vector3(0.16, 1.0, 0.18)], [Vector3(0.2, 0.5, 0), Vector3(0.16, 1.0, 0.18)], [Vector3(-0.43, 1.15, 0), Vector3(0.12, 1.4, 0.12)], [Vector3(0.43, 1.15, 0), Vector3(0.12, 1.4, 0.12)]]:
-		var mesh := MeshInstance3D.new()
-		var box := BoxMesh.new()
-		box.size = part[1]
-		mesh.mesh = box
-		mesh.material_override = material
-		mesh.position = part[0]
-		body.add_child(mesh)
-		arms.append(mesh)
-	var eye_material := StandardMaterial3D.new()
-	eye_material.albedo_color = Color(0.7, 0.55, 0.3)
-	eye_material.emission_enabled = true
-	eye_material.emission = Color(0.7, 0.3, 0.05)
-	for x in [-0.09, 0.09]:
-		var eye := MeshInstance3D.new()
-		var sphere := SphereMesh.new()
-		sphere.radius = 0.035
-		sphere.height = 0.07
-		eye.mesh = sphere
-		eye.material_override = eye_material
-		eye.position = Vector3(x, 2.25, -0.25)
-		body.add_child(eye)
+func _build_visual() -> void:
+	visual = Node3D.new()
+	visual.set_script(preload("res://scripts/enemy/escutador_visual.gd"))
+	add_child(visual)
+	body = visual
 
 func transition(next: State) -> void:
 	state = next
 	timer = 0.0
+	if is_instance_valid(visual): visual.set_motion(int(next))
+	if next == State.ALERT:
+		hearing_cooldown = 2.8
+		Sound.at("listen", global_position + Vector3.UP * 2.1, -21)
+	if next == State.INVESTIGATE: Sound.at("investigate", global_position, -25)
+	if next == State.ATTACK: Sound.at("attack", global_position, -16 - (1 - Game.settings.scares) * 12)
 	if next == State.CHASE:
 		unseen = 0.0
 		Sound.at("chase", global_position, -10 * Game.settings.scares)
@@ -84,9 +69,10 @@ func _hear(event: Dictionary) -> void:
 	last_known = event.position
 	heard_hide = is_instance_valid(Game.player) and Game.player.hidden and strength > 0.32
 	if state == State.CHASE: return
-	if strength > 0.5 and global_position.distance_to(last_known) < 12 and not Game.player.hidden:
-		transition(State.INVESTIGATE)
-	elif strength + suspicion > 0.18: transition(State.ALERT)
+	# Every audible reaction first gives the player a readable listening pose.
+	# Repeated voice/footstep events update memory without restarting the pose.
+	if state == State.ALERT or hearing_cooldown > 0: return
+	if strength + suspicion > 0.14: transition(State.ALERT)
 
 func sees_player() -> bool:
 	if not is_instance_valid(Game.player) or Game.player.hidden: return false
@@ -102,6 +88,8 @@ func sees_player() -> bool:
 func _physics_process(delta: float) -> void:
 	if not Game.playing: return
 	age += delta
+	hearing_cooldown = maxf(0, hearing_cooldown - delta)
+	foot_clock -= delta
 	timer += delta
 	perceive_clock -= delta
 	sound_clock -= delta
@@ -133,7 +121,7 @@ func _physics_process(delta: float) -> void:
 		State.ALERT:
 			speed = 0
 			_face(last_known, delta)
-			if timer > 0.7: transition(State.INVESTIGATE)
+			if timer > listen_duration: transition(State.INVESTIGATE)
 		State.INVESTIGATE:
 			target = last_known
 			if global_position.distance_to(target) < 1.1 or timer > 14: transition(State.SEARCH)
@@ -151,8 +139,10 @@ func _physics_process(delta: float) -> void:
 			if global_position.distance_to(Game.player.global_position) < 1.25 and sees_player(): transition(State.ATTACK)
 		State.ATTACK:
 			speed = 0
-			body.rotation.x = -0.35 * sin(minf(timer * 4, PI))
-			if timer < 0.05: Sound.at("capture", global_position, -8 - (1 - Game.settings.scares) * 18)
+			_capture_focus(delta)
+			if timer > 0.3 and visual.active_clip != "capture":
+				visual.play_capture()
+				Sound.at("capture", global_position, -15 - (1 - Game.settings.scares) * 18)
 			if timer > 0.65: Game.finish(false)
 		State.LOST:
 			target = last_known
@@ -170,8 +160,10 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if direction.length() > 0.1 and speed > 0:
 		_face(global_position + direction, delta)
-		body.position.y = sin(age * (14 if state == State.CHASE else 6)) * 0.045
-		for i in range(2, arms.size()): arms[i].rotation.x = sin(age * 6 + i * PI) * (0.5 if state == State.CHASE else 0.18)
+		if foot_clock <= 0:
+			Sound.at("creature_step", global_position, -17 if state == State.CHASE else -23)
+			foot_clock = 0.36 if state == State.CHASE else 0.67
+	visual.advance_motion(Vector2(velocity.x, velocity.z).length())
 	if global_position.distance_to(previous) < 0.006 and speed > 0 and direction.length() > 0.1: stuck_time += delta
 	else: stuck_time = 0
 	if stuck_time > 1.2:
@@ -189,3 +181,11 @@ func _face(point: Vector3, delta: float) -> void:
 	var direction := point - global_position
 	if Vector2(direction.x, direction.z).length() > 0.05:
 		rotation.y = lerp_angle(rotation.y, atan2(-direction.x, -direction.z), minf(1, delta * 5))
+
+func _capture_focus(delta: float) -> void:
+	if not is_instance_valid(Game.player) or Game.settings.scares <= 0: return
+	var camera: Camera3D = Game.player.camera
+	var direction: Vector3 = visual.head_position() - camera.global_position
+	if direction.length() < 0.05: return
+	var desired := Basis.looking_at(direction.normalized(), Vector3.UP).get_rotation_quaternion()
+	camera.global_basis = Basis(camera.global_basis.get_rotation_quaternion().slerp(desired, minf(1, delta * 4 * Game.settings.scares)))

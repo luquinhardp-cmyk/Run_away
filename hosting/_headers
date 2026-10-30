@@ -1,4 +1,5 @@
 /*
+  Cache-Control: no-cache
   X-Content-Type-Options: nosniff
   Permissions-Policy: microphone=(self)
 /play/*.wasm
