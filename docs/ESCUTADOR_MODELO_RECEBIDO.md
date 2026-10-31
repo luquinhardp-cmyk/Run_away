@@ -19,7 +19,7 @@ O modelo anterior do jogo continua no histórico Git e em `assets/models/escutad
 - 28.068 triângulos no principal, 12.348 no reduzido. 23 ações glTF: idle, breathe, walk, patrol, listen, investigate, search, run, chase, attack, capture, return, head_tilt, hide_search, lost e oito capturas contextuais. As oito capturas possuem poses esqueléticas diferentes.
 - Marcha em posição fixa com solução analítica de pernas por IK, elevação do pé em balanço, contraposição dos braços, respiração discreta e escuta com cabeça/pavilhões articulados. Os controles foram amostrados em keyframes; não existe dependência de constraints Blender em runtime. Não foi usado motion capture.
 
-Scripts reproduzíveis: `tools/art/audit_received_escutador.py`, `build_received_escutador.py`, `animate_received_escutador.py` `export_received_escutador.py` e `reanimate_received_escutador.py`. O último reexporta a cena salva sem reconstruir a anatomia. A cena Blender contém os materiais completos; os GLBs preservam nomes de materiais sem duplicar imagens embutidas, e o Godot aplica os recursos compartilhados.
+Scripts reproduzíveis: `tools/art/audit_received_escutador.py`, `build_received_escutador.py`, `animate_received_escutador.py`, `export_received_escutador.py` e `reanimate_received_escutador.py`. O exportador reexporta a cena salva sem reconstruir a anatomia; o reanimador atualiza os keyframes mantendo a malha. A cena Blender contém os materiais completos; os GLBs preservam nomes de materiais sem duplicar imagens embutidas, e o Godot aplica os recursos compartilhados.
 
 ## Materiais
 
@@ -50,3 +50,9 @@ Imagens reais em `review/escutador_received/`: entrada original, frontal, rosto,
 5. **Aparelhos reais:** FPS sustentado, memória, aquecimento, bateria, microfone, multitoque, escala/visibilidade e instalação de atualização mantendo dados. Nenhum Android físico estava conectado.
 
 O material entregue permite continuar essas etapas no `.blend` real. A prévia não deve ser anunciada como personagem hiperrealista finalizado.
+
+## Publicação e links permanentes
+
+Versão técnica 0.9.0/código 9, APK ARM64 com mesmo pacote e certificado da 0.8, validado por `tools/verify_android_update.py`. Publicação inicial de teste: `1d73f5ff.run-away-ecos.pages.dev`, runtime `5bb8ed1`. A validação de navegador passou com Chromium/WebGL/D3D11: abertura, consentimento sem microfone, gameplay, pausa, cadastro e checkpoint protegido no Firestore com 12 objetos físicos e gaveta; zero erros de execução na repetição bem-sucedida. A primeira tentativa teve falha de cadastro no fixture; repetir com digitação pausada e captura da resposta eliminou o problema, sem alteração do backend. Conta e documento temporários foram removidos após o teste.
+
+Após a solicitação explícita de manter o mesmo link, o endereço entregue passa a ser sempre https://run-away-ecos.pages.dev/ e o download sempre https://run-away-ecos.pages.dev/baixar-apk. A atualização troca o conteúdo/destino, preservando esses endereços. A identificação de prévia técnica e as pendências artísticas continuam visíveis na página. Ver [regra de publicação](PUBLICACAO_LINK_FIXO.md).

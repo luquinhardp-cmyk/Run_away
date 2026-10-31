@@ -31,7 +31,10 @@ for payload in [wasm, output / "play/index.pck"]:
             pack_parts.append(name)
         (payload.parent / "pack-parts.json").write_text(json.dumps(pack_parts))
         payload.unlink()
-shutil.copyfile(root / args.landing, output / "index.html")
+landing = (root / args.landing).read_text(encoding="utf-8")
+landing = re.sub(r'href="https://github\.com/luquinhardp-cmyk/Run_away/releases/download/[^" ]+/ecos-android\.apk"', 'href="/baixar-apk"', landing)
+(output / "index.html").write_text(landing, encoding="utf-8")
+(output / "_redirects").write_text("\n".join(f"{path} {args.apk_url} 302" for path in ["/baixar-apk", "/baixar-apk/", "/ecos-android.apk"]) + "\n", encoding="utf-8")
 shutil.copyfile(root / "hosting/_headers", output / "_headers")
 shutil.copyfile(root / "hosting/wasm-loader.js", output / "play/wasm-loader.js")
 page = output / "play/index.html"
@@ -47,5 +50,5 @@ try:
 except (OSError, subprocess.CalledProcessError):
     commit = "unknown"
 version = re.search(r'version/name="([^"]+)"', (root / "export_presets.cfg").read_text(encoding="utf-8")).group(1)
-(output / "version.json").write_text(json.dumps({"version": version, "commit": commit, "renderer": "Compatibility", "apk": args.apk_url}), encoding="utf-8")
+(output / "version.json").write_text(json.dumps({"version": version, "commit": commit, "renderer": "Compatibility", "apk": "https://run-away-ecos.pages.dev/baixar-apk", "apk_versioned": args.apk_url}), encoding="utf-8")
 print(f"Hosting ready: WASM {wasm.stat().st_size:,} bytes; gzip header required.")

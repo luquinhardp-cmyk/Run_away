@@ -1,0 +1,19 @@
+{
+  "tests": {
+    "asset": 84,
+    "general": 80,
+    "expansion": 41,
+    "horror": 29,
+    "physics": 47,
+    "night": 76,
+    "geometry": 229,
+    "graphics": 20
+  },
+  "passed": 606,
+  "failed": 0,
+  "android_hardware": false,
+  "mic_hardware": false,
+  "apk_bytes": 53542283,
+  "apk_sha256": "6f24627f11c7b2df83ae6bfdf669368d7f64ba0ee3b4cd9189b4a1c4c9aee5e4",
+  "art_status": "technical preview; final anatomical sculpt, manual retopology, high-to-low baking and motion polish pending"
+}
