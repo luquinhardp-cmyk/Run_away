@@ -1,19 +1,20 @@
 {
+  "firestore": {
+    "rules": "firestore.rules"
+  },
   "hosting": {
     "site": "run-away-f63e4",
-    "public": "builds/web",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "_headers"],
-    "headers": [
-      {"source": "**", "headers": [
-        {"key": "Cache-Control", "value": "no-cache"},
-        {"key": "X-Content-Type-Options", "value": "nosniff"},
-        {"key": "Permissions-Policy", "value": "microphone=(self)"}
-      ]},
-      {"source": "**/*.wasm", "headers": [
-        {"key": "Content-Type", "value": "application/wasm"},
-        {"key": "Content-Encoding", "value": "gzip"}
-      ]},
-      {"source": "**/*.html", "headers": [{"key": "Cache-Control", "value": "no-cache"}]}
+    "public": "hosting/firebase-redirect",
+    "ignore": [
+      "firebase.json",
+      "**/.*"
+    ],
+    "redirects": [
+      {
+        "source": "**",
+        "destination": "https://run-away-ecos.pages.dev/",
+        "type": 302
+      }
     ]
   }
 }

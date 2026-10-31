@@ -25,6 +25,7 @@ func _ready() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	Game.record_results = false
 	var checkpoint_backup := Game.checkpoint.duplicate(true)
 	var saved_exists := FileAccess.file_exists("user://checkpoint.json")
 	var saved_content := FileAccess.get_file_as_string("user://checkpoint.json") if saved_exists else ""

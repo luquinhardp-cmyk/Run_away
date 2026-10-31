@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function owner(uid) { return request.auth != null && request.auth.uid == uid; }
+    function checkpoint(c) {
+      return c.keys().hasOnly(['version', 'items', 'power', 'doors', 'elapsed_ms'])
+        && c.version == 1 && c.items is list && c.items.size() <= 3
+        && c.items.hasOnly(['lanterna', 'fusivel', 'cartao'])
+        && c.power is bool && (!c.power || c.items.hasAll(['fusivel']))
+        && c.doors is map && c.doors.size() <= 20
+        && c.elapsed_ms is number && c.elapsed_ms >= 0 && c.elapsed_ms <= 604800000;
+    }
+    function validRun(r, id) {
+      return id.matches('^[a-f0-9]{32}$') && r.id == id
+        && r.keys().hasOnly(['id', 'won', 'elapsed_ms', 'score', 'items', 'power'])
+        && r.won is bool && r.power is bool
+        && r.elapsed_ms is number && r.elapsed_ms >= 0 && r.elapsed_ms <= 604800000
+        && r.items is list && r.items.size() <= 3 && r.items.toSet().size() == r.items.size()
+        && r.items.hasOnly(['lanterna', 'fusivel', 'cartao'])
+        && (!r.power || r.items.hasAll(['fusivel']))
+        && (!r.won || (r.power && r.items.hasAll(['fusivel', 'cartao'])))
+        && r.score == r.items.size() * 100 + (r.power ? 300 : 0) + (r.won ? 500 : 0);
+    }
+    function totals(uid) {
+      let before = resource.data.stats;
+      let after = request.resource.data.stats;
+      let id = request.resource.data.lastRunId;
+      let path = /databases/$(database)/documents/players/$(uid)/runs/$(id);
+      let r = getAfter(path).data;
+      return !exists(path) && validRun(r, id)
+        && after.keys().hasOnly(['totalPoints', 'runs', 'escapes', 'bestEscapeMs'])
+        && after.totalPoints == before.totalPoints + r.score
+        && after.runs == before.runs + 1
+        && after.escapes == before.escapes + (r.won ? 1 : 0)
+        && after.bestEscapeMs == (r.won && r.elapsed_ms < before.bestEscapeMs ? r.elapsed_ms : before.bestEscapeMs);
+    }
+    match /players/{uid} {
+      allow get: if owner(uid);
+      allow create: if owner(uid)
+        && request.resource.data.keys().hasOnly(['schemaVersion', 'stats'])
+        && request.resource.data.schemaVersion == 1
+        && request.resource.data.stats == {'totalPoints': 0, 'runs': 0, 'escapes': 0, 'bestEscapeMs': 604800001};
+      allow update: if owner(uid) && (
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['checkpoint'])
+          && checkpoint(request.resource.data.checkpoint))
+        || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stats', 'lastRunId']) && totals(uid))
+      );
+      match /runs/{id} {
+        allow read: if owner(uid);
+        allow create: if owner(uid) && validRun(request.resource.data, id)
+          && getAfter(/databases/$(database)/documents/players/$(uid)).data.lastRunId == id
+          && getAfter(/databases/$(database)/documents/players/$(uid)).data.stats.runs
+             == get(/databases/$(database)/documents/players/$(uid)).data.stats.runs + 1;
+      }
+    }
+  }
+}

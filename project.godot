@@ -8,6 +8,7 @@ config/icon="res://assets/icon.svg"
 
 [autoload]
 Game="*res://scripts/systems/game.gd"
+Cloud="*res://scripts/systems/cloud.gd"
 NoiseBus="*res://scripts/audio/noise.gd"
 Mic="*res://scripts/audio/microphone.gd"
 Sound="*res://scripts/audio/sound.gd"

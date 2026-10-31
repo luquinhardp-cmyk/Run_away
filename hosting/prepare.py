@@ -25,5 +25,5 @@ try:
 except (OSError, subprocess.CalledProcessError):
     commit = "unknown"
 version = re.search(r'version/name="([^"]+)"', (root / "export_presets.cfg").read_text(encoding="utf-8")).group(1)
-(output / "version.json").write_text(json.dumps({"version": version, "commit": commit, "renderer": "Compatibility", "apk": "https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.2.0-art/ecos-android.apk"}), encoding="utf-8")
+(output / "version.json").write_text(json.dumps({"version": version, "commit": commit, "renderer": "Compatibility", "apk": "https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.3.0-cloud/ecos-android.apk"}), encoding="utf-8")
 print(f"Hosting ready: WASM {wasm.stat().st_size:,} bytes; gzip header required.")

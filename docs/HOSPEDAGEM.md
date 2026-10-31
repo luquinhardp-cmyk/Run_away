@@ -26,14 +26,13 @@ URL de produção: `https://run-away-ecos.pages.dev/`. A página de entrada ofer
 
 ## Firebase
 
-Projeto explicitamente indicado: `run-away-f63e4`. Apenas Hosting, sem banco, regras ou Functions.
+Projeto explicitamente indicado: `run-away-f63e4`. A partir de 0.3, Firebase fornece Authentication (e-mail/senha) e Firestore em São Paulo. Cloudflare serve o jogo.
 
 ```powershell
-firebase login --reauth
-firebase deploy --only hosting --project run-away-f63e4
+firebase deploy --only firestore:rules --project run-away-f63e4
 ```
 
-Reautenticação concluída e Hosting publicado em **https://run-away-f63e4.web.app/**. O Cloudflare foi publicado em **https://run-away-ecos.pages.dev/**. A pré-release e o APK estão disponíveis no GitHub. Nenhuma regra de banco, serviço Functions ou domínio personalizado foi alterado.
+O endereço legado **https://run-away-f63e4.web.app/** somente redireciona ao **https://run-away-ecos.pages.dev/**. `firebase.json` conserva esse redirecionamento sem hospedar outra cópia do jogo. As regras restringem dados ao dono autenticado; veja `CONTAS_E_PROGRESSO.md`. O APK está na release `v0.3.0-cloud` (versionCode 3).
 
 O teste após a primeira publicação detectou que as CDNs entregavam bytes gzip residuais ao compilador WebAssembly. `wasm-loader.js` normaliza a resposta exclusiva de `index.wasm`: verifica a assinatura e descomprime os bytes residuais com DecompressionStream, preservando respostas já descomprimidas. O preparo injeta esse carregador antes do código da engine. Essa versão requer navegador com DecompressionStream (ou a resposta deve já chegar descomprimida).
 

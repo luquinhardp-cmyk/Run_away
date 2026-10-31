@@ -10,6 +10,72 @@ var power := false
 var doors: Dictionary = {}
 var settings := {"sensitivity": 0.003, "fov": 78.0, "master": 0.8, "effects": 0.8, "music": 0.5, "mic_sensitivity": 1.0, "scares": 0.6, "quality": 1.0, "controls": 1.0, "opacity": 0.58, "control_x": 0.0, "control_y": 0.0}
 var checkpoint: Dictionary = {}
+var profile := ""
+var elapsed_ms := 0
+var last_score := 0
+var run_id := ""
+var record_results := true
+var history: Dictionary = {}
+var _tick := 0
+var _autosave := 0.0
+
+func _process(delta: float) -> void:
+	update_clock()
+	if playing and not paused and record_results:
+		_autosave += delta
+		if _autosave >= 15:
+			_autosave = 0
+			save_checkpoint()
+
+func update_clock() -> void:
+	var now := Time.get_ticks_msec()
+	if playing and not paused and _tick > 0: elapsed_ms += now - _tick
+	_tick = now
+
+func checkpoint_path() -> String:
+	return "user://checkpoint.json" if profile.is_empty() else "user://accounts/" + profile + "/checkpoint.json"
+
+func history_path() -> String:
+	return "user://history.json" if profile.is_empty() else "user://accounts/" + profile + "/history.json"
+
+func select_profile(value: String) -> void:
+	profile = value
+	checkpoint = {}
+	history = {}
+	if FileAccess.file_exists(checkpoint_path()):
+		var data = JSON.parse_string(FileAccess.get_file_as_string(checkpoint_path()))
+		if data is Dictionary and data.get("version") == 1: checkpoint = data
+	if FileAccess.file_exists(history_path()):
+		var data = JSON.parse_string(FileAccess.get_file_as_string(history_path()))
+		if data is Dictionary: history = data
+	updated.emit()
+
+static func write_json(path: String, data: Dictionary) -> void:
+	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+	var file := FileAccess.open(path + ".tmp", FileAccess.WRITE)
+	if file:
+		file.store_string(JSON.stringify(data))
+		file.close()
+		DirAccess.rename_absolute(path + ".tmp", path)
+
+static func format_time(milliseconds: int) -> String:
+	var seconds := milliseconds / 1000
+	return "%02d:%02d" % [seconds / 60, seconds % 60]
+
+static func score_for(items: Array, restored: bool, escaped: bool) -> int:
+	var points := 0
+	for item in ["lanterna", "fusivel", "cartao"]:
+		if items.has(item): points += 100
+	return points + (300 if restored else 0) + (500 if escaped else 0)
+
+func local_stats() -> Dictionary:
+	var result := {"totalPoints": 0, "runs": history.size(), "escapes": 0, "bestEscapeMs": 0}
+	for run in history.values():
+		result.totalPoints += int(run.score)
+		if run.won:
+			result.escapes += 1
+			if result.bestEscapeMs == 0 or run.elapsed_ms < result.bestEscapeMs: result.bestEscapeMs = int(run.elapsed_ms)
+	return result
 var objective: String:
 	get:
 		if not inventory.has("lanterna"): return "01 / Encontre a lanterna na enfermaria."
@@ -20,6 +86,7 @@ var objective: String:
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	select_profile("")
 	var config := ConfigFile.new()
 	if config.load("user://settings.cfg") == OK:
 		for key in settings: settings[key] = config.get_value("settings", key, settings[key])
@@ -35,6 +102,10 @@ func _ready() -> void:
 		InputMap.action_add_event(action, event)
 
 func begin(resume: bool = false) -> void:
+	_autosave = 0
+	elapsed_ms = int(checkpoint.get("elapsed_ms", 0)) if resume else 0
+	run_id = Crypto.new().generate_random_bytes(16).hex_encode()
+	_tick = Time.get_ticks_msec()
 	inventory.clear()
 	doors.clear()
 	power = false
@@ -49,16 +120,15 @@ func begin(resume: bool = false) -> void:
 
 func collect(item: String) -> void:
 	if not inventory.has(item): inventory.append(item)
+	if record_results: save_checkpoint()
 	updated.emit()
 
 func save_checkpoint() -> void:
 	# Always resume in the safe infirmary; inventory and mechanisms persist.
-	checkpoint = {"version": 1, "items": inventory.duplicate(), "power": power, "doors": doors.duplicate(true)}
-	var file := FileAccess.open("user://checkpoint.json.tmp", FileAccess.WRITE)
-	if file:
-		file.store_string(JSON.stringify(checkpoint))
-		file.close()
-		DirAccess.rename_absolute("user://checkpoint.json.tmp", "user://checkpoint.json")
+	update_clock()
+	checkpoint = {"version": 1, "items": inventory.duplicate(), "power": power, "doors": doors.duplicate(true), "elapsed_ms": elapsed_ms}
+	write_json(checkpoint_path(), checkpoint)
+	if record_results: Cloud.queue_checkpoint(checkpoint)
 	updated.emit()
 
 func save_settings() -> void:
@@ -71,12 +141,21 @@ func save_settings() -> void:
 
 func finish(won: bool) -> void:
 	if not playing: return
+	update_clock()
+	last_score = score_for(inventory, power, won)
+	if record_results:
+		var run := {"id": run_id, "won": won, "elapsed_ms": elapsed_ms, "score": last_score, "items": inventory.duplicate(), "power": power}
+		history[run_id] = run
+		write_json(history_path(), history)
+		Cloud.queue_run(run)
 	playing = false
 	Mic.suspend()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	ended.emit(won)
 
 func set_paused(value: bool) -> void:
+	update_clock()
+	if value and playing and record_results: save_checkpoint()
 	paused = value
 	get_tree().paused = value
 	if value: Mic.suspend()

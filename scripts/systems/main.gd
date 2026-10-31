@@ -8,6 +8,8 @@ var column: VBoxContainer
 var screen := "menu"
 var pause_was := false
 var menu_stage: Node3D
+var account_status: Label
+var menu_status: Label
 
 func _exit_tree() -> void:
 	if is_instance_valid(menu_stage): menu_stage.set_active(false)
@@ -55,6 +57,7 @@ func _ready() -> void:
 	scroll.add_child(column)
 	Game.ended.connect(_ended)
 	Game.updated.connect(_updated)
+	Cloud.changed.connect(_cloud_updated)
 	Game.save_settings()
 	menu()
 
@@ -91,10 +94,62 @@ func menu() -> void:
 	button("INICIAR NOVA SESSÃO", func(): consent_screen(false))
 	if not Game.checkpoint.is_empty(): button("CONTINUAR DO CHECKPOINT", func(): consent_screen(true))
 	button("CONFIGURAÇÕES", func(): settings_screen("menu"))
+	button("CONTA / PROGRESSO", account_screen)
+	menu_status = text(Cloud.status, 16)
 	if not OS.has_feature("android") and not OS.has_feature("web"): button("SAIR", func(): get_tree().quit())
-	text("Direção de arte 0.2 • O Escutador\nRecomendado: fones de ouvido. Sustos moderados, sem flashes.", 16)
+	text("Versão 0.3 • O Escutador\nRecomendado: fones de ouvido. Sustos moderados, sem flashes.", 16)
+
+func _cloud_updated() -> void:
+	if screen == "menu" and is_instance_valid(menu_status): menu_status.text = Cloud.status
+	if screen == "account" and is_instance_valid(account_status): account_status.text = Cloud.status
+
+func account_screen() -> void:
+	screen = "account"
+	clear()
+	text("CONTA / PROGRESSO", 34)
+	account_status = text(Cloud.status, 18)
+	var totals: Dictionary = Game.local_stats() if Cloud.uid.is_empty() else Cloud.stats
+	text("Pontos: %d  ·  Partidas: %d  ·  Fugas: %d\nMelhor fuga: %s" % [int(totals.get("totalPoints", 0)), int(totals.get("runs", 0)), int(totals.get("escapes", 0)), Game.format_time(int(totals.get("bestEscapeMs", 0))) if int(totals.get("escapes", 0)) > 0 else "—"])
+	text("100 pontos por item · 300 pela energia · 500 pela fuga. O tempo não conta pausas.\nAo retomar, você volta à enfermaria com os itens e mecanismos salvos.", 16)
+	if Cloud.uid.is_empty():
+		text("Entre para levar o progresso a outros aparelhos. Como visitante, os dados ficam neste navegador ou aplicativo.", 16)
+		var address := LineEdit.new()
+		address.placeholder_text = "E-mail"
+		address.custom_minimum_size.y = 48
+		address.virtual_keyboard_type = LineEdit.KEYBOARD_TYPE_EMAIL_ADDRESS
+		column.add_child(address)
+		var password := LineEdit.new()
+		password.placeholder_text = "Senha (mínimo 6 caracteres)"
+		password.secret = true
+		password.custom_minimum_size.y = 48
+		column.add_child(password)
+		button("ENTRAR", func():
+			await Cloud.authenticate(address.text, password.text)
+			if screen == "account" and not Cloud.uid.is_empty(): account_screen())
+		button("CRIAR CONTA", func():
+			await Cloud.authenticate(address.text, password.text, true)
+			if screen == "account" and not Cloud.uid.is_empty(): account_screen())
+		button("ESQUECI MINHA SENHA", func(): Cloud.reset_password(address.text))
+	else:
+		text(Cloud.email, 18)
+		text("Partidas aguardando envio: " + str(Cloud.pending.runs.size()), 16)
+		if not Cloud.conflict.is_empty():
+			text("Há progresso diferente neste aparelho e na nuvem. Escolha qual continuar; os resultados já concluídos serão preservados.")
+			button("USAR CHECKPOINT DA NUVEM", func(): Cloud.choose_checkpoint(true); account_screen())
+			button("USAR CHECKPOINT DESTE APARELHO", func(): Cloud.choose_checkpoint(false); account_screen())
+		button("SINCRONIZAR / ATUALIZAR", func():
+			await Cloud.sync(true)
+			if screen == "account": account_screen())
+		button("IMPORTAR CHECKPOINT DO VISITANTE", func(): Cloud.import_guest(); account_screen())
+		text("A importação substitui o checkpoint desta conta pelo do visitante deste aparelho. Não transfere pontos de visitante.", 16)
+		button("SAIR DA CONTA", func(): Cloud.sign_out(); account_screen())
+	button("VOLTAR", func():
+		if not Cloud.busy and not Cloud.syncing: menu())
 
 func consent_screen(resume: bool) -> void:
+	if Cloud.busy or Cloud.syncing or not Cloud.conflict.is_empty():
+		account_screen()
+		return
 	screen = "consent"
 	clear()
 	text("ATÉ O SEU MEDO FAZ BARULHO.", 38)
@@ -164,6 +219,7 @@ func pause_screen() -> void:
 	button("VOLTAR AO MENU", to_menu)
 
 func to_menu() -> void:
+	if Game.playing and Game.record_results: Game.save_checkpoint()
 	Game.playing = false
 	Game.paused = false
 	get_tree().paused = false
@@ -176,6 +232,7 @@ func _ended(won: bool) -> void:
 	get_tree().paused = true
 	clear()
 	text("VOCÊ ESCAPOU." if won else "ELE OUVIU VOCÊ.", 50)
+	text("Tempo ativo: %s · Pontos nesta partida: %d\n%s" % [Game.format_time(Game.elapsed_ms), Game.last_score, "Resultado guardado para sincronizar com sua conta." if not Cloud.uid.is_empty() else "Entre em CONTA / PROGRESSO para salvar futuras partidas na nuvem."])
 	text("O ar frio do lado de fora nunca pareceu tão vivo." if won else "A instalação guardou mais um silêncio.\nAnde agachado, quebre a linha de visão e evite ruídos perto dos armários.")
 	button("TENTAR NOVAMENTE", func(): start(false, false))
 	if not Game.checkpoint.is_empty(): button("RETOMAR CHECKPOINT", func(): start(true, false))

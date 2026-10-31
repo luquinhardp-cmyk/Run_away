@@ -29,7 +29,7 @@ No workspace entregue, `Jogar.bat` usa a engine portátil em `../.tools/godot`, 
 - `scenes/enemy/creature.tscn`: Escutador com mesh/UV/skin, 29 ossos, 12 clipes, nove estados e NavigationAgent3D.
 - `scenes/ui/hud.tscn`: joystick, área de olhar, botões e indicadores.
 - `scripts/interactions/interactable.gd`: portas, itens, gaveta, documento, gerador, distração, saída e armários.
-- Autoloads: Game (estado/saves), NoiseBus (eventos/oclusão), Mic (captura/RMS), Sound (áudio espacial).
+- Autoloads: Game (estado/saves), Cloud (login/Firestore), NoiseBus (eventos/oclusão), Mic (captura/RMS), Sound (áudio espacial).
 - `assets/audio`: 17 WAVs originais, incluindo escuta, passos da criatura, vento e gotejamento. `assets/icon.svg`: ícone original.
 - `tests`: testes de integração e captura visual. `docs`: projeto, arquitetura e plano de validação Android.
 
@@ -50,7 +50,7 @@ Exportação local não publica em lojas. Veja os presets e as instruções Andr
 
 ## Teste pelo navegador e download
 
-Publicado para testes em [Cloudflare Pages](https://run-away-ecos.pages.dev/) e [Firebase Hosting](https://run-away-f63e4.web.app/). Ambos oferecem jogo no navegador e [download do APK](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.2.0-art/ecos-android.apk). Consulte `docs/HOSPEDAGEM.md` para comandos.
+Publicado para testes em [Cloudflare Pages](https://run-away-ecos.pages.dev/) com [download do APK 0.3](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.3.0-cloud/ecos-android.apk). Firebase fornece login e progresso por conta; o endereço antigo do Firebase redireciona ao Cloudflare. Abra **CONTA / PROGRESSO** para criar uma conta. [Dados salvos e funcionamento](docs/CONTAS_E_PROGRESSO.md).
 
 O preset Web usa renderer Compatibility e áudio Stream para suportar processamento de captura. Não equivale ao renderer Mobile do APK. A versão Web requer WebGL 2, WebAssembly e HTTPS para o microfone. O APK de teste é distribuído nas Releases do repositório, fora do histórico Git.
 
