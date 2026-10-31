@@ -1,0 +1,19 @@
+ESCUTADOR — MODELO 3D ORIGINAL PARA GODOT 4
+
+Arquivo: Escutador_Criatura_Original.glb
+Formato: glTF 2.0 binário (.glb)
+Orientação: frente -Z, cima +Y; altura aproximada 3,5 metros.
+
+IMPORTANTE: É uma base tridimensional procedural de horror, com malhas reais e cores de vértice, NÃO um personagem final com rig, animações, UVs detalhadas ou texturas PBR. Não afirmar que está pronto para produção.
+
+INSTRUÇÕES AO CODEX:
+1. Inspecione o projeto Godot 4 e faça backup da cena atual da criatura.
+2. Importe o GLB como modelo visual; mantenha a IA, sensores, navegação, colisões, sons e estados existentes.
+3. Ajuste escala, orientação e ponto de origem; crie colisão simplificada e teste a câmera FPS.
+4. Para qualidade final adulta: refine a topologia no Blender, una malhas organicamente, esculpa musculatura e pele, faça retopologia, UV unwrap e texturas PBR (albedo, normal, roughness, AO).
+5. Crie armature e skinning com ossos de quadril, coluna, pescoço, mandíbula, ombros, cotovelos, punhos, dedos, pernas e estruturas auditivas.
+6. Implemente animações idle, patrulha, escuta, investigação, corrida, ataque e capturas variadas; integre via AnimationTree.
+7. Substitua a aparência provisória somente após validar modelo, rig, colisões e desempenho Android.
+8. Não confunda este modelo com a criatura alada do céu: este é o monstro terrestre O Escutador.
+
+O arquivo gerar_escutador.py permite regenerar o modelo, requer numpy e trimesh.

@@ -30,7 +30,11 @@ func run():
 	capture._process(capture.selected.duration*.4)
 	for i in 4: await get_tree().process_frame
 	await RenderingServer.frame_post_draw
-	get_viewport().get_texture().get_image().save_png("res://docs/review/performance/capture_closeup.png")
+	var args := OS.get_cmdline_user_args()
+	var output := "res://docs/review/performance/capture_closeup.png"
+	var option := args.find("--output")
+	if option >= 0 and option+1 < args.size(): output = args[option+1]
+	get_viewport().get_texture().get_image().save_png(output)
 	capture._release()
 	main.to_menu()
 	main.free()

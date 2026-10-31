@@ -1,0 +1,141 @@
+{
+  "input_sha256": "31cd026684522188cee228d5298e757d785513e3478317c6b8a96ddb26dc9694",
+  "input_triangles": 21684,
+  "input_meshes": 130,
+  "triangles": 28068,
+  "triangles_low": 12348,
+  "bones": 29,
+  "clips": [
+    {
+      "name": "idle",
+      "duration": 3.6,
+      "loop": true
+    },
+    {
+      "name": "breathe",
+      "duration": 4.1,
+      "loop": true
+    },
+    {
+      "name": "walk",
+      "duration": 1.0,
+      "loop": true
+    },
+    {
+      "name": "patrol",
+      "duration": 1.0,
+      "loop": true
+    },
+    {
+      "name": "listen",
+      "duration": 1.6,
+      "loop": false
+    },
+    {
+      "name": "investigate",
+      "duration": 1.0,
+      "loop": true
+    },
+    {
+      "name": "search",
+      "duration": 1.0,
+      "loop": true
+    },
+    {
+      "name": "run",
+      "duration": 0.5,
+      "loop": true
+    },
+    {
+      "name": "chase",
+      "duration": 0.5,
+      "loop": true
+    },
+    {
+      "name": "attack",
+      "duration": 0.75,
+      "loop": false
+    },
+    {
+      "name": "capture",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "return",
+      "duration": 1.0,
+      "loop": true
+    },
+    {
+      "name": "head_tilt",
+      "duration": 2.1,
+      "loop": false
+    },
+    {
+      "name": "hide_search",
+      "duration": 2.6,
+      "loop": true
+    },
+    {
+      "name": "lost",
+      "duration": 2.8,
+      "loop": true
+    },
+    {
+      "name": "capture_front",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_side",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_rear",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_hide",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_corridor",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_chase",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_silent",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_dark",
+      "duration": 1.25,
+      "loop": false
+    }
+  ],
+  "texture_size": 1024,
+  "texture_size_low": 512,
+  "materials": 3,
+  "scale_from_input": 0.74,
+  "source_blend": "assets/source/received_escutador/escutador_refined.blend",
+  "limitations": [
+    "Procedural anatomy refinement, not a final production sculpt",
+    "Decimated remesh, no manually authored animation edge loops",
+    "Authored keyframes and analytic leg IK, no motion capture",
+    "Generated albedo; procedural micro normals and roughness, no scanned or high-poly-baked skin",
+    "Real Android FPS, thermals, microphone and touch not measured"
+  ],
+  "nominal_stance_speed_mps": {
+    "patrol": 1.533333,
+    "chase": 3.333333
+  }
+}
