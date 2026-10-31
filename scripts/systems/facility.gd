@@ -11,6 +11,10 @@ var floor_material: StandardMaterial3D
 var metal: StandardMaterial3D
 var interact_script = preload("res://scripts/interactions/interactable.gd")
 var nav_ready := false
+var events: Node
+var nav_update_pending := false
+var nav_rebuilds := 0
+var nav_gates: Dictionary = {}
 
 func _ready() -> void:
 	HorrorArt.set_quality(int(Game.settings.quality))
@@ -36,6 +40,9 @@ func _ready() -> void:
 	for z in range(0, 11): cells[Vector2i(0, z)] = "CORREDOR"
 	for entry in [[-1, 0, "ENFERMARIA"], [-2, 0, "ENFERMARIA"], [1, 2, "MANUTENÇÃO"], [2, 2, "MANUTENÇÃO"], [-1, 4, "DEPÓSITO"], [-2, 4, "DEPÓSITO"], [1, 6, "SEGURANÇA"], [2, 6, "SEGURANÇA"], [-1, 8, "ENERGIA"], [-2, 8, "ENERGIA"]]:
 		cells[Vector2i(entry[0], entry[1])] = entry[2]
+	# A slower industrial loop connects maintenance, workshop and security.
+	for z in range(2, 7): cells[Vector2i(3, z)] = "GALERIA LATERAL"
+	for x in [1, 2]: cells[Vector2i(x, 4)] = "OFICINA"
 	for cell in cells: _tile(cell)
 	_environment()
 	_props()
@@ -45,6 +52,16 @@ func _ready() -> void:
 	region.bake_navigation_mesh(false)
 	nav_ready = true
 	_doors()
+	_expansion_objects()
+	_sync_accessibility()
+	Game.updated.connect(_sync_accessibility)
+	_search_points()
+	events = Node.new()
+	events.set_script(preload("res://scripts/world/events.gd"))
+	add_child(events)
+	var metrics := Node.new()
+	metrics.set_script(preload("res://scripts/world/metrics.gd"))
+	add_child(metrics)
 	var art := Node3D.new()
 	art.set_script(preload("res://scripts/systems/facility_art.gd"))
 	add_child(art)
@@ -207,15 +224,15 @@ func interaction(kind: String, id: String, title: String, pos: Vector3, size: Ve
 
 func _items() -> void:
 	interaction("pickup", "lanterna", "Lanterna", Vector3(-7.8, 0.85, 0.8), Vector3(0.45, 0.22, 0.22), Color(0.65, 0.85, 0.62))
-	interaction("pickup", "fusivel", "Fusível", Vector3(7.7, 0.85, -9), Vector3(0.18, 0.3, 0.18), Color(0.95, 0.59, 0.22))
+	interaction("pickup", "fusivel", "Fusível", Vector3(7.7 if Game.world.variant == 0 else 6.6, 0.85, -9), Vector3(0.18, 0.3, 0.18), Color(0.95, 0.59, 0.22))
 	interaction("pickup", "cartao", "Cartão de segurança", Vector3(7.8, 0.85, -25), Vector3(0.32, 0.07, 0.24), Color(0.35, 0.78, 0.85))
 	interaction("generator", "generator", "Instalar fusível / ligar gerador", Vector3(-8, 1.0, -32), Vector3(1.3, 2, 0.8), Color(0.3, 0.35, 0.2))
 	interaction("exit", "exit", "Usar cartão / escapar", Vector3(0, 1.3, -41.7), Vector3(1.8, 2.6, 0.2), Color(0.18, 0.37, 0.3))
 	for pos in [Vector3(-5, 1, 1.2), Vector3(-5, 1, -15), Vector3(5, 1, -7), Vector3(-5, 1, -31)]:
-		var locker := interaction("hide", "", "Esconder-se no armário", pos, Vector3(1.1, 2, 1.0), Color(0.12, 0.19, 0.21))
+		var locker := interaction("hide", "locker_%d_%d" % [int(pos.x), int(pos.z)], "Esconder-se no armário", pos, Vector3(1.1, 2, 1.0), Color(0.12, 0.19, 0.21))
 		locker.rotation.y = PI / 2 if pos.x < 0 else -PI / 2
 	var document := interaction("document", "note", "Ler anotação", Vector3(-8.5, 1, -1.7), Vector3(0.6, 0.6, 0.08), Color(0.65, 0.59, 0.4))
-	document.message = "ELE ESCUTA. Fusível: manutenção. Gerador: energia. Cartão: segurança.\nUse os armários, mas não grite. Fones de ouvido são recomendados."
+	document.message = "ELE ESCUTA. Fusível: manutenção → painel e gerador: energia → cartão: segurança → saída.\nGaleria lateral conecta manutenção e segurança. Chave da oficina no depósito abre o atalho central. Q arremessa peças. Rádio e alarme atraem para sua fonte real."
 	interaction("drawer", "drawer", "Abrir gaveta", Vector3(8, 0.4, -7), Vector3(1.3, 0.6, 0.65), Color(0.25, 0.2, 0.14))
 	interaction("object", "can", "Derrubar lata / distrair", Vector3(-4, 0.7, -17.2), Vector3(0.25, 0.4, 0.25), Color(0.5, 0.3, 0.2))
 
@@ -232,13 +249,75 @@ func _quality() -> void:
 func _process(delta: float) -> void:
 	if not Game.playing: return
 	age += delta
-	if lights.size() > 2:
-		lights[2].light_energy = 1.15 * (0.7 if fmod(age, 17.0) > 16.6 else 1.0)
-	if not scare_done and is_instance_valid(Game.player) and Game.player.global_position.z < -12:
-		scare_done = true
-		Sound.at("metal", Vector3(-5, 1, -16), -10 - (1 - Game.settings.scares) * 22)
-		NoiseBus.emit_noise(self, 0.5, "evento_ambiental", 20)
-		message.emit("Um impacto vem do depósito. Algo se move no corredor.")
+	for light in lights:
+		light.light_energy = (1.15 if Game.power else (0.12 if Game.world.get("blackout", false) else 0.55))
+	if lights.size() > 2 and fmod(age, 17.0) > 16.8: lights[2].light_energy *= 0.75
+
+func find_interaction(id: String) -> Node3D:
+	for child in get_children():
+		if child.get("item_id") == id: return child
+	return null
+
+func request_navigation_update() -> void:
+	if nav_update_pending: return
+	nav_update_pending = true
+	_rebuild_navigation.call_deferred()
+
+func _rebuild_navigation() -> void:
+	await get_tree().process_frame
+	region.bake_navigation_mesh(false)
+	nav_rebuilds += 1
+	nav_update_pending = false
+
+func _sync_accessibility() -> void:
+	var changed := false
+	for door in get_tree().get_nodes_in_group("doors"):
+		if not is_ancestor_of(door): continue
+		var blocked: bool = not door.open and not door._door_unlocked()
+		if blocked and not nav_gates.has(door.item_id):
+			var gate := box(door.position, Vector3(0.15, 2.6, 1.8), metal)
+			gate.visible = false
+			nav_gates[door.item_id] = gate
+			changed = true
+		elif not blocked and nav_gates.has(door.item_id):
+			nav_gates[door.item_id].queue_free()
+			nav_gates.erase(door.item_id)
+			changed = true
+	if changed: request_navigation_update()
+
+func _search_points() -> void:
+	for cell in cells:
+		var point := Marker3D.new()
+		point.position = Vector3(cell.x * 4, 0.1, -cell.y * 4)
+		add_child(point)
+		point.add_to_group("search_points")
+
+func _expansion_objects() -> void:
+	interaction("fuse_panel", "fuse_panel", "Instalar fusível", Vector3(-5.3, 1.4, -33.7), Vector3(0.7, 0.9, 0.2), Color(0.25, 0.3, 0.2))
+	_label("PAINEL / FUSÍVEL", Vector3(-5.3, 2.2, -33.7), 0, 22)
+	interaction("radio", "radio", "Ligar rádio", Vector3(12, 0.85, -12), Vector3(0.5, 0.4, 0.25), Color(0.3, 0.25, 0.2))
+	interaction("alarm", "alarm", "Ligar alarme", Vector3(13.7, 1.4, -22), Vector3(0.35, 0.4, 0.25), Color(0.7, 0.2, 0.12))
+	box(Vector3(12, 0.35, -12), Vector3(0.8, 0.7, 0.55), metal)
+	for z in [-8, -16, -24]:
+		var light := OmniLight3D.new()
+		light.position = Vector3(12, 2.6, z)
+		light.omni_range = 5
+		light.light_color = Color("ad9565")
+		light.shadow_enabled = false
+		add_child(light)
+		lights.append(light)
+	interaction("pickup", "chave_oficina", "Chave da oficina", Vector3(-7.5, 0.9, -14.8), Vector3(0.22, 0.12, 0.12), Color(0.8, 0.6, 0.2))
+	var door := interaction("door", "workshop", "Destrancar oficina", Vector3(2, 1.3, -16), Vector3(0.15, 2.6, 1.8), Color(0.3, 0.25, 0.2))
+	door.add_to_group("doors")
+	# Gate only the short central connector; the long loop remains usable without a key.
+	_label("OFICINA / ROTA LATERAL", Vector3(10.15, 2.4, -16), PI / 2, 24)
+	_label("MANUTENÇÃO ←    SEGURANÇA →", Vector3(13.85, 2.1, -16), -PI / 2, 22)
+	var profile := Game.difficulty_profile()
+	for index in profile.throwable_supply:
+		var pos := Vector3(6 + (index % 2) * 1.2, 0.85, -8 - int(index / 2) * 4)
+		interaction("throw_pickup", "metal_" + str(index), "Coletar peça metálica", pos, Vector3(0.2, 0.18, 0.2), Color(0.4, 0.3, 0.2))
+	var bed := interaction("hide", "under_table", "Esconder-se sob a bancada", Vector3(11.6, 0.5, -18), Vector3(1.8, 1.0, 0.9), Color(0.2, 0.2, 0.18))
+	bed.visual_protection = 0.55
 
 func _annex_geometry() -> void:
 	# Connected additions leave all original objectives/rooms and chase widths intact.
@@ -289,6 +368,12 @@ func _decorate_interaction(node: StaticBody3D) -> void:
 				mesh.material_override = rust
 				_decor_box(mesh, Vector3(0, 0.15, 0), Vector3(0.08, 0.014, 0.08), HorrorArt.solid(Color("b19a64"), 0.2))
 		"hide":
+			if node.item_id == "under_table":
+				mesh.mesh = null
+				_decor_box(mesh, Vector3(0, 0.5, 0), Vector3(1.8, 0.1, 0.9), rust)
+				for x in [-0.8, 0.8]: _decor_box(mesh, Vector3(x, 0, 0), Vector3(0.07, 1.0, 0.8), rust)
+				HorrorArt.merge_static(mesh, mesh)
+				return
 			# Opaque sides + real gaps in the louvers let the player watch the corridor.
 			mesh.mesh = null
 			for x in [-0.54, 0.54]: _decor_box(mesh, Vector3(x, 0, 0), Vector3(0.04, 2, 1), rust)

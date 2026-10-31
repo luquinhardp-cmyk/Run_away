@@ -15,6 +15,7 @@ var step_clock := 0.0
 var head_clock := 0.0
 var lamp_on := false
 var prompt := ""
+var throw_selected := true
 
 func _ready() -> void:
 	Game.player = self
@@ -55,6 +56,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("interact"): interact()
 	if event.is_action_pressed("flashlight"): toggle_lamp()
 	if event.is_action_pressed("crouch"): toggle_crouch()
+	if event.is_action_pressed("throw"): throw_object()
 	if event is InputEventMouseButton and event.pressed: Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func look(relative: Vector2) -> void:
@@ -115,10 +117,27 @@ func _detect_interaction() -> void:
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
 	if not hit.is_empty() and hit.collider.has_method("interact"):
 		focus = hit.collider
-		prompt = "E / " + focus.get_prompt()
+		if start.distance_to(hit.position) <= focus.interaction_distance: prompt = "E / " + focus.get_prompt()
+		else: focus = null
 
 func interact() -> void:
 	if hidden:
+		var query := PhysicsShapeQueryParameters3D.new()
+		query.shape = shape.shape
+		query.collision_mask = 1 | 4
+		query.exclude = [get_rid()]
+		var candidates: Array[Vector3] = [exit_position]
+		if is_instance_valid(hide_spot):
+			for side in [-1, 1]: candidates.append(hide_spot.approach_position() + hide_spot.global_basis.x * side * 1.0 + Vector3.UP * 0.1)
+		var free_exit := false
+		for point in candidates:
+			query.transform = Transform3D(Basis.IDENTITY, point + Vector3.UP * shape.position.y)
+			if get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty():
+				exit_position = point
+				free_exit = true
+				break
+		if not free_exit: return
+		if is_instance_valid(hide_spot): hide_spot.occupant = null
 		hidden = false
 		global_position = exit_position
 		rotation.y = exit_look.x
@@ -128,6 +147,9 @@ func interact() -> void:
 	elif is_instance_valid(focus): focus.interact(self)
 
 func enter_hide(spot: Node3D) -> void:
+	if spot.has_occupant(): return
+	if is_instance_valid(Game.enemy): Game.enemy.witness_hide(spot)
+	spot.occupant = self
 	exit_position = global_position
 	exit_look = Vector2(rotation.y, pitch)
 	hide_spot = spot
@@ -135,9 +157,26 @@ func enter_hide(spot: Node3D) -> void:
 	velocity = Vector3.ZERO
 	# Locker origins are at body centre; camera remains at human eye height,
 	# behind the real louver gaps instead of above the cabinet.
-	global_position = spot.global_position - Vector3.UP + spot.global_basis.z * 0.10
+	global_position = spot.global_position - Vector3.UP * spot.collider.shape.size.y * 0.5 + spot.global_basis.z * 0.10
 	rotation.y = spot.rotation.y + PI
 	pitch = 0.0
 	camera.rotation.x = 0.0
-	camera.position.y = 1.5
+	camera.position.y = 0.65 if spot.item_id == "under_table" else 1.5
 	NoiseBus.emit_noise(self, 0.15, "armario", 6.0)
+
+func throw_object() -> Node3D:
+	if not Game.playing or Game.paused or hidden or not throw_selected or int(Game.world.get("throwables", 0)) <= 0: return null
+	if get_tree().get_nodes_in_group("throwables").size() >= 8: return null
+	var start := camera.global_position
+	var direction := -camera.global_basis.z
+	var query := PhysicsRayQueryParameters3D.create(start, start + direction * 0.65, 1, [get_rid()])
+	if not get_world_3d().direct_space_state.intersect_ray(query).is_empty(): return null
+	var object: RigidBody3D = preload("res://scenes/interactables/throwable.tscn").instantiate()
+	get_parent().add_child(object)
+	object.global_position = start + direction * 0.45
+	object.add_collision_exception_with(self)
+	object.linear_velocity = direction * object.throw_force + Vector3.UP * 1.8
+	Game.world.throwables = int(Game.world.throwables) - 1
+	if Game.record_results: Game.save_checkpoint()
+	Game.updated.emit()
+	return object

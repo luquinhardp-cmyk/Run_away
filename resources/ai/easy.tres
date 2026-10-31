@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CreatureProfile" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/ai/creature_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+label = "Fácil"
+patrol_speed = 1.35
+investigate_speed = 1.6
+chase_speed = 3.05
+reaction_time = 0.8
+search_duration = 10.0
+hearing_sensitivity = 0.8
+visual_sensitivity = 0.8
+lost_after = 1.8
+hide_warning = 3.0
+event_interval = 60.0
+throwable_supply = 7

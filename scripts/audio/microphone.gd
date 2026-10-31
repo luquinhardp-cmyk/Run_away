@@ -16,6 +16,11 @@ var sustained := 0.0
 var silent_time := 0.0
 var bus := -1
 var focused := true
+var stable_time := 0.0
+var previous_db := -80.0
+var gate_open := false
+var last_rms_usec := 0
+var output_guard := 0.0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -77,6 +82,8 @@ func disable() -> void:
 	suspend()
 
 func suspend() -> void:
+	gate_open = false
+	stable_time = 0
 	if is_instance_valid(stream): stream.stop()
 	if capture: capture.clear_buffer()
 	active = false
@@ -107,8 +114,24 @@ func classify(db: float) -> int:
 	if relative < 26.0: return 2
 	return 3
 
+func update_gate(db: float, delta: float) -> int:
+	stable_time = stable_time + delta if absf(db - previous_db) < 1.2 else 0.0
+	previous_db = db
+	# Slowly absorb steady fan noise; changing/speech-like peaks remain salient.
+	if stable_time > 3.0 or db < floor_db + 5:
+		floor_db = clampf(lerpf(floor_db, db, minf(1, delta * 0.12)), -72, -16)
+	var relative := db - floor_db + linear_to_db(float(Game.settings.mic_sensitivity))
+	if gate_open and relative < 6: gate_open = false
+	elif not gate_open and relative >= 9: gate_open = true
+	if not gate_open: return 0
+	var result := maxi(1, classify(db))
+	if level >= 2 and relative > 14: result = maxi(2, result)
+	if level >= 3 and relative > 24: result = 3
+	return result
+
 func _process(delta: float) -> void:
 	if not active: return
+	output_guard = maxf(0, output_guard - delta)
 	cooldown = maxf(0, cooldown - delta)
 	var count := capture.get_frames_available()
 	if count < 256:
@@ -117,7 +140,9 @@ func _process(delta: float) -> void:
 			disable()
 			status = "SEM SINAL · modo sem microfone"
 		return
+	var started := Time.get_ticks_usec()
 	var db := rms_db(capture.get_buffer(count))
+	last_rms_usec = Time.get_ticks_usec() - started
 	volume_db = lerpf(volume_db, db, 1.0 - exp(-delta * 14.0))
 	if db <= -79.0: silent_time += delta
 	else: silent_time = 0.0
@@ -135,8 +160,8 @@ func _process(delta: float) -> void:
 			status = "MIC ATIVO · piso %.0f dB" % floor_db
 			calibration_samples.clear()
 		return
-	level = classify(volume_db)
+	level = update_gate(volume_db, delta)
 	sustained = sustained + delta if level > 0 else maxf(0, sustained - delta * 2)
-	if level > 0 and sustained >= 0.12 and cooldown <= 0 and is_instance_valid(Game.player):
+	if level > 0 and sustained >= 0.12 and cooldown <= 0 and (output_guard <= 0 or level == 3) and is_instance_valid(Game.player):
 		NoiseBus.emit_noise(Game.player, [0.0, 0.23, 0.62, 1.0][level], "microfone", [0.0, 7.0, 17.0, 30.0][level], 0.5)
 		cooldown = 0.55

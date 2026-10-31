@@ -15,9 +15,20 @@ var elapsed_ms := 0
 var last_score := 0
 var run_id := ""
 var record_results := true
+var testing := false
 var history: Dictionary = {}
 var _tick := 0
 var _autosave := 0.0
+var world: Dictionary = {}
+var objectives := HorrorObjectives.new()
+
+func difficulty_profile() -> CreatureProfile:
+	return load("res://resources/ai/" + ["easy", "normal", "hard"][clampi(int(world.get("difficulty", settings.get("difficulty", 1))), 0, 2)] + ".tres")
+
+func new_world(seed_value: int) -> Dictionary:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value
+	return {"seed": seed_value, "variant": rng.randi_range(0, 1), "difficulty": int(settings.get("difficulty", 1)), "unlocks": {}, "events": {}, "fuse_installed": false, "generator_started": false, "blackout": false, "throwables": 0, "collected_props": [], "escaped": false}
 
 func _process(delta: float) -> void:
 	update_clock()
@@ -44,7 +55,7 @@ func select_profile(value: String) -> void:
 	history = {}
 	if FileAccess.file_exists(checkpoint_path()):
 		var data = JSON.parse_string(FileAccess.get_file_as_string(checkpoint_path()))
-		if data is Dictionary and data.get("version") == 1: checkpoint = data
+		if data is Dictionary and data.get("version") in [1, 2]: checkpoint = data
 	if FileAccess.file_exists(history_path()):
 		var data = JSON.parse_string(FileAccess.get_file_as_string(history_path()))
 		if data is Dictionary: history = data
@@ -78,24 +89,23 @@ func local_stats() -> Dictionary:
 	return result
 var objective: String:
 	get:
-		if not inventory.has("lanterna"): return "01 / Encontre a lanterna na enfermaria."
-		if not inventory.has("fusivel"): return "02 / Procure um fusível na manutenção."
-		if not power: return "03 / Restaure a energia na sala de energia."
-		if not inventory.has("cartao"): return "04 / Pegue o cartão na segurança."
-		return "05 / Abra a saída no fim do corredor."
+		return objectives.current_text()
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	settings.merge({"difficulty": 1, "seed": 0, "metrics": false})
 	select_profile("")
 	var config := ConfigFile.new()
 	if config.load("user://settings.cfg") == OK:
 		for key in settings: settings[key] = config.get_value("settings", key, settings[key])
 	if FileAccess.file_exists("user://checkpoint.json"):
 		var data = JSON.parse_string(FileAccess.get_file_as_string("user://checkpoint.json"))
-		if data is Dictionary and data.get("version") == 1: checkpoint = data
-	for action in ["forward", "back", "left", "right", "run", "crouch", "interact", "flashlight", "pause", "inventory"]:
+		if data is Dictionary and data.get("version") in [1, 2]: checkpoint = data
+	settings["difficulty"] = config.get_value("settings", "difficulty", 1)
+	settings["seed"] = config.get_value("settings", "seed", 0)
+	for action in ["forward", "back", "left", "right", "run", "crouch", "interact", "flashlight", "pause", "inventory", "throw"]:
 		InputMap.add_action(action)
-	var keys := {"forward": KEY_W, "back": KEY_S, "left": KEY_A, "right": KEY_D, "run": KEY_SHIFT, "crouch": KEY_C, "interact": KEY_E, "flashlight": KEY_F, "pause": KEY_ESCAPE, "inventory": KEY_TAB}
+	var keys := {"forward": KEY_W, "back": KEY_S, "left": KEY_A, "right": KEY_D, "run": KEY_SHIFT, "crouch": KEY_C, "interact": KEY_E, "flashlight": KEY_F, "pause": KEY_ESCAPE, "inventory": KEY_TAB, "throw": KEY_Q}
 	for action in keys:
 		var event := InputEventKey.new()
 		event.physical_keycode = keys[action]
@@ -109,10 +119,18 @@ func begin(resume: bool = false) -> void:
 	inventory.clear()
 	doors.clear()
 	power = false
+	var seed_value := int(settings.get("seed", 0))
+	if seed_value == 0: seed_value = randi_range(1, 2147483647)
+	world = new_world(seed_value)
 	if resume and not checkpoint.is_empty():
 		for item in checkpoint.get("items", []): inventory.append(str(item))
 		power = checkpoint.get("power", false)
 		doors = checkpoint.get("doors", {}).duplicate()
+		world = checkpoint.get("world", world).duplicate(true)
+		# Migrate original checkpoints without resetting already restored power.
+		if power:
+			world.fuse_installed = true
+			world.generator_started = true
 	playing = true
 	paused = false
 	get_tree().paused = false
@@ -126,7 +144,7 @@ func collect(item: String) -> void:
 func save_checkpoint() -> void:
 	# Always resume in the safe infirmary; inventory and mechanisms persist.
 	update_clock()
-	checkpoint = {"version": 1, "items": inventory.duplicate(), "power": power, "doors": doors.duplicate(true), "elapsed_ms": elapsed_ms}
+	checkpoint = {"version": 2, "items": inventory.duplicate(), "power": power, "doors": doors.duplicate(true), "elapsed_ms": elapsed_ms, "world": world.duplicate(true)}
 	write_json(checkpoint_path(), checkpoint)
 	if record_results: Cloud.queue_checkpoint(checkpoint)
 	updated.emit()
@@ -134,7 +152,7 @@ func save_checkpoint() -> void:
 func save_settings() -> void:
 	var config := ConfigFile.new()
 	for key in settings: config.set_value("settings", key, settings[key])
-	config.save("user://settings.cfg")
+	if not testing: config.save("user://settings.cfg")
 	AudioServer.set_bus_volume_db(0, linear_to_db(settings.master))
 	Engine.max_fps = 30 if settings.quality < 1 else 60
 	updated.emit()
@@ -142,9 +160,11 @@ func save_settings() -> void:
 func finish(won: bool) -> void:
 	if not playing: return
 	update_clock()
-	last_score = score_for(inventory, power, won)
+	var restored: bool = power or world.get("generator_started", false)
+	last_score = score_for(inventory, restored, won)
+	world.escaped = won
 	if record_results:
-		var run := {"id": run_id, "won": won, "elapsed_ms": elapsed_ms, "score": last_score, "items": inventory.duplicate(), "power": power}
+		var run := {"id": run_id, "won": won, "elapsed_ms": elapsed_ms, "score": last_score, "items": inventory.duplicate(), "power": restored}
 		history[run_id] = run
 		write_json(history_path(), history)
 		Cloud.queue_run(run)

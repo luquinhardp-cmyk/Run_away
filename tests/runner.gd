@@ -26,6 +26,7 @@ func _ready() -> void:
 
 func _run() -> void:
 	Game.record_results = false
+	Game.testing = true
 	var checkpoint_backup := Game.checkpoint.duplicate(true)
 	var saved_exists := FileAccess.file_exists("user://checkpoint.json")
 	var saved_content := FileAccess.get_file_as_string("user://checkpoint.json") if saved_exists else ""
@@ -40,7 +41,7 @@ func _run() -> void:
 	var enemy = Game.enemy
 	enemy.set_physics_process(false)
 	check(Game.playing and is_instance_valid(player) and is_instance_valid(enemy), "cenas jogador / criatura / fase conectadas")
-	check(main.level.cells.size() == 21, "planta: corredor e cinco salas duplas")
+	check(main.level.cells.size() == 28, "planta original preservada e circuito lateral conectado")
 	check(main.level.nav_ready, "navigation mesh construída")
 	var path := NavigationServer3D.map_get_path(enemy.agent.get_navigation_map(), Vector3(-7, 0.1, 0), Vector3(0, 0.1, -39), true)
 	check(path.size() > 2, "caminho navegável entre enfermaria e saída")
@@ -105,6 +106,7 @@ func _run() -> void:
 	generator.interact(player)
 	check(not Game.power, "gerador exige fusível")
 	find_item("fusivel").interact(player)
+	find_item("fuse_panel").interact(player)
 	generator.interact(player)
 	check(Game.power, "fusível restaura energia")
 	check(FileAccess.file_exists("user://checkpoint.json"), "checkpoint persistido")
@@ -176,7 +178,7 @@ func _run() -> void:
 	enemy.timer = 3
 	enemy._physics_process(0.02)
 	check(enemy.state == enemy.State.SEARCH, "perda de alvo leva à busca")
-	enemy.timer = 7
+	enemy.timer = enemy.profile.search_duration + 1
 	enemy._physics_process(0.02)
 	check(enemy.state == enemy.State.RETURN, "busca expira e retorna")
 	# Real art assets, skeletal deformation and additional navigation routes.
@@ -235,6 +237,10 @@ func _run() -> void:
 	Game.enemy.set_physics_process(false)
 	Game.enemy.ready_navigation = true
 	Game.enemy.age = 10
+	Game.player.global_position = Vector3(0, 0.1, -20)
+	Game.enemy.global_position = Vector3(0, 0.1, -21)
+	Game.enemy.rotation.y = PI
+	await frames()
 	Game.enemy.transition(Game.enemy.State.ATTACK)
 	Game.enemy.timer = 1
 	Game.enemy._physics_process(0.01)

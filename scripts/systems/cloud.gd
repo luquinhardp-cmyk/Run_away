@@ -46,7 +46,10 @@ func _request(method: HTTPClient.Method, url: String, data: Variant = null, auth
 		return {"ok": false, "code": 0, "body": {}}
 	var reply: Array = await request.request_completed
 	request.queue_free()
-	var body = JSON.parse_string(reply[3].get_string_from_utf8())
+	var raw: String = reply[3].get_string_from_utf8().strip_edges()
+	var body = JSON.parse_string(raw) if raw.begins_with("{") else {}
+	if Game.testing and not raw.begins_with("{"):
+		print("HTTP TEST unexpected response: status=", reply[1], " result=", reply[0], " bytes=", reply[3].size())
 	return {"ok": reply[0] == HTTPRequest.RESULT_SUCCESS and reply[1] >= 200 and reply[1] < 300, "code": reply[1], "body": body if body is Dictionary else {}}
 
 func _auth_url(action: String) -> String:

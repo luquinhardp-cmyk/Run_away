@@ -15,6 +15,7 @@ var toast_time := 0.0
 var touch_buttons: Array[Button] = []
 var inventory_open := false
 var actions: Array[Button] = []
+var throw_button: Button
 
 func _ready() -> void:
 	root = Control.new()
@@ -72,6 +73,8 @@ func _ready() -> void:
 	button("INTERAGIR", Vector2(-146, -188), func(): Game.player.interact())
 	button("LANTERNA", Vector2(-278, -188), func(): Game.player.toggle_lamp())
 	button("MOCHILA", Vector2(-410, -98), toggle_inventory)
+	button("ARREMESSAR", Vector2(-410, -188), func(): Game.player.throw_object())
+	throw_button = actions[-1]
 	var pause := Button.new()
 	pause.text = "Ⅱ  PAUSA"
 	pause.set_anchors_preset(Control.PRESET_TOP_RIGHT)
@@ -171,7 +174,8 @@ func show_message(text: String) -> void:
 
 func toggle_inventory() -> void:
 	inventory_open = not inventory_open
-	show_message("MOCHILA: " + (", ".join(Game.inventory) if not Game.inventory.is_empty() else "vazia"))
+	Game.player.throw_selected = int(Game.world.get("throwables", 0)) > 0
+	show_message("MOCHILA: " + (", ".join(Game.inventory) if not Game.inventory.is_empty() else "vazia") + "\nPeças metálicas selecionadas: %d · Q / ARREMESSAR\n%s" % [int(Game.world.get("throwables", 0)), Game.objectives.definitions[-1].caption])
 
 func _process(delta: float) -> void:
 	root.visible = Game.playing and not Game.paused
@@ -182,6 +186,7 @@ func _process(delta: float) -> void:
 		move = Vector2.ZERO
 		Game.player.touch_run = false
 	Game.player.touch_move = move
+	throw_button.visible = int(Game.world.get("throwables", 0)) > 0 and not Game.player.hidden
 	objective.text = Game.objective
 	prompt.text = Game.player.prompt
 	mic_label.text = Mic.status + ("  ▰".repeat(Mic.level) if Mic.active else " · sons do jogo ativos")

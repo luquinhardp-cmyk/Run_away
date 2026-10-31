@@ -97,7 +97,7 @@ func menu() -> void:
 	button("CONTA / PROGRESSO", account_screen)
 	menu_status = text(Cloud.status, 16)
 	if not OS.has_feature("android") and not OS.has_feature("web"): button("SAIR", func(): get_tree().quit())
-	text("Versão 0.3 • O Escutador\nRecomendado: fones de ouvido. Sustos moderados, sem flashes.", 16)
+	text("Versão 0.4 • Sobreviva ao Escutador\nRecomendado: fones de ouvido. Sustos moderados, sem flashes.", 16)
 
 func _cloud_updated() -> void:
 	if screen == "menu" and is_instance_valid(menu_status): menu_status.text = Cloud.status
@@ -242,6 +242,23 @@ func settings_screen(back: String) -> void:
 	screen = "settings"
 	clear()
 	text("CONFIGURAÇÕES", 34)
+	text("Dificuldade e seed são aplicadas à próxima nova sessão.", 17)
+	var difficulty := OptionButton.new()
+	for name in ["Fácil", "Normal", "Difícil"]: difficulty.add_item(name)
+	difficulty.selected = int(Game.settings.get("difficulty", 1))
+	difficulty.item_selected.connect(func(index: int): Game.settings.difficulty = index; Game.save_settings())
+	column.add_child(difficulty)
+	var seed_input := LineEdit.new()
+	seed_input.placeholder_text = "Seed: 0 sorteia uma partida nova"
+	seed_input.text = str(Game.settings.get("seed", 0))
+	seed_input.text_submitted.connect(func(value: String): Game.settings.seed = clampi(value.to_int(), 0, 2147483647); Game.save_settings())
+	seed_input.focus_exited.connect(func(): Game.settings.seed = clampi(seed_input.text.to_int(), 0, 2147483647); Game.save_settings())
+	column.add_child(seed_input)
+	var metrics := CheckBox.new()
+	metrics.text = "Registrar métricas locais (FPS, IA, áudio, memória)"
+	metrics.button_pressed = Game.settings.get("metrics", false)
+	metrics.toggled.connect(func(value: bool): Game.settings.metrics = value; Game.save_settings())
+	column.add_child(metrics)
 	for data in [["sensitivity", "Sensibilidade da câmera", 0.001, 0.008, 0.0002], ["fov", "Campo de visão", 65, 95, 1], ["master", "Volume geral", 0, 1, 0.05], ["effects", "Efeitos", 0, 1, 0.05], ["music", "Música", 0, 1, 0.05], ["mic_sensitivity", "Sensibilidade do microfone", 0.5, 3, 0.1], ["scares", "Intensidade dos sustos", 0, 1, 0.1], ["quality", "Qualidade: 0 baixa / 1 média / 2 alta", 0, 2, 1], ["controls", "Tamanho dos controles", 0.8, 1.3, 0.1], ["opacity", "Opacidade dos botões", 0.2, 1, 0.05], ["control_x", "Posição horizontal dos controles", -20, 100, 5], ["control_y", "Posição vertical dos controles", -80, 0, 5]]:
 		var caption := text(data[1] + " : " + str(Game.settings[data[0]]), 17)
 		var slider := HSlider.new()

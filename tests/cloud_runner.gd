@@ -21,6 +21,7 @@ func record_user() -> void:
 
 func run() -> void:
 	Game.record_results = false
+	Game.testing = true
 	var prefix := "runaway-qa-" + Crypto.new().generate_random_bytes(8).hex_encode()
 	var address := prefix + "@example.com"
 	await Cloud.authenticate(address, password, true)
@@ -32,7 +33,18 @@ func run() -> void:
 	Cloud.queue_checkpoint(checkpoint)
 	await Cloud.sync()
 	check(Cloud.pending.checkpoint.is_empty(), "checkpoint uploaded")
+	checkpoint["version"] = 2
+	checkpoint["world"] = Game.new_world(70421)
+	checkpoint.world.fuse_installed = true
+	checkpoint.world.generator_started = true
+	checkpoint.world.unlocks.workshop = true
+	checkpoint.world.events.pipe = true
+	checkpoint.items.append("chave_oficina")
+	Cloud.queue_checkpoint(checkpoint)
+	await Cloud.sync()
+	check(Cloud.pending.checkpoint.is_empty(), "v2 world checkpoint uploads without breaking v1")
 	var event := {"id": Crypto.new().generate_random_bytes(16).hex_encode(), "won": true, "elapsed_ms": 105432, "score": 1100, "items": ["lanterna", "fusivel", "cartao"], "power": true}
+	event.items.append("chave_oficina")
 	Cloud.queue_run(event)
 	await Cloud.sync()
 	check(Cloud.stats.get("totalPoints") == 1100 and Cloud.stats.get("runs") == 1 and Cloud.stats.get("bestEscapeMs") == 105432, "atomic score and best escape")

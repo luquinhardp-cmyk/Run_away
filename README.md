@@ -2,11 +2,13 @@
 
 Protótipo vertical de survival horror 3D nativo em GDScript. Projeto independente; nenhum arquivo do Desolação RPG foi alterado. Desenvolvido e testado com **Godot 4.7.2 stable**, renderer Mobile (Vulkan). A versão 0.2 inclui materiais PBR originais, ambientação rural/industrial e uma criatura 3D articulada. A arte procedural ainda está em polimento.
 
+Esta branch contém a **expansão 0.4**: percepção/memória/busca modular, arremessáveis físicos, rádio/alarme, circuito lateral, chave de atalho, painel de fusível, apagão recuperável, eventos com seed e três dificuldades. [Relatório de entrega](docs/RELATORIO_EXPANSAO.md) · [Auditoria anterior às mudanças](docs/AUDITORIA_GAMEPLAY.md). O hosting de produção 0.3 fica separado da prévia desta branch.
+
 ## Executar
 
 1. Importe `project.godot` na Godot 4.7.2 e pressione **F6 na cena main** ou **F5**.
 2. Escolha nova sessão e jogar com ou sem microfone. Com microfone, fique em silêncio por três segundos. Use fones.
-3. Lanterna na mesa da enfermaria → fusível na manutenção → gerador na energia → cartão na segurança → saída no extremo do corredor.
+3. Lanterna na mesa da enfermaria → fusível na manutenção → painel de fusível e gerador na energia → cartão na segurança → saída no extremo do corredor. A galeria lateral liga manutenção e segurança; a chave do depósito abre o atalho da oficina. Colete peças e use Q / ARREMESSAR para distrair.
 
 No workspace entregue, `Jogar.bat` usa a engine portátil em `../.tools/godot`, se presente. É possível informar outro executável na variável `GODOT_EXE`.
 

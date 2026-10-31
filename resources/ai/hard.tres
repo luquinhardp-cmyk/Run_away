@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CreatureProfile" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/ai/creature_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+label = "Difícil"
+investigate_speed = 2.1
+chase_speed = 3.5
+reaction_time = 0.4
+search_duration = 24.0
+hearing_sensitivity = 1.2
+visual_sensitivity = 1.15
+lost_after = 3.0
+hide_warning = 1.8
+event_interval = 32.0
+throwable_supply = 3

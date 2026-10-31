@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="HorrorObjective" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/objectives/objective_definition.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = "shortcut"
+caption = "Opcional / Chave da oficina: deposito. Abra a rota lateral."
+requires = PackedStringArray()
+optional = true
