@@ -29,7 +29,16 @@ Revisão gráfica gerou 14 imagens em `docs/review/horror`, incluindo salas, lei
 
 APK 0.5.0/código 5 ARM64 exportado, assinatura debug v2/v3 verificada e permissões INTERNET/RECORD_AUDIO conferidas no manifesto. Build tools usou fallback 30.0.3 por ausência da versão do Target SDK; a exportação concluiu. Nenhum dispositivo foi listado por adb.
 
-Regras Firestore publicadas apenas para compatibilidade do novo checkpoint. Contas e documentos criados pelos testes são temporários e removidos após validação. Resultados de publicação e navegador serão registrados na conclusão deste relatório.
+Regras Firestore publicadas apenas para compatibilidade do novo checkpoint. Contas e documentos criados pelos testes foram removidos após validação.
+
+## Publicação e teste web — 31/10/2026
+
+- [Jogar a prévia 0.5](https://feature-horror-visual-creatu.run-away-ecos.pages.dev/), deployment imutável [ab397448](https://ab397448.run-away-ecos.pages.dev/).
+- [Baixar APK ARM64](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.5.0-horror/ecos-android.apk), [prerelease GitHub](https://github.com/luquinhardp-cmyk/Run_away/releases/tag/v0.5.0-horror).
+- Código do pacote: `ab7528337e4adc60f420e4466f22fc9c4aff482a`. APK: 48.940.712 bytes; SHA-256 `e80ce390b6fa44079d15d150738062139a72d96bd993207809f3d003857d1c54`.
+- Chromium/Playwright abriu a publicação real, carregou WASM/PCK comprimidos, entrou na fase, pausou e criou conta pela interface. O documento protegido do jogador foi confirmado via Firebase. Zero erros de execução; conta e documentos temporários removidos. Captura do jogo web em `docs/review/horror/15_web_gameplay.png`.
+- PCK comprimido aproximadamente 24,3 MB e WASM 10,05 MB, ambos abaixo do limite por arquivo do Cloudflare. O carregador normaliza gzip residual do CDN. A primeira abertura ainda exige download grande e não serve como medição de FPS no telefone.
+- Produção em `run-away-ecos.pages.dev` foi consultada e continua em 0.3.0; esta entrega usa prévia e prerelease separadas, conforme autorização anterior de envio para testes.
 
 ## Limites e próximos testes
 
