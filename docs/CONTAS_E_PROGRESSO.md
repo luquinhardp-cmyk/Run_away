@@ -33,3 +33,5 @@ firebase deploy --only firestore:rules --project run-away-f63e4
 `tests/cloud_runner.tscn` é uma suíte **online explícita**: cria duas contas temporárias `runaway-qa-…@example.com`, testa isolamento, salvamento, reenvio, renovação, conflitos, fila persistente, pontuação e pausa. Exclui as contas ao terminar. O responsável pela execução deve limpar seus documentos de teste usando acesso administrativo, com os UIDs gravados no arquivo indicado por `RUN_AWAY_TEST_USERS`. Não executar em paralelo com o jogo. A suíte normal `tests/runner.tscn` não acessa contas nem grava resultados.
 
 Android tem permissão de Internet; a Web usa HTTPS e a mesma API REST diretamente da Godot. Nenhuma voz é enviada ao Firebase.
+
+Validação desta entrega: 69 verificações do jogo e 17 testes online passaram. As contas temporárias e seus documentos foram removidos após os testes. APK 0.3.0 ARM64 exportado e assinatura v2/v3 verificada. Isso não substitui testes em celulares físicos.
