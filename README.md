@@ -2,7 +2,7 @@
 
 Protótipo vertical de survival horror 3D nativo em GDScript. Projeto independente; nenhum arquivo do Desolação RPG foi alterado. Desenvolvido e testado com **Godot 4.7.2 stable**, renderer Mobile (Vulkan). A versão 0.2 inclui materiais PBR originais, ambientação rural/industrial e uma criatura 3D articulada. A arte procedural ainda está em polimento.
 
-Esta branch contém a **expansão 0.4**: percepção/memória/busca modular, arremessáveis físicos, rádio/alarme, circuito lateral, chave de atalho, painel de fusível, apagão recuperável, eventos com seed e três dificuldades. [Relatório de entrega](docs/RELATORIO_EXPANSAO.md) · [Auditoria anterior às mudanças](docs/AUDITORIA_GAMEPLAY.md). O hosting de produção 0.3 fica separado da prévia desta branch.
+Esta branch contém a **expansão 0.4**: percepção/memória/busca modular, arremessáveis físicos, rádio/alarme, circuito lateral, chave de atalho, painel de fusível, apagão recuperável, eventos com seed e três dificuldades. [Jogar prévia 0.4](https://feature-survival-horror-game.run-away-ecos.pages.dev/) · [APK 0.4](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.4.0-gameplay/ecos-android.apk) · [Relatório de entrega](docs/RELATORIO_EXPANSAO.md) · [Auditoria anterior às mudanças](docs/AUDITORIA_GAMEPLAY.md). O hosting de produção 0.3 fica separado da prévia desta branch.
 
 ## Executar
 

@@ -1,5 +1,7 @@
 # Contas e progresso — 0.3
 
+Atualização 0.4: o checkpoint v2 também guarda seed, dificuldade, instalação do painel, atalhos, eventos e consumo de peças. Saves v1 continuam aceitos. Para testar esse progresso entre aparelhos, use 0.4 em ambos: o cliente antigo desconhece os novos campos. Veja `OBJETIVOS_E_ENIGMAS.md` e `RELATORIO_EXPANSAO.md`.
+
 Cloudflare Pages hospeda o jogo Web: https://run-away-ecos.pages.dev/. Firebase `run-away-f63e4` fornece Authentication (e-mail/senha) e Firestore, região `southamerica-east1`. Não usa Functions nem precisa de Identity Platform pago. O Web app registrado tem configuração pública em `resources/firebase_config.json`; essa chave identifica o cliente, não concede acesso administrativo.
 
 No menu, abra **CONTA / PROGRESSO**, crie uma conta ou entre. Use a mesma conta em outro aparelho e escolha continuar. Sem login, o jogo funciona com saves locais. Senhas e tokens não são gravados em arquivo: é necessário entrar novamente ao reabrir o aplicativo. A recuperação de senha usa o e-mail da conta.

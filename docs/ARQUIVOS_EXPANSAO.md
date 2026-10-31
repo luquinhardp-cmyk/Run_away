@@ -3,6 +3,7 @@
 ## Modificados
 
 - `README.md`
+- `docs/CONTAS_E_PROGRESSO.md`
 - `export_presets.cfg`
 - `firestore.rules`
 - `hosting/prepare.py`
@@ -37,9 +38,13 @@
 - `docs/OTIMIZACAO_ANDROID.md`
 - `docs/RELATORIO_EXPANSAO.md`
 - `docs/review/expansion/01_gallery.png`
+- `docs/review/expansion/01_gallery.png.import`
 - `docs/review/expansion/02_workshop.png`
+- `docs/review/expansion/02_workshop.png.import`
 - `docs/review/expansion/03_panel.png`
+- `docs/review/expansion/03_panel.png.import`
 - `docs/review/expansion/04_touch_hud.png`
+- `docs/review/expansion/04_touch_hud.png.import`
 - `docs/review/expansion/render_metrics.json`
 - `hosting/expansion.html`
 - `resources/ai/easy.tres`
@@ -78,9 +83,12 @@
 - `scripts/world/metrics.gd`
 - `scripts/world/metrics.gd.uid`
 - `tests/expansion_review.gd`
+- `tests/expansion_review.gd.uid`
 - `tests/expansion_review.tscn`
 - `tests/expansion_runner.gd`
+- `tests/expansion_runner.gd.uid`
 - `tests/expansion_runner.tscn`
 - `tests/playthrough.gd`
+- `tests/playthrough.gd.uid`
 - `tests/playthrough.tscn`
 - `tools/generate_device_audio.py`

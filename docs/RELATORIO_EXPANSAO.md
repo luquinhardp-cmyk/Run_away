@@ -1,6 +1,6 @@
 # Entrega — expansão de sobrevivência 0.4
 
-Branch `feature/survival-horror-gameplay-expansion`, a partir de `7f08606`. Godot 4.7.2 stable. O relatório de auditoria foi escrito antes de alterar scripts; referência de 69 testes aprovada.
+Branch `feature/survival-horror-gameplay-expansion`, a partir de `7f08606`. Código dos pacotes: `5747ca2`. Godot 4.7.2 stable. O relatório de auditoria foi escrito antes de alterar scripts; referência de 69 testes aprovada.
 
 ## Sistemas entregues e reaproveitados
 
@@ -22,8 +22,9 @@ Cena de produção nova: `scenes/interactables/throwable.tscn`. Cenas de teste n
 | `tests/runner.tscn` | 69 verificações passaram |
 | `tests/expansion_runner.tscn` | 41 verificações passaram: ruídos, portas/LOS, navegação física, chave/atalho, painel, eventos/recuperação, rádio/alarme, impacto real, cap de corpos, memória/busca, armário avisado, microfone sintético e save |
 | `tests/cloud_runner.tscn` | 18 verificações online passaram, incluindo v1/v2, chave opcional sem pontos extras, isolamento entre contas, fila persistente, reenvio sem duplicação e renovação; contas/documentos temporários removidos |
-| `tests/playthrough.tscn` | Partida completa na dificuldade Fácil, seed 70421: cápsula e criatura ativas, nenhuma mudança artificial de posição/estado durante o percurso; interações pela mira; rádio, circuito lateral, painel/gerador, cartão e saída; vitória com 1.100 pontos |
+| `tests/playthrough.tscn` | Partida completa na dificuldade Fácil, seed 70421, simulação acelerada 4x: cápsula e criatura ativas, nenhuma mudança artificial de posição/estado durante o percurso; interações pela mira; rádio, circuito lateral, painel/gerador, cartão e saída; vitória com 1.100 pontos |
 | `tests/expansion_review.tscn` | Quatro capturas reais em Compatibility/Intel UHD, incluindo galeria, oficina, painel e HUD touch; imagens e métricas em `docs/review/expansion/` |
+| Prévia publicada, Chromium/WebGL 2 | Carregamento remoto completo, menu, consentimento, fase e pausa; cadastro pela UI, sincronização e documento protegido no Firestore confirmados; zero erros JavaScript/GDScript. Conta/documento temporários removidos |
 
 O percurso automatizado testa uma estratégia específica. Tentativa direta pela porta da segurança terminou em captura; a volta pela galeria permitiu escapar no Fácil. A mesma estratégia automatizada também perdeu no Normal: não é um teste de balanceamento humano aprovado para as três dificuldades. Os testes de cenários exercitam perseguição, perda visual, esconderijo e distração separadamente. O percurso inteiro não finge um teste manual em celular.
 
@@ -33,7 +34,15 @@ Snapshots de revisão: 20–151 draw calls, 1.068–27.572 primitivas, aproximad
 
 Builds isolados em `builds/expansion/`; APK usa versionCode 4, versionName 0.4.0. A autorização de publicação de testes já concedida permite uma **prévia de branch** no Cloudflare e uma nova pré-release no GitHub, preservando produção 0.3 e assets anteriores. Não implantar esta branch como branch de produção por engano. Firebase permanece como backend; apenas regras retrocompatíveis mudaram.
 
+- [Jogar a prévia 0.4](https://feature-survival-horror-game.run-away-ecos.pages.dev/)
+- [APK 0.4 ARM64](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.4.0-gameplay/ecos-android.apk): 43.179.280 bytes, assinatura v2/v3 verificada, manifest com versão e permissões INTERNET/RECORD_AUDIO conferido.
+- [Release de testes](https://github.com/luquinhardp-cmyk/Run_away/releases/tag/v0.4.0-gameplay).
+- Produção `https://run-away-ecos.pages.dev/` foi conferida e continua em 0.3.0. A prévia informa 0.4.0 em `version.json`.
+
+O Web baixa aproximadamente 34 MB na primeira abertura (WASM comprimido e pacote). Na conexão deste ambiente, arquivos grandes chegaram a apenas 50–110 KB/s; a primeira tentativa expirou enquanto os arquivos ainda baixavam. Repetida com prazo adequado, a verificação terminou com sucesso, sem substituir os assets remotos por arquivos locais.
+
 ```powershell
+New-Item -ItemType Directory -Force builds/expansion/web/play
 godot --headless --path . --export-release Web builds/expansion/web/play/index.html
 python hosting/prepare.py --output builds/expansion/web --landing hosting/expansion.html --apk-url https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.4.0-gameplay/ecos-android.apk
 godot --headless --path . --export-debug Android builds/expansion/ecos-android.apk
