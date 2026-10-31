@@ -1,0 +1,23 @@
+{
+  "preview": "https://feature-detailed-geometry-mo.run-away-ecos.pages.dev/",
+  "immutable": "https://6871a26b.run-away-ecos.pages.dev/",
+  "version": "0.8.0",
+  "runtime_commit": "d85e109d1313a84841d5a9c69acc8379db2af10c",
+  "browser": "Chromium WebGL 2, ANGLE D3D11",
+  "checks": {
+    "split_pack_loaded": true,
+    "boot_consent_gameplay_pause": true,
+    "ui_email_password_signup": true,
+    "protected_firestore_player_created": true,
+    "guest_checkpoint_imported": true,
+    "twelve_physical_props_and_drawer": true,
+    "temporary_auth_deleted": true,
+    "temporary_firestore_document_deleted": true,
+    "production_still_0_3": true
+  },
+  "runtime_errors": 0,
+  "android_physical_device": false,
+  "microphone_hardware": false,
+  "apk_bytes": 54269522,
+  "apk_sha256": "210a8d51da7f2b9c1519ba6f797afd3b43123c45e51546c540a0fad5826fac12"
+}
