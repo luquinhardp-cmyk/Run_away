@@ -1,0 +1,141 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "no-cache",
+      "cf-ray": "a5367b8778a71b2c-GRU",
+      "connection": "keep-alive",
+      "content-encoding": "br",
+      "content-type": "text/html; charset=utf-8",
+      "date": "Sat, 31 Oct 2026 23:36:33 GMT",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "permissions-policy": "microphone=(self)",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=arFGOcfhaOFWLYP7GfRu9HS508lo3KT3g0EBvmqkC8U%2BwBVEikG3JNFqrlWamKhqrs%2Fhqu0icj6Bc2HntymaZC%2BmCh4VDW9NlvAIcIEpcIuD0MY%2B%2FP5pFp3dKe49P5%2B%2Fqq7gZm%2BRHGBkKw%3D%3D\"}]}",
+      "server": "cloudflare",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff"
+    },
+    "bytes": 2180
+  },
+  {
+    "path": "/play/",
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "no-cache",
+      "cf-ray": "a5367b8bbb991b2c-GRU",
+      "connection": "keep-alive",
+      "content-encoding": "br",
+      "content-type": "text/html; charset=utf-8",
+      "date": "Sat, 31 Oct 2026 23:36:33 GMT",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "permissions-policy": "microphone=(self)",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=Gwh6xnBWkZ7QU%2F54BExEbxU7v%2F1lkhrB2YqFupF8w6fwSFF4VAOSv6eC2b4FByjV5x67SLNw8f62mB1capMW2IlZqyecXoQc%2FEO2DaV1WX62c%2BPgAa9%2FerVdKbjeqgpvRk5I3MdLrphOuQ%3D%3D\"}]}",
+      "server": "cloudflare",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff"
+    },
+    "bytes": 5803
+  },
+  {
+    "path": "/version.json",
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "no-cache",
+      "cf-ray": "a5367b8d8ce21b2c-GRU",
+      "connection": "keep-alive",
+      "content-encoding": "br",
+      "content-type": "application/json",
+      "date": "Sat, 31 Oct 2026 23:36:34 GMT",
+      "etag": "W/\"ffaac31c2482028fbcc0735973533349\"",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "permissions-policy": "microphone=(self)",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=h7hLTTgXEqVHPBWFEpbC8r%2FtFPwrxFzjcJKbWQmKXXw6qrILI02FE0kX9WUtSrPF481dvujBgnm1ZDiKgjRmd8%2FDu0THQVDKQhaGhhpnbRMrFBSY8MTiaNvwUA%2F0IN9dOb%2FfLxxWEikPdA%3D%3D\"}]}",
+      "server": "cloudflare",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff"
+    },
+    "version": {
+      "version": "0.10.0",
+      "commit": "8a81001a998c9a466bd8a41610ee0c2e36000598",
+      "renderer": "Compatibility",
+      "apk": "https://run-away-ecos.pages.dev/baixar-apk",
+      "apk_versioned": "https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.10.0-tutorial-macabre/ecos-android.apk"
+    }
+  },
+  {
+    "path": "/baixar-apk",
+    "status": 302,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "no-cache",
+      "cf-ray": "a5367b8fcea71b2c-GRU",
+      "connection": "keep-alive",
+      "content-length": "119",
+      "content-type": "text/plain;charset=UTF-8",
+      "date": "Sat, 31 Oct 2026 23:36:34 GMT",
+      "location": "https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.10.0-tutorial-macabre/ecos-android.apk",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "permissions-policy": "microphone=(self)",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=NgV9IsNh73H8SILz3S33L3XcraE5r%2B1VZ0DPrbbJLSB5IBtGo%2BkOKCznbw2OYODmP1G3l5LbZQKXK20cEbwMakOhOxoocz%2FkpiKQRu6Y%2F%2FeMFYNLQP0YkwmLqThX07VYKWkA8g29wHsRYw%3D%3D\"}]}",
+      "server": "cloudflare",
+      "x-content-type-options": "nosniff"
+    }
+  },
+  {
+    "path": "/play/index.wasm",
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "no-cache",
+      "cf-ray": "a5367b9339e9f190-GRU",
+      "connection": "close",
+      "content-encoding": "gzip",
+      "content-type": "application/wasm",
+      "date": "Sat, 31 Oct 2026 23:36:35 GMT",
+      "etag": "\"e407201a881f350e566a921556049762\"",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "permissions-policy": "microphone=(self)",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=dAbyVYSWfSU3LBdpFgFSEDyHrB3n6ri6rwmOd2B24GQy61Ms25Fh1yH%2BoJnkJ%2F4JEOLe2KGfTjpFO%2F4tqv%2FHaOVhdKWHHMtNIWtR2e9D7Sw9oDBhH9D6tbMnd1kRWmCaeZatuZIeglE2tw%3D%3D\"}]}",
+      "server": "cloudflare",
+      "x-content-type-options": "nosniff"
+    }
+  },
+  {
+    "path": "/play/index.pck.part0",
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "no-cache",
+      "cf-ray": "a5367b943a011b2c-GRU",
+      "connection": "close",
+      "content-type": "application/octet-stream",
+      "date": "Sat, 31 Oct 2026 23:36:35 GMT",
+      "etag": "\"89b32ea5c33253773ddd44cac6fb4e03\"",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "permissions-policy": "microphone=(self)",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=W%2FOSS7j0IPO7dG7R3%2BNdidnFEHHiHirmdEUS%2BGxBwsc7Hx8LLgOLI2t2N6tv8CqdLuNoYDxeLLYBl6jqxAHFbB7gvSGDO5AS8hzWStOKCangL%2FpRmxyGFRztj4hwI0ISTeP9L%2B0iQ%2FuTIw%3D%3D\"}]}",
+      "server": "cloudflare",
+      "x-content-type-options": "nosniff"
+    }
+  },
+  {
+    "apkPublicStatus": 200,
+    "apkBytes": 55298395
+  }
+]
