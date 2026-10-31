@@ -1,6 +1,6 @@
 # ECOS — Instalação Abandonada
 
-**Prévia atual 0.7 — Lua de sangue:** [Jogar na web](https://feature-blood-moon-dark-fore.run-away-ecos.pages.dev/) · [APK Android](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.7.0-night/ecos-android.apk) · [Relatório técnico](docs/RELATORIO_CEU_FLORESTA.md). 266 testes automáticos aprovados. Arte procedural; validação em Android físico pendente. A produção 0.3 permanece separada.
+**Versão atual 0.9 — prévia técnica do Escutador:** [Jogar na web](https://run-away-ecos.pages.dev/) · [APK Android atual](https://run-away-ecos.pages.dev/baixar-apk) · [Relatório técnico e pendências](docs/ESCUTADOR_MODELO_RECEBIDO.md). 606 verificações aprovadas. Arte ainda em refinamento: escultura fina, retopologia manual, bake e polimento de movimento pendentes. Android físico não validado. Os links do jogo e do APK permanecem os mesmos nas atualizações.
 
 Protótipo vertical de survival horror 3D em GDScript, desenvolvido com **Godot 4.7.2 stable**. A versão 0.6 acrescenta materiais físicos, objetos manipuláveis e impactos ouvidos pela criatura. A arte e a simulação usam soluções procedurais e simplificadas; desempenho e microfone em Android físico ainda precisam de validação.
 
@@ -56,7 +56,7 @@ Exportação local não publica em lojas. Veja os presets e as instruções Andr
 
 ## Teste pelo navegador e download
 
-Publicado para testes em [Cloudflare Pages](https://run-away-ecos.pages.dev/) com [download do APK 0.3](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.3.0-cloud/ecos-android.apk). Firebase fornece login e progresso por conta; o endereço antigo do Firebase redireciona ao Cloudflare. Abra **CONTA / PROGRESSO** para criar uma conta. [Dados salvos e funcionamento](docs/CONTAS_E_PROGRESSO.md).
+Publicado para testes em [Cloudflare Pages](https://run-away-ecos.pages.dev/) com [download permanente do APK atual](https://run-away-ecos.pages.dev/baixar-apk). Firebase fornece login e progresso por conta; o endereço antigo do Firebase redireciona ao Cloudflare. Abra **CONTA / PROGRESSO** para criar uma conta. [Dados salvos e funcionamento](docs/CONTAS_E_PROGRESSO.md).
 
 O preset Web usa renderer Compatibility e áudio Stream para suportar processamento de captura. Não equivale ao renderer Mobile do APK. A versão Web requer WebGL 2, WebAssembly e HTTPS para o microfone. O APK de teste é distribuído nas Releases do repositório, fora do histórico Git.
 
