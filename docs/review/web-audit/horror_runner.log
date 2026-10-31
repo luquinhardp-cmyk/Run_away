@@ -1,0 +1,63 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+
+PASS physical signage replaces room labels and adds narrative
+
+PASS all signs have panels, occlusion and fixed front faces
+
+PASS HUD retained independently of signage
+
+PASS eight resource capture definitions loaded
+
+PASS distant creature cannot seize controls
+
+PASS front and rear use actual relative orientation
+
+PASS rear capture follows player orientation
+
+PASS capture selection excludes immediate repeat with alternatives
+
+PASS hide capture requires confirmed occupied hiding place
+
+PASS walls and distance prevent remote capture
+
+PASS global director cooldown blocks event requests
+
+PASS microphone raises attention without forcing a scare
+
+PASS accessibility disables light variation events
+
+PASS event maximum prevents repeated knock spam
+
+PASS director state persists counts and exact RNG state
+
+PASS twelve audio banks supply variations and cooldowns
+
+PASS visible contact starts face closeup
+
+PASS capture zoom tightly frames face
+
+PASS capture camera points at monster face
+
+PASS closeup lights face without moving physical player
+
+PASS capture uses louder bounded priority sound
+
+PASS capture releases camera position and FOV
+
+PASS confirmed nearby visible enemy starts capture
+
+PASS capture has single ownership and rejects overlap
+
+PASS movement remains locked during confirmed defeat
+
+PASS zero motion and visual effects preserve camera
+
+PASS director never duplicates creature
+
+PASS capture ends in defeat and releases lock
+
+PASS capture history survives scene recreation
+
+HORROR RESULT 29 passed; 0 failed

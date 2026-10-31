@@ -1,0 +1,463 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+
+PASS 37 authored models with two geometry versions
+
+PASS imported normals, mapped PBR and nondegenerate UVs keyfalse
+
+PASS finite dimensions keyfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs keytrue
+
+PASS finite dimensions keytrue
+
+PASS lower-detail geometry reduces triangles key
+
+PASS imported normals, mapped PBR and nondegenerate UVs fusefalse
+
+PASS finite dimensions fusefalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs fusetrue
+
+PASS finite dimensions fusetrue
+
+PASS lower-detail geometry reduces triangles fuse
+
+PASS imported normals, mapped PBR and nondegenerate UVs flashlightfalse
+
+PASS finite dimensions flashlightfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs flashlighttrue
+
+PASS finite dimensions flashlighttrue
+
+PASS lower-detail geometry reduces triangles flashlight
+
+PASS imported normals, mapped PBR and nondegenerate UVs security_cardfalse
+
+PASS finite dimensions security_cardfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs security_cardtrue
+
+PASS finite dimensions security_cardtrue
+
+PASS lower-detail geometry reduces triangles security_card
+
+PASS imported normals, mapped PBR and nondegenerate UVs wrenchfalse
+
+PASS finite dimensions wrenchfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs wrenchtrue
+
+PASS finite dimensions wrenchtrue
+
+PASS lower-detail geometry reduces triangles wrench
+
+PASS imported normals, mapped PBR and nondegenerate UVs bottlefalse
+
+PASS finite dimensions bottlefalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs bottletrue
+
+PASS finite dimensions bottletrue
+
+PASS lower-detail geometry reduces triangles bottle
+
+PASS imported normals, mapped PBR and nondegenerate UVs canfalse
+
+PASS finite dimensions canfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs cantrue
+
+PASS finite dimensions cantrue
+
+PASS lower-detail geometry reduces triangles can
+
+PASS imported normals, mapped PBR and nondegenerate UVs cratefalse
+
+PASS finite dimensions cratefalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs cratetrue
+
+PASS finite dimensions cratetrue
+
+PASS lower-detail geometry reduces triangles crate
+
+PASS imported normals, mapped PBR and nondegenerate UVs bucketfalse
+
+PASS finite dimensions bucketfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs buckettrue
+
+PASS finite dimensions buckettrue
+
+PASS lower-detail geometry reduces triangles bucket
+
+PASS imported normals, mapped PBR and nondegenerate UVs chairfalse
+
+PASS finite dimensions chairfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs chairtrue
+
+PASS finite dimensions chairtrue
+
+PASS lower-detail geometry reduces triangles chair
+
+PASS imported normals, mapped PBR and nondegenerate UVs trolleyfalse
+
+PASS finite dimensions trolleyfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs trolleytrue
+
+PASS finite dimensions trolleytrue
+
+PASS lower-detail geometry reduces triangles trolley
+
+PASS imported normals, mapped PBR and nondegenerate UVs workbenchfalse
+
+PASS finite dimensions workbenchfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs workbenchtrue
+
+PASS finite dimensions workbenchtrue
+
+PASS lower-detail geometry reduces triangles workbench
+
+PASS imported normals, mapped PBR and nondegenerate UVs shelffalse
+
+PASS finite dimensions shelffalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs shelftrue
+
+PASS finite dimensions shelftrue
+
+PASS lower-detail geometry reduces triangles shelf
+
+PASS imported normals, mapped PBR and nondegenerate UVs lockerfalse
+
+PASS finite dimensions lockerfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs lockertrue
+
+PASS finite dimensions lockertrue
+
+PASS lower-detail geometry reduces triangles locker
+
+PASS imported normals, mapped PBR and nondegenerate UVs diesel_generatorfalse
+
+PASS finite dimensions diesel_generatorfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs diesel_generatortrue
+
+PASS finite dimensions diesel_generatortrue
+
+PASS lower-detail geometry reduces triangles diesel_generator
+
+PASS imported normals, mapped PBR and nondegenerate UVs fuse_panelfalse
+
+PASS finite dimensions fuse_panelfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs fuse_paneltrue
+
+PASS finite dimensions fuse_paneltrue
+
+PASS lower-detail geometry reduces triangles fuse_panel
+
+PASS imported normals, mapped PBR and nondegenerate UVs door_steelfalse
+
+PASS finite dimensions door_steelfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs door_steeltrue
+
+PASS finite dimensions door_steeltrue
+
+PASS lower-detail geometry reduces triangles door_steel
+
+PASS imported normals, mapped PBR and nondegenerate UVs door_woodfalse
+
+PASS finite dimensions door_woodfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs door_woodtrue
+
+PASS finite dimensions door_woodtrue
+
+PASS lower-detail geometry reduces triangles door_wood
+
+PASS imported normals, mapped PBR and nondegenerate UVs door_exitfalse
+
+PASS finite dimensions door_exitfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs door_exittrue
+
+PASS finite dimensions door_exittrue
+
+PASS lower-detail geometry reduces triangles door_exit
+
+PASS imported normals, mapped PBR and nondegenerate UVs radiofalse
+
+PASS finite dimensions radiofalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs radiotrue
+
+PASS finite dimensions radiotrue
+
+PASS lower-detail geometry reduces triangles radio
+
+PASS imported normals, mapped PBR and nondegenerate UVs alarmfalse
+
+PASS finite dimensions alarmfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs alarmtrue
+
+PASS finite dimensions alarmtrue
+
+PASS lower-detail geometry reduces triangles alarm
+
+PASS imported normals, mapped PBR and nondegenerate UVs batteryfalse
+
+PASS finite dimensions batteryfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs batterytrue
+
+PASS finite dimensions batterytrue
+
+PASS lower-detail geometry reduces triangles battery
+
+PASS imported normals, mapped PBR and nondegenerate UVs rockfalse
+
+PASS finite dimensions rockfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs rocktrue
+
+PASS finite dimensions rocktrue
+
+PASS lower-detail geometry reduces triangles rock
+
+PASS imported normals, mapped PBR and nondegenerate UVs tankfalse
+
+PASS finite dimensions tankfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs tanktrue
+
+PASS finite dimensions tanktrue
+
+PASS lower-detail geometry reduces triangles tank
+
+PASS imported normals, mapped PBR and nondegenerate UVs motorfalse
+
+PASS finite dimensions motorfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs motortrue
+
+PASS finite dimensions motortrue
+
+PASS lower-detail geometry reduces triangles motor
+
+PASS imported normals, mapped PBR and nondegenerate UVs workshop_pressfalse
+
+PASS finite dimensions workshop_pressfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs workshop_presstrue
+
+PASS finite dimensions workshop_presstrue
+
+PASS lower-detail geometry reduces triangles workshop_press
+
+PASS imported normals, mapped PBR and nondegenerate UVs broken_windowfalse
+
+PASS finite dimensions broken_windowfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs broken_windowtrue
+
+PASS finite dimensions broken_windowtrue
+
+PASS lower-detail geometry reduces triangles broken_window
+
+PASS imported normals, mapped PBR and nondegenerate UVs drainfalse
+
+PASS finite dimensions drainfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs draintrue
+
+PASS finite dimensions draintrue
+
+PASS lower-detail geometry reduces triangles drain
+
+PASS imported normals, mapped PBR and nondegenerate UVs roof_trussfalse
+
+PASS finite dimensions roof_trussfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs roof_trusstrue
+
+PASS finite dimensions roof_trusstrue
+
+PASS lower-detail geometry reduces triangles roof_truss
+
+PASS imported normals, mapped PBR and nondegenerate UVs palletfalse
+
+PASS finite dimensions palletfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs pallettrue
+
+PASS finite dimensions pallettrue
+
+PASS lower-detail geometry reduces triangles pallet
+
+PASS imported normals, mapped PBR and nondegenerate UVs tree_deadfalse
+
+PASS finite dimensions tree_deadfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs tree_deadtrue
+
+PASS finite dimensions tree_deadtrue
+
+PASS lower-detail geometry reduces triangles tree_dead
+
+PASS imported normals, mapped PBR and nondegenerate UVs tree_broadleaffalse
+
+PASS finite dimensions tree_broadleaffalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs tree_broadleaftrue
+
+PASS finite dimensions tree_broadleaftrue
+
+PASS lower-detail geometry reduces triangles tree_broadleaf
+
+PASS imported normals, mapped PBR and nondegenerate UVs tree_pinefalse
+
+PASS finite dimensions tree_pinefalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs tree_pinetrue
+
+PASS finite dimensions tree_pinetrue
+
+PASS lower-detail geometry reduces triangles tree_pine
+
+PASS imported normals, mapped PBR and nondegenerate UVs crt_monitorfalse
+
+PASS finite dimensions crt_monitorfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs crt_monitortrue
+
+PASS finite dimensions crt_monitortrue
+
+PASS lower-detail geometry reduces triangles crt_monitor
+
+PASS imported normals, mapped PBR and nondegenerate UVs door_framefalse
+
+PASS finite dimensions door_framefalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs door_frametrue
+
+PASS finite dimensions door_frametrue
+
+PASS lower-detail geometry reduces triangles door_frame
+
+PASS imported normals, mapped PBR and nondegenerate UVs drawer_handlefalse
+
+PASS finite dimensions drawer_handlefalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs drawer_handletrue
+
+PASS finite dimensions drawer_handletrue
+
+PASS lower-detail geometry reduces triangles drawer_handle
+
+PASS imported normals, mapped PBR and nondegenerate UVs mechanical_partfalse
+
+PASS finite dimensions mechanical_partfalse
+
+PASS imported normals, mapped PBR and nondegenerate UVs mechanical_parttrue
+
+PASS finite dimensions mechanical_parttrue
+
+PASS lower-detail geometry reduces triangles mechanical_part
+
+PASS FPS camera keeps 1.56 metre eye height
+
+PASS model integrated with existing interaction hull chave_oficina
+
+PASS model integrated with existing interaction hull fusivel
+
+PASS model integrated with existing interaction hull cartao
+
+PASS model integrated with existing interaction hull generator
+
+PASS model integrated with existing interaction hull fuse_panel
+
+PASS model integrated with existing interaction hull radio
+
+PASS model integrated with existing interaction hull alarm
+
+PASS model integrated with existing interaction hull under_table
+
+PASS model integrated with existing interaction hull exit
+
+PASS key has physical thickness and rests on support
+
+PASS empty central fuse carrier before insertion
+
+PASS installed fuse appears from saved gameplay state
+
+PASS hinge rotates leaf without moving frame maintenance
+
+PASS visual remains on physical leaf maintenance
+
+PASS hinge rotates leaf without moving frame storage
+
+PASS visual remains on physical leaf storage
+
+PASS hinge rotates leaf without moving frame security
+
+PASS visual remains on physical leaf security
+
+PASS hinge rotates leaf without moving frame power
+
+PASS visual remains on physical leaf power
+
+PASS hinge rotates leaf without moving frame workshop
+
+PASS visual remains on physical leaf workshop
+
+PASS drawer pull travels with sliding body
+
+PASS visual replacement preserves mass CCD and sound can
+
+PASS visual replacement preserves mass CCD and sound bottle_ward
+
+PASS visual replacement preserves mass CCD and sound tool_edge
+
+PASS visual replacement preserves mass CCD and sound small_crate
+
+PASS visual replacement preserves mass CCD and sound chair_maintenance
+
+PASS visual replacement preserves mass CCD and sound crate_storage
+
+PASS visual replacement preserves mass CCD and sound trolley_ward
+
+PASS visual replacement preserves mass CCD and sound bucket_power
+
+PASS visual replacement preserves mass CCD and sound rubber_gallery
+
+PASS visual replacement preserves mass CCD and sound fragile_workshop
+
+PASS visual replacement preserves mass CCD and sound bottle_shelf
+
+PASS visual replacement preserves mass CCD and sound drawer_tool
+
+PASS real window aperture has no opaque full-wall collision
+
+PASS visible window grille has matching collision
+
+PASS three refined tree variants feed instanced forest
+
+PASS terrain triangles face upward instead of disappearing from above
+
+PASS forest population and surrounding horizon preserved
+
+PASS playable central route elevation preserved
+
+PASS terrain undulates beyond playable routes
+
+GEOMETRY RESULT 229 passed; 0 failed

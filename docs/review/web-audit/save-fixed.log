@@ -1,0 +1,23 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+
+PASS checkpoint JSON roundtrip remains eligible for resume
+
+PASS ten seconds of digital silence preserve microphone consent and capture
+
+PASS silence calibrates and never creates a noise
+
+PASS a sound after prolonged silence opens the hearing gate
+
+PASS explicit disable revokes consent
+
+PASS initial navigation includes proxies without a deferred duplicate bake
+
+PASS initial construction requires one bake
+
+PASS HUD reacts to viewport resize
+
+PASS pause clears both touches and movement
+
+WEB AUDIT RESULT 9 passed; 0 failed. Synthetic microphone; no hardware claim.

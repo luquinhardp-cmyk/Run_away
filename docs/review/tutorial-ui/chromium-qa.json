@@ -1,0 +1,24 @@
+{
+  "browser": "chromium",
+  "physicalDevice": false,
+  "testResult": "TUTORIAL RESULT 41 passed; 0 failed",
+  "completed": true,
+  "errors": [
+    "ERROR: Texture with GL ID of 14469: leaked 5460 bytes.",
+    "   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)",
+    "ERROR: Texture with GL ID of 14470: leaked 5460 bytes.",
+    "   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)",
+    "ERROR: Pages in use exist at exit in PagedAllocator: N16WorkerThreadPool5GroupE",
+    "   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)"
+  ],
+  "runtimeErrors": [],
+  "shutdownErrors": [
+    "ERROR: Texture with GL ID of 14469: leaked 5460 bytes.",
+    "   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)",
+    "ERROR: Texture with GL ID of 14470: leaked 5460 bytes.",
+    "   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)",
+    "ERROR: Pages in use exist at exit in PagedAllocator: N16WorkerThreadPool5GroupE",
+    "   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)"
+  ],
+  "qaMode": true
+}

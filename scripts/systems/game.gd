@@ -1,7 +1,10 @@
 extends Node
 signal updated
+signal tutorial_save_requested
 signal ended(won: bool)
 var playing := false
+var in_tutorial := false
+var inventory_open := false
 var paused := false
 var player: CharacterBody3D
 var enemy: CharacterBody3D
@@ -43,7 +46,7 @@ func _process(delta: float) -> void:
 
 func update_clock() -> void:
 	var now := Time.get_ticks_msec()
-	if playing and not paused and _tick > 0: elapsed_ms += now - _tick
+	if playing and not paused and not in_tutorial and _tick > 0: elapsed_ms += now - _tick
 	_tick = now
 
 func checkpoint_path() -> String:
@@ -52,13 +55,28 @@ func checkpoint_path() -> String:
 func history_path() -> String:
 	return "user://history.json" if profile.is_empty() else "user://accounts/" + profile + "/history.json"
 
+func tutorial_path() -> String:
+	return "user://tutorial.json" if profile.is_empty() else "user://accounts/" + profile + "/tutorial.json"
+
+func tutorial_progress() -> Dictionary:
+	if not FileAccess.file_exists(tutorial_path()): return {}
+	var data = JSON.parse_string(FileAccess.get_file_as_string(tutorial_path()))
+	if not data is Dictionary or data.get("version") != 1.0: return {}
+	return data if data.get("stage") in ["tutorial", "entered"] else {}
+
+static func supported_checkpoint(data: Variant) -> bool:
+	if not data is Dictionary: return false
+	var version = data.get("version")
+	# JSON numbers are floats. Array.has uses strict types and rejects 2.0 in [1, 2].
+	return (version is int or version is float) and (version == 1.0 or version == 2.0)
+
 func select_profile(value: String) -> void:
 	profile = value
 	checkpoint = {}
 	history = {}
 	if FileAccess.file_exists(checkpoint_path()):
 		var data = JSON.parse_string(FileAccess.get_file_as_string(checkpoint_path()))
-		if data is Dictionary and data.get("version") in [1, 2]: checkpoint = data
+		if supported_checkpoint(data): checkpoint = data
 	if FileAccess.file_exists(history_path()):
 		var data = JSON.parse_string(FileAccess.get_file_as_string(history_path()))
 		if data is Dictionary: history = data
@@ -96,6 +114,7 @@ var objective: String:
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	settings["tutorial_completed"] = false
 	settings.merge({"difficulty": 1, "seed": 0, "metrics": false, "camera_motion": 0.5, "visual_scares": true, "light_variation": true,"fps_limit":0,"render_scale":0.0,"shadow_quality":-1,"vegetation_distance":0.0,"adaptive_resolution":false})
 	select_profile("")
 	var config := ConfigFile.new()
@@ -103,7 +122,7 @@ func _ready() -> void:
 		for key in settings: settings[key] = config.get_value("settings", key, settings[key])
 	if FileAccess.file_exists("user://checkpoint.json"):
 		var data = JSON.parse_string(FileAccess.get_file_as_string("user://checkpoint.json"))
-		if data is Dictionary and data.get("version") in [1, 2]: checkpoint = data
+		if supported_checkpoint(data): checkpoint = data
 	settings["difficulty"] = config.get_value("settings", "difficulty", 1)
 	settings["seed"] = config.get_value("settings", "seed", 0)
 	for action in ["forward", "back", "left", "right", "run", "crouch", "interact", "flashlight", "pause", "inventory", "throw", "hold"]:
@@ -115,6 +134,8 @@ func _ready() -> void:
 		InputMap.action_add_event(action, event)
 
 func begin(resume: bool = false) -> void:
+	in_tutorial = false
+	inventory_open = false
 	capture_in_progress = false
 	_autosave = 0
 	elapsed_ms = int(checkpoint.get("elapsed_ms", 0)) if resume else 0
@@ -146,6 +167,9 @@ func collect(item: String) -> void:
 	updated.emit()
 
 func save_checkpoint() -> void:
+	if in_tutorial:
+		tutorial_save_requested.emit()
+		return
 	# Always resume in the safe infirmary; inventory and mechanisms persist.
 	for manager in get_tree().get_nodes_in_group("physics_managers"): manager.snapshot()
 	update_clock()
@@ -162,7 +186,7 @@ func save_settings() -> void:
 	updated.emit()
 
 func finish(won: bool) -> void:
-	if not playing: return
+	if not playing or in_tutorial: return
 	update_clock()
 	var restored: bool = power or world.get("generator_started", false)
 	last_score = score_for(inventory, restored, won)
@@ -185,5 +209,5 @@ func set_paused(value: bool) -> void:
 	get_tree().paused = value
 	if value: Mic.suspend()
 	else: Mic.resume_capture()
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if value else Input.MOUSE_MODE_CAPTURED
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if value or OS.has_feature("web") or testing else Input.MOUSE_MODE_CAPTURED
 	updated.emit()

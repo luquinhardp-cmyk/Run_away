@@ -1,0 +1,45 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+
+PASS profile internal resolution 0
+
+PASS profile FPS target 0
+
+PASS profile MSAA 0
+
+PASS full physics retained 0
+
+PASS profile internal resolution 1
+
+PASS profile FPS target 1
+
+PASS profile MSAA 1
+
+PASS full physics retained 1
+
+PASS profile internal resolution 2
+
+PASS profile FPS target 2
+
+PASS profile MSAA 2
+
+PASS full physics retained 2
+
+PASS independent resolution FPS and shadows
+
+PASS saving unrelated settings preserves custom FPS limit
+
+PASS overload lowers resolution gradually
+
+PASS adaptive resolution honors minimum
+
+PASS headroom requires sustained twelve seconds
+
+PASS headroom increases resolution gradually
+
+PASS adaptive resolution honors maximum
+
+PASS close surfaces import real mip chains
+
+GRAPHICS RESULT 20 passed; 0 failed

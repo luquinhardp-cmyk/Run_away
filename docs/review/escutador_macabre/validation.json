@@ -1,0 +1,40 @@
+{
+  "nativePassed": 328,
+  "nativeFailed": 0,
+  "suites": [
+    {
+      "suite": "received_creature_runner",
+      "passed": 82,
+      "failed": 0
+    },
+    {
+      "suite": "macabre_runner",
+      "passed": 55,
+      "failed": 0
+    },
+    {
+      "suite": "horror_runner",
+      "passed": 29,
+      "failed": 0
+    },
+    {
+      "suite": "expansion_runner",
+      "passed": 41,
+      "failed": 0
+    },
+    {
+      "suite": "runner",
+      "passed": 80,
+      "failed": 0
+    },
+    {
+      "suite": "tutorial_runner",
+      "passed": 41,
+      "failed": 0
+    }
+  ],
+  "physicalDevice": false,
+  "physicalMicrophone": false,
+  "webQA": "chromium-qa.json",
+  "renderer": "Compatibility"
+}

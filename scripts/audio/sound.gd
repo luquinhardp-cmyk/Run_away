@@ -65,9 +65,21 @@ func creature_cue(kind: String, pos: Vector3, gain: float = -20) -> void:
 
 func stop_all() -> void:
 	for child in get_children():
-		if child is AudioStreamPlayer3D:
+		if child is AudioStreamPlayer3D or child is AudioStreamPlayer:
 			child.stop()
+			child.stream = null
 			child.queue_free()
+
+func ui_click() -> void:
+	if get_child_count() >= 24: return
+	var sound := AudioStreamPlayer.new()
+	sound.process_mode = Node.PROCESS_MODE_ALWAYS
+	sound.stream = preload("res://assets/audio/switch.wav")
+	sound.bus = "Effects"
+	sound.volume_db = -29
+	add_child(sound)
+	sound.finished.connect(sound.queue_free)
+	sound.play() # Interface feedback is not a world noise event.
 
 func _ready() -> void:
 	for name in ["Effects", "Music", "Threat"]:

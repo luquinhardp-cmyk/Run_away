@@ -1,4 +1,5 @@
 extends CharacterBody3D
+signal tutorial_action(action: String, data: Dictionary)
 var camera: Camera3D
 var lamp: SpotLight3D
 var shape: CollisionShape3D
@@ -65,7 +66,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("throw"): throw_object()
 	if event.is_action_pressed("hold"): begin_hold()
 	if event.is_action_released("hold"): manipulator.release()
-	if event is InputEventMouseButton and event.pressed: Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	# Touch-generated mouse events must not request browser pointer lock.
+	if event is InputEventMouseButton and event.pressed and event.device != -1 and not Game.testing: Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func look(relative: Vector2) -> void:
 	if not Game.playing or Game.paused or Game.capture_in_progress: return
@@ -103,6 +105,7 @@ func _physics_process(delta: float) -> void:
 		var running := (Input.is_action_pressed("run") or touch_run) and not crouched
 		var speed := 1.25 if crouched else (4.0 if running else 2.45)
 		var direction := global_basis * Vector3(input.x, 0, input.y)
+		var before_move := global_position
 		velocity.x = move_toward(velocity.x, direction.x * speed, 12 * delta)
 		velocity.z = move_toward(velocity.z, direction.z * speed, 12 * delta)
 		velocity += get_gravity() * delta
@@ -112,6 +115,9 @@ func _physics_process(delta: float) -> void:
 			raised.origin.y += 0.18
 			if not test_move(global_transform, Vector3.UP * 0.18) and not test_move(raised, direction * 0.2): global_position.y += 0.18
 		move_and_slide()
+		if Game.in_tutorial:
+			var travelled := Vector2(global_position.x-before_move.x,global_position.z-before_move.z).length()
+			if travelled > 0.001: tutorial_action.emit("move", {"distance":travelled,"running":running,"crouched":crouched})
 		CharacterPhysicsPush.apply(self)
 		if Vector2(velocity.x, velocity.z).length() > 0.4 and is_on_floor():
 			step_clock -= delta
@@ -166,6 +172,7 @@ func interact() -> void:
 		pitch = exit_look.y
 		camera.rotation.x = pitch
 		hide_spot = null
+		if Game.in_tutorial: tutorial_action.emit("hide_exit", {})
 	elif is_instance_valid(focus): focus.interact(self)
 
 func enter_hide(spot: Node3D) -> void:
@@ -186,6 +193,7 @@ func enter_hide(spot: Node3D) -> void:
 	camera.rotation.x = 0.0
 	camera.position.y = 0.65 if spot.item_id == "under_table" else 1.5
 	NoiseBus.emit_noise(self, 0.15, "armario", 6.0)
+	if Game.in_tutorial: tutorial_action.emit("hide_enter", {})
 
 func throw_object() -> Node3D:
 	if is_instance_valid(manipulator.held):
@@ -211,3 +219,18 @@ func begin_hold() -> void:
 	if is_instance_valid(focus) and focus is PhysicalProp3D:
 		if focus.profile.category == "C": manipulator.begin_drag(focus)
 		else: manipulator.begin(focus)
+
+func drop_throwable() -> Node3D:
+	if not Game.playing or Game.paused or Game.capture_in_progress or hidden or int(Game.world.get("throwables",0)) <= 0: return null
+	if get_tree().get_nodes_in_group("throwables").size() >= 8: return null
+	var direction := -camera.global_basis.z
+	var query := PhysicsRayQueryParameters3D.create(camera.global_position,camera.global_position+direction*.65,1,[get_rid()])
+	if not get_world_3d().direct_space_state.intersect_ray(query).is_empty(): return null
+	var object := preload("res://scenes/interactables/throwable.tscn").instantiate()
+	get_parent().add_child(object)
+	object.global_position = camera.global_position+direction*.45
+	object.add_collision_exception_with(self)
+	Game.world.throwables = int(Game.world.throwables)-1
+	if Game.record_results: Game.save_checkpoint()
+	Game.updated.emit()
+	return object

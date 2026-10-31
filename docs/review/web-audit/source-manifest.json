@@ -1,0 +1,15 @@
+{
+  "source_base": "a01f53222541506c298b9bf73dde787c7b443f66",
+  "uncommitted_changes": true,
+  "published": false,
+  "files": {
+    "hosting/wasm-loader.js": "87e9e622ae1effd258a9193a8f0e5de18f93e5545277f2179372245cc4437583",
+    "scripts/audio/microphone.gd": "c593b087406f9dd040c8509e2f619099ae15c3e0ff2c95c550e65687f67e9116",
+    "scripts/player/hud.gd": "08e6b4ff66ee1a116cd94cb4071c05dd70ce921cb0d627e1945a5cec26cc1b2a",
+    "scripts/systems/facility.gd": "cb143e675f15c58ad486073d542e2df6585d4cb0f1bf25162c6c305b516d9003",
+    "scripts/systems/main.gd": "4980eabe095944ac5ee404f5c425f0494717dea74dd2c6d0815bb4642ff01e72",
+    "scripts/systems/game.gd": "b245f2158c3826c3eb4776fdbf71a93682e219e19f4da064d65271f68748e41b",
+    "scripts/environment/flying_shadow_event.gd": "18d6cdef79176449f24d7281e99abdf01c6febe71ab73bf8b0c09ca72963ce7b",
+    "export_presets.cfg": "604afe8f6dc6d9f2e82ea2a703f2428a0b468b755052247c9177889887933dff"
+  }
+}

@@ -17,8 +17,15 @@ var nav_rebuilds := 0
 var nav_gates: Dictionary = {}
 var horror: Node
 var horror_light_multiplier := 1.0
+var startup_ms: Dictionary = {}
+
+func _startup_mark(stage: String, started: int) -> int:
+	var now := Time.get_ticks_usec()
+	startup_ms[stage] = (now - started) / 1000.0
+	return now
 
 func _ready() -> void:
+	var started := Time.get_ticks_usec()
 	HorrorArt.set_quality(int(Game.settings.quality))
 	wall_material = HorrorArt.surface("aged_concrete")
 	floor_material = HorrorArt.surface("cracked_floor")
@@ -50,9 +57,7 @@ func _ready() -> void:
 	_props()
 	_annex_geometry()
 	_items()
-	# Bake with closed doors excluded: their colliders are added after baking.
-	region.bake_navigation_mesh(false)
-	nav_ready = true
+	started = _startup_mark("geometry", started)
 	_doors()
 	_expansion_objects()
 	_navigation_furniture()
@@ -71,11 +76,13 @@ func _ready() -> void:
 	var art := Node3D.new()
 	art.set_script(preload("res://scripts/systems/facility_art.gd"))
 	add_child(art)
+	started = _startup_mark("art", started)
 	# Keep geometry collision bodies for navigation/occlusion, batch their rendering.
 	var batches := Node3D.new()
 	batches.name = "ArchitectureBatches"
 	add_child(batches)
 	HorrorArt.merge_static(geometry, batches)
+	started = _startup_mark("batching", started)
 	Game.updated.connect(_quality)
 	_quality()
 	var physics := Node.new()
@@ -84,6 +91,13 @@ func _ready() -> void:
 	var night := Node3D.new()
 	night.set_script(preload("res://scripts/environment/night_world.gd"))
 	add_child(night)
+	started = _startup_mark("physics_forest", started)
+	# Include art colliders, restored events, furniture and locked-door proxies.
+	# Dynamic door colliders live outside the region and remain operable by AI.
+	region.bake_navigation_mesh(false)
+	nav_ready = true
+	nav_update_pending = false
+	_startup_mark("navigation", started)
 
 func material(color: Color, emission: bool = false) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()
@@ -305,6 +319,7 @@ func find_interaction(id: String) -> Node3D:
 func request_navigation_update() -> void:
 	if nav_update_pending: return
 	nav_update_pending = true
+	if not nav_ready: return # Initial construction is baked together in _ready.
 	_rebuild_navigation.call_deferred()
 
 func _navigation_furniture() -> void:

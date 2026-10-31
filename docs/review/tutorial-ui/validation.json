@@ -1,0 +1,87 @@
+{
+  "nativePassed": 693,
+  "nativeFailed": 0,
+  "suites": [
+    {
+      "suite": "runner",
+      "passed": 80,
+      "failed": 0,
+      "log": "runner.log"
+    },
+    {
+      "suite": "expansion_runner",
+      "passed": 41,
+      "failed": 0,
+      "log": "expansion_runner.log"
+    },
+    {
+      "suite": "geometry_runner",
+      "passed": 229,
+      "failed": 0,
+      "log": "geometry_runner.log"
+    },
+    {
+      "suite": "graphics_runner",
+      "passed": 20,
+      "failed": 0,
+      "log": "graphics_runner.log"
+    },
+    {
+      "suite": "horror_runner",
+      "passed": 29,
+      "failed": 0,
+      "log": "horror_runner.log"
+    },
+    {
+      "suite": "night_runner",
+      "passed": 76,
+      "failed": 0,
+      "log": "night_runner.log"
+    },
+    {
+      "suite": "physics_runner",
+      "passed": 47,
+      "failed": 0,
+      "log": "physics_runner.log"
+    },
+    {
+      "suite": "received_creature_runner",
+      "passed": 84,
+      "failed": 0,
+      "log": "received_creature_runner.log"
+    },
+    {
+      "suite": "web_audit_runner",
+      "passed": 11,
+      "failed": 0,
+      "log": "web_audit_runner.log"
+    },
+    {
+      "suite": "tutorial_runner",
+      "passed": 41,
+      "failed": 0,
+      "log": "tutorial_runner.log"
+    },
+    {
+      "suite": "inventory_runner",
+      "passed": 23,
+      "failed": 0,
+      "log": "inventory_runner.log"
+    },
+    {
+      "suite": "tutorial_persistence",
+      "passed": 12,
+      "failed": 0,
+      "log": "tutorial_persistence.log"
+    }
+  ],
+  "physicalDevice": false,
+  "physicalMicrophone": false,
+  "webQA": "chromium-qa.json",
+  "browsers": "browser-results.json",
+  "limitations": [
+    "No physical Android/iOS or Safari validation",
+    "Browser requestAnimationFrame samples are not GPU timings",
+    "Web automated engine shutdown reports two GL textures and WorkerThreadPool allocator warnings"
+  ]
+}

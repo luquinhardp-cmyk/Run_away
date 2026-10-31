@@ -1,0 +1,131 @@
+{
+  "input_sha256": "821e5a4771c18fed7ddf9a1e0caf1f1b78a5521558d10786fd1395f767595ad9",
+  "input_meshes": 358,
+  "triangles": 26840,
+  "triangles_low": 14756,
+  "bones": 29,
+  "clips": [
+    {
+      "name": "idle",
+      "duration": 3.6,
+      "loop": true
+    },
+    {
+      "name": "breathe",
+      "duration": 4.1,
+      "loop": true
+    },
+    {
+      "name": "walk",
+      "duration": 1.0,
+      "loop": true
+    },
+    {
+      "name": "patrol",
+      "duration": 1.0,
+      "loop": true
+    },
+    {
+      "name": "listen",
+      "duration": 1.6,
+      "loop": false
+    },
+    {
+      "name": "investigate",
+      "duration": 1.0,
+      "loop": true
+    },
+    {
+      "name": "search",
+      "duration": 1.0,
+      "loop": true
+    },
+    {
+      "name": "run",
+      "duration": 0.5,
+      "loop": true
+    },
+    {
+      "name": "chase",
+      "duration": 0.5,
+      "loop": true
+    },
+    {
+      "name": "attack",
+      "duration": 0.75,
+      "loop": false
+    },
+    {
+      "name": "capture",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "return",
+      "duration": 1.0,
+      "loop": true
+    },
+    {
+      "name": "head_tilt",
+      "duration": 2.1,
+      "loop": false
+    },
+    {
+      "name": "hide_search",
+      "duration": 2.6,
+      "loop": true
+    },
+    {
+      "name": "lost",
+      "duration": 2.8,
+      "loop": true
+    },
+    {
+      "name": "capture_front",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_side",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_rear",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_hide",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_corridor",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_chase",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_silent",
+      "duration": 1.25,
+      "loop": false
+    },
+    {
+      "name": "capture_dark",
+      "duration": 1.25,
+      "loop": false
+    }
+  ],
+  "source": "assets/source/macabre_escutador/escutador_macabre.blend",
+  "limitations": [
+    "Original GLB has vertex colors, no scanned skin textures",
+    "Authored animation with analytic leg IK, not motion capture",
+    "Body voxel union and decimation, not manually authored deformation loops",
+    "Physical Android and iOS performance not measured"
+  ]
+}

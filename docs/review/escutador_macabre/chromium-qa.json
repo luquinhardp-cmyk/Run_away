@@ -1,0 +1,16 @@
+{
+  "browser": "chromium",
+  "physicalDevice": false,
+  "testResult": "HORROR RESULT 29 passed; 0 failed",
+  "completed": true,
+  "errors": [
+    "ERROR: Pages in use exist at exit in PagedAllocator: N16WorkerThreadPool5GroupE",
+    "   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)"
+  ],
+  "runtimeErrors": [],
+  "shutdownErrors": [
+    "ERROR: Pages in use exist at exit in PagedAllocator: N16WorkerThreadPool5GroupE",
+    "   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)"
+  ],
+  "qaMode": true
+}

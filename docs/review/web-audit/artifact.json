@@ -1,0 +1,27 @@
+{
+  "file": "builds\\web-audit\\ecos-web-audit.zip",
+  "bytes": 38680564,
+  "sha256": "27f4308da31b14852dc90d96642db6aa8866ca59acb70fa9c26d9f28795e93b8",
+  "published": false,
+  "site_files": {
+    "index.html": "09810f943e5935ce9cc8e2a0457d5acd6ae52f9a52fbe3bfabd3e5b78bbf4f1b",
+    "version.json": "54dea4d6d4fc6c3614c8be09141aa9fa842b157357c55a5f55f9abd2a6e1e92c",
+    "_headers": "b5a3c2481ad32347e3bf14e88833634a196fb7cb38584e80fa7b8884499a1bf3",
+    "_redirects": "1c6aa821ef905b5b7b187ae562596054d158402616ee48e4224e9bedc3a47b5c",
+    "play\\index.apple-touch-icon.png": "982b6f6fde5b341536b8047c163445845e08a2e4d8ae96d66c0e591af54b56b2",
+    "play\\index.apple-touch-icon.png.import": "d5cbcbc59a1a05298e26e69873620de08ed0fcb82cf1d4c5217b7438f054278f",
+    "play\\index.audio.position.worklet.js": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+    "play\\index.audio.worklet.js": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+    "play\\index.html": "b5c539cf08d9fddbd87e54800f0775ce2cbe6603f35a657d627d4d68764ba8d1",
+    "play\\index.icon.png": "ad314c08f75100c7e848a5863c7a115ce944a8a7626d09d7d6d6dffa29f8fc4f",
+    "play\\index.icon.png.import": "a0b24f12769fc827f0c8a63803ab84a95f62a4d92229cf446efb10b4a36b4c34",
+    "play\\index.js": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+    "play\\index.pck.part0": "beb9841c42c771fb6be66c891c81e7714f6f3f017199bd2360595e0d327c3dac",
+    "play\\index.pck.part1": "817a2f8aa9662d47002c913f23f1833d0c6e5c736a5f8cd7f802cace1e823430",
+    "play\\index.png": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e",
+    "play\\index.png.import": "9ce662b95f00b5f55daaddafb116f4a3cd2dac7737dbdd4769df2524db4a5fcb",
+    "play\\index.wasm": "2862a06f11ad1579c4ceb764f724013c1e62f8916d5d8d237fe5ee209c76f56e",
+    "play\\pack-parts.json": "53c291650bd08a45b7f01b4ce30397b0207ea166a78feafd507c0cf8a5582e10",
+    "play\\wasm-loader.js": "87e9e622ae1effd258a9193a8f0e5de18f93e5545277f2179372245cc4437583"
+  }
+}

@@ -1,0 +1,99 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+
+PASS twelve authored dynamic props; structures stay static
+
+PASS cloud codec preserves floating-point transform arrays
+
+PASS generator stays anchored
+
+PASS mission pickup keeps original gameplay
+
+PASS both characters collide with props
+
+PASS physical surface metal
+
+PASS physical surface wood
+
+PASS physical surface concrete
+
+PASS physical surface glass
+
+PASS physical surface rubber
+
+PASS physical surface earth
+
+PASS physical surface cloth
+
+PASS unsupported body falls under native gravity
+
+PASS can rests on floor without tunneling
+
+PASS stationary body sleeps
+
+PASS actual floor contact produces impact
+
+PASS glass breaks at tested fall speed and clears collision
+
+PASS fragment cleanup budget bounded
+
+PASS rubber uses bouncy physical material
+
+PASS noise originates at true contact, not player
+
+PASS tiny contacts stay silent
+
+PASS per-body cooldown prevents repeated contact spam
+
+PASS dynamic collision pair reports exactly once
+
+PASS lower-friction surface slides farther in identical setup
+
+PASS can responds to push and rolling impulse
+
+PASS nearby light object can be held
+
+PASS force-limited spring lifts object without teleport
+
+PASS throw applies bounded mass-aware impulse
+
+PASS mass limit rejects heavy furniture
+
+PASS medium furniture permits horizontal drag
+
+PASS drag mode never lifts medium furniture
+
+PASS wall blocks acquisition
+
+PASS CCD prevents fast object crossing wall
+
+PASS spring acquires body on near side of wall
+
+PASS held body remains on near side of wall
+
+PASS drawer uses bounded linear collision body
+
+PASS drawer state included in snapshot
+
+PASS suspended element swings within limits
+
+PASS pendulum motion decays
+
+PASS creature listens to physical impact at its actual source
+
+PASS twelve simultaneous falling objects settle above floor
+
+PASS creature navigates through a light physical obstruction
+
+PASS creature push leaves obstacle on physical floor
+
+PASS manager admits body within fixed cap
+
+PASS world prop creation budget enforced
+
+PASS resume restores moved prop transform
+
+PASS resume restores drawer state
+
+PHYSICS RESULT 47 passed; 0 failed

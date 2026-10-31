@@ -143,20 +143,18 @@ func _process(delta: float) -> void:
 			disable()
 			status = "SEM SINAL · modo sem microfone"
 		return
-	var started := Time.get_ticks_usec()
-	var db := rms_db(capture.get_buffer(count))
-	var frame_delta := delta
+	# Receiving samples proves the device is alive, even in absolute silence.
+	silent_time = 0.0
 	# Include frames spent waiting for 256 samples, preserving gate timing at high FPS.
 	delta=sample_clock
 	sample_clock=0
+	_process_samples(capture.get_buffer(count), delta)
+
+func _process_samples(frames: PackedVector2Array, delta: float) -> void:
+	var started := Time.get_ticks_usec()
+	var db := rms_db(frames)
 	last_rms_usec = Time.get_ticks_usec() - started
 	volume_db = lerpf(volume_db, db, 1.0 - exp(-delta * 14.0))
-	if db <= -79.0: silent_time += frame_delta
-	else: silent_time = 0.0
-	if silent_time > 6.0:
-		disable()
-		status = "SEM SINAL · verifique o microfone"
-		return
 	if calibrating > 0:
 		calibration_samples.append(db)
 		calibrating -= delta

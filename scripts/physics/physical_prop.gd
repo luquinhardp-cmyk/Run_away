@@ -10,6 +10,7 @@ var mesh: Node3D
 var impact_audio: PhysicsImpactAudio
 var held_by: Node
 var previous_velocity := Vector3.ZERO
+var older_velocity := Vector3.ZERO
 var age := 0.0
 var broken := false
 var thrown := false
@@ -117,8 +118,12 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		var normal := state.transform.basis * state.get_contact_local_normal(i)
 		var relative := previous_velocity - state.get_contact_collider_velocity_at_position(i)
 		var speed := absf(relative.dot(normal))
+		# CCD can resolve velocity one tick before contacts become available.
+		# Keep that pre-impact sample without reusing persistent solver impulses.
+		speed = maxf(speed,absf((older_velocity-state.get_contact_collider_velocity_at_position(i)).dot(normal)))
 		if impact_audio.report(state.get_contact_collider_position(i), other, speed, mass, noise_kind):
 			if profile.break_speed > 0 and speed >= profile.break_speed: break_apart.call_deferred()
+	older_velocity = previous_velocity
 	previous_velocity = state.linear_velocity
 func _physics_process(delta: float) -> void:
 	age += delta

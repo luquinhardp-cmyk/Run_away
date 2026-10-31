@@ -1,0 +1,87 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+
+PASS seed reproduces world configuration
+
+PASS normal Resource loaded
+
+PASS difficulty changes persistence and resources, not only speed
+
+PASS maintenance and security connected by lateral loop
+
+PASS locked security door makes path use real alternative route
+
+PASS shortcut refuses wrong or missing key
+
+PASS matching key permanently unlocks shortcut and navigation
+
+PASS door refuses to close onto actor
+
+PASS generator requires actual fuse installation
+
+PASS panel and generator complete electrical puzzle
+
+PASS blackout changes real power state
+
+PASS persistent event never repeats on the same run
+
+PASS blackout recoverable without losing fuse
+
+PASS physical environmental event triggered
+
+PASS physical obstacle updates navigation on demand
+
+PASS fallen pipe preserves an escape route
+
+PASS radio uses spatial audio and actual source position
+
+PASS radio can be switched off
+
+PASS alarm automatically ends
+
+PASS typed standard noise preserves complete contract
+
+PASS collect and throw real rigid body consumes one resource
+
+PASS physical collision produces distraction noise
+
+PASS physics object cap enforced
+
+PASS navigation recovery opens an operable door without teleporting
+
+PASS closed door blocks actual vision ray
+
+PASS opening same door restores actual line of sight
+
+PASS visual sensor detects exposed player
+
+PASS noise never redirects visual chase memory
+
+PASS loss leads to last observed position, not current hidden position
+
+PASS loss builds multiple reachable search points
+
+PASS opaque locker protects vision and tracks occupancy
+
+PASS unclued locker does not reveal player magically
+
+PASS microphone raises local hiding-place suspicion
+
+PASS hide investigation warns before capture
+
+PASS player can leave while locker is being investigated
+
+PASS empty locker investigation does not capture escaped player
+
+PASS microphone hysteresis prevents gate flicker
+
+PASS steady fan noise is absorbed gradually
+
+PASS checkpoint restores seed, shortcuts, events and puzzle progress
+
+PASS collected distraction cannot be duplicated on resume
+
+PASS integrated puzzle and survival results lead to successful escape
+
+EXPANSION RESULT 41 passed; 0 failed

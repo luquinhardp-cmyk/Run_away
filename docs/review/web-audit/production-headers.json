@@ -1,0 +1,97 @@
+[
+  {
+    "route": "/",
+    "status": 403,
+    "headers": {
+      "Date": "Sat, 31 Oct 2026 18:41:35 GMT",
+      "Content-Type": "text/plain; charset=UTF-8",
+      "Content-Length": "17",
+      "Connection": "close",
+      "Cache-Control": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+      "Expires": "Thu, 01 Jan 1970 00:00:01 GMT",
+      "Referrer-Policy": "same-origin",
+      "X-Frame-Options": "SAMEORIGIN",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=Rs%2FW5ZVFxklzjQipJa4qKryfzWlurYPW1ozHdm%2B%2FNawyIeUPK26TStTgG7bwtppoY%2FuBsXOBxEbpb%2BwJs4zkHL4VXsp0s7C1kLGi%2BK7zThIenF9Xn%2BkL1kGM4lJaxKnBPmjVO%2Bw2QNWzRA%3D%3D\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Server": "cloudflare",
+      "CF-RAY": "a534cb720aea5f28-GRU",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    }
+  },
+  {
+    "route": "/play/",
+    "status": 403,
+    "headers": {
+      "Date": "Sat, 31 Oct 2026 18:41:35 GMT",
+      "Content-Type": "text/plain; charset=UTF-8",
+      "Content-Length": "17",
+      "Connection": "close",
+      "Cache-Control": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+      "Expires": "Thu, 01 Jan 1970 00:00:01 GMT",
+      "Referrer-Policy": "same-origin",
+      "X-Frame-Options": "SAMEORIGIN",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=UI68YHkWREmLTnmvIxAxHoLT7L6zy83mYVGJYgbMV%2FQ%2BPly08F3t3U1AXFj9zYRdmqMkZ5L2zNcf%2Ban7GdQA%2BNYoUPz6CUnHamlb%2BqSr77PZE9sAS1q6bk2%2BsmcInENQI7reAfzxXapSsQ%3D%3D\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Server": "cloudflare",
+      "CF-RAY": "a534cb727fc66d55-GRU",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    }
+  },
+  {
+    "route": "/baixar-apk",
+    "status": 403,
+    "headers": {
+      "Date": "Sat, 31 Oct 2026 18:41:35 GMT",
+      "Content-Type": "text/plain; charset=UTF-8",
+      "Content-Length": "17",
+      "Connection": "close",
+      "Cache-Control": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+      "Expires": "Thu, 01 Jan 1970 00:00:01 GMT",
+      "Referrer-Policy": "same-origin",
+      "X-Frame-Options": "SAMEORIGIN",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=7hoMHvYq6tXSqiY3AwOjy%2FCtPCHGA7xT0rfVG91LXUgHyx2mhwkqtRoJVR%2BnYYhPf9%2FGbnpKERcm1iAscFANVH6VDekiRMJap3Q5YACWt9PR%2FX0aDmdDY1YO8YT27uQOCO0DEoQ7nRWt3A%3D%3D\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Server": "cloudflare",
+      "CF-RAY": "a534cb72dfc59ad3-GRU",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    }
+  },
+  {
+    "route": "/version.json",
+    "status": 403,
+    "headers": {
+      "Date": "Sat, 31 Oct 2026 18:41:35 GMT",
+      "Content-Type": "text/plain; charset=UTF-8",
+      "Content-Length": "17",
+      "Connection": "close",
+      "Cache-Control": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+      "Expires": "Thu, 01 Jan 1970 00:00:01 GMT",
+      "Referrer-Policy": "same-origin",
+      "X-Frame-Options": "SAMEORIGIN",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=z5RoYpvBZW5DyvpkSDw2%2BZV%2BZYVQm0nCW2kiOHSmq51QfHFz%2BLVSscCfg88RwSzRlMY3lPODsD%2BIDszJYybo7aXJZz7PtSYhO3VvmdHSknIcYUf0dQs5O%2FZZdVcPSbNn%2FA%2FRW2uQbcQxMQ%3D%3D\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Server": "cloudflare",
+      "CF-RAY": "a534cb741de9a531-GRU",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    }
+  },
+  {
+    "route": "/play/index.wasm",
+    "status": 403,
+    "headers": {
+      "Date": "Sat, 31 Oct 2026 18:41:35 GMT",
+      "Content-Type": "text/plain; charset=UTF-8",
+      "Content-Length": "17",
+      "Connection": "close",
+      "Cache-Control": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+      "Expires": "Thu, 01 Jan 1970 00:00:01 GMT",
+      "Referrer-Policy": "same-origin",
+      "X-Frame-Options": "SAMEORIGIN",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=rYOuilo%2FdsiX2UFB%2FJRXumIsGcSBqncqUOY%2BJ%2F2dDTw7n9oT%2Bkgy0eA%2FFy1rorRMp7bKaAAMAFiTVR7m%2FJJjKXb8RNsNYA65y37%2B7KjYJyKyIIleX1SkB7q4vYpqjWfXEEJkOnS9U88%2BpQ%3D%3D\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Server": "cloudflare",
+      "CF-RAY": "a534cb74cf0a0da6-GRU",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    }
+  }
+]

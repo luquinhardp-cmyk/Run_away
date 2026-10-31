@@ -75,6 +75,10 @@ func _load_model() -> void:
 		mat.roughness = 0.95
 		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		if OS.has_feature("web"):
+			# This distant black silhouette needs neither per-light passes nor shadows.
+			mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+			mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		mesh.material_override = mat
 		materials.append(mat)
 	entity.hide()

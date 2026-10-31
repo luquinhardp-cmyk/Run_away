@@ -91,13 +91,14 @@ func menu() -> void:
 	text("E C O S", 68)
 	text("INSTALAÇÃO ABANDONADA", 26)
 	text("Não há armas. Há caminhos. E algo escutando.\nEncontre o fusível, restaure a energia e alcance a saída.")
-	button("INICIAR NOVA SESSÃO", func(): consent_screen(false))
+	button("INICIAR NOVA SESSÃO", new_game_screen)
 	if not Game.checkpoint.is_empty(): button("CONTINUAR DO CHECKPOINT", func(): consent_screen(true))
+	if Game.tutorial_progress().get("stage") == "tutorial": button("RETOMAR PREPARAÇÃO", func(): consent_screen(true, true))
 	button("CONFIGURAÇÕES", func(): settings_screen("menu"))
 	button("CONTA / PROGRESSO", account_screen)
 	menu_status = text(Cloud.status, 16)
 	if not OS.has_feature("android") and not OS.has_feature("web"): button("SAIR", func(): get_tree().quit())
-	text("Versão 0.9 • Prévia do Escutador\nRecomendado: fones de ouvido. Sustos moderados, sem flashes.", 16)
+	text("Versão 0.10 • Tutorial e Escutador\nRecomendado: fones de ouvido. Sustos moderados, sem flashes.", 16)
 
 func _cloud_updated() -> void:
 	if screen == "menu" and is_instance_valid(menu_status): menu_status.text = Cloud.status
@@ -146,7 +147,17 @@ func account_screen() -> void:
 	button("VOLTAR", func():
 		if not Cloud.busy and not Cloud.syncing: menu())
 
-func consent_screen(resume: bool) -> void:
+func new_game_screen() -> void:
+	screen = "new_game"
+	clear()
+	text("ANTES DE ENTRAR", 38)
+	text("Aprenda os controles na sala de preparação. Os objetos de treino ficam lá; o tempo de fuga começa na fase principal.")
+	if Game.settings.get("tutorial_completed", false): text("Preparação já concluída neste aparelho. Você pode repeti-la.", 17)
+	button("NOVO JOGO COM TUTORIAL", func(): consent_screen(false, true))
+	button("NOVO JOGO SEM TUTORIAL", func(): consent_screen(false))
+	button("VOLTAR", menu)
+
+func consent_screen(resume: bool, tutorial := false) -> void:
 	if Cloud.busy or Cloud.syncing or not Cloud.conflict.is_empty():
 		account_screen()
 		return
@@ -155,12 +166,17 @@ func consent_screen(resume: bool) -> void:
 	text("ATÉ O SEU MEDO FAZ BARULHO.", 38)
 	text("Com o microfone ligado, sons perto do celular podem atrair a criatura.\nApenas a intensidade é processada localmente. Nenhuma voz é gravada ou enviada.\nA captura para na pausa e em segundo plano. Você pode desligá-la imediatamente no HUD.\nUse fones para evitar que o alto-falante do jogo ative o microfone.")
 	text("Ao ativar: mantenha silêncio durante 3 segundos para calibrar o ruído ambiente.")
-	button("JOGAR COM MICROFONE · permitir", func(): start(resume, true))
-	button("JOGAR SEM MICROFONE", func(): start(resume, false))
+	button("JOGAR COM MICROFONE · permitir", func():
+		if tutorial: start_tutorial(resume, true)
+		else: start(resume, true))
+	button("JOGAR SEM MICROFONE", func():
+		if tutorial: start_tutorial(resume, false)
+		else: start(resume, false))
 	button("VOLTAR", menu)
 
 func start(resume: bool, microphone: bool) -> void:
 	_remove_level()
+	if not Game.testing: Game.write_json(Game.tutorial_path(), {"version":1,"stage":"entered","completed":Game.settings.get("tutorial_completed",false)})
 	menu_stage.set_active(false)
 	Game.begin(resume)
 	level = preload("res://scenes/levels/facility.tscn").instantiate()
@@ -181,16 +197,65 @@ func start(resume: bool, microphone: bool) -> void:
 	level.message.connect(hud.show_message)
 	screen = "playing"
 	ui.hide()
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if not Game.testing and not DisplayServer.is_touchscreen_available(): Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if microphone: Mic.request_enable()
 	else: Mic.disable()
+
+func start_tutorial(resume: bool, microphone: bool) -> void:
+	_remove_level()
+	menu_stage.set_active(false)
+	var progress := Game.tutorial_progress() if resume else {}
+	Game.begin(false)
+	Game.in_tutorial = true
+	level = preload("res://scenes/tutorial/preparation.tscn").instantiate()
+	level.restore_data = progress
+	add_child(level)
+	var player := preload("res://scenes/player/player.tscn").instantiate()
+	player.position = level.spawn_position()
+	level.add_child(player)
+	hud = preload("res://scenes/tutorial/hud.tscn").instantiate()
+	hud.manager = level
+	hud.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(hud)
+	level.attach_player(player, hud)
+	level.exit_requested.connect(tutorial_confirmation)
+	# Free the preparation only after its signal has finished emitting.
+	level.transition_requested.connect(_tutorial_transition,CONNECT_DEFERRED)
+	screen = "playing"
+	ui.hide()
+	if not Game.testing and not DisplayServer.is_touchscreen_available(): Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if microphone: Mic.request_enable()
+	else: Mic.disable()
+
+func tutorial_confirmation() -> void:
+	if not Game.in_tutorial or screen != "playing": return
+	screen = "tutorial_confirm"
+	Game.set_paused(true)
+	clear()
+	text("VOCÊ ESTÁ PRESTES A ENTRAR NO COMPLEXO.", 30)
+	text("Depois de atravessar esta porta, não será possível voltar à sala de preparação nesta partida.")
+	button("ENTRAR", func():
+		screen = "playing"
+		ui.hide()
+		Game.set_paused(false)
+		level.accept_exit())
+	button("PERMANECER NA SALA", func():
+		screen = "playing"
+		ui.hide()
+		Game.set_paused(false))
+
+func _tutorial_transition() -> void:
+	if not Game.in_tutorial or not is_instance_valid(level) or not level.departed: return
+	var microphone := Mic.consent
+	start(false, microphone)
+	if Game.record_results: Game.save_checkpoint()
 
 func _remove_level() -> void:
 	Mic.disable()
 	Sound.stop_all()
 	if is_instance_valid(level):
-		for audio in level.find_children("*", "AudioStreamPlayer3D", true, false): audio.stop()
-		for audio in level.find_children("*", "AudioStreamPlayer", true, false): audio.stop()
+		for audio in level.find_children("*", "AudioStreamPlayer3D", true, false): audio.stop(); audio.stream = null
+		for audio in level.find_children("*", "AudioStreamPlayer", true, false): audio.stop(); audio.stream = null
 		level.free()
 	if is_instance_valid(hud):
 		hud.free()
@@ -203,6 +268,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func _updated() -> void:
+	if Game.inventory_open: return
 	if Game.playing and Game.paused and screen == "playing": pause_screen()
 	elif Game.playing and not Game.paused and screen in ["pause", "settings"]:
 		screen = "playing"
@@ -214,8 +280,14 @@ func pause_screen() -> void:
 	text("RESPIRA. EM SILÊNCIO.", 40)
 	text("PAUSADO · captura de microfone interrompida")
 	button("CONTINUAR", func(): Game.set_paused(false))
+	if Game.in_tutorial and level.departing:
+		text("Entrada no complexo registrada. A sala de preparação não pode mais ser retomada nesta partida.",17)
+		button("VOLTAR AO MENU", to_menu)
+		return
 	button("CONFIGURAÇÕES", func(): settings_screen("pause"))
-	button("REINICIAR FASE", func(): start(false, false))
+	button("REINICIAR PREPARAÇÃO" if Game.in_tutorial else "REINICIAR FASE", func():
+		if Game.in_tutorial: start_tutorial(false, Mic.consent)
+		else: start(false, false))
 	button("VOLTAR AO MENU", to_menu)
 
 func to_menu() -> void:
@@ -224,6 +296,7 @@ func to_menu() -> void:
 	Game.paused = false
 	get_tree().paused = false
 	_remove_level()
+	Game.in_tutorial = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	menu()
 

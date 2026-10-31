@@ -65,14 +65,22 @@ func _ready() -> void:
 	ambience.volume_db = -32
 	add_child(ambience)
 	ambience.finished.connect(ambience.play)
-	ambience.play()
+	_start_ambience()
 
 func set_active(value: bool) -> void:
 	visible = value
 	camera.current = value
 	world_environment.environment = sky if value else null
-	if value: ambience.play()
+	if value: _start_ambience()
 	else: ambience.stop()
+
+func _start_ambience() -> void:
+	if visible and is_instance_valid(ambience) and not ambience.playing: ambience.play()
+
+func _exit_tree() -> void:
+	if is_instance_valid(ambience):
+		ambience.stop()
+		ambience.stream = null
 
 func _box(root: Node3D, pos: Vector3, size: Vector3, mat: Material, angle: Vector3 = Vector3.ZERO) -> void:
 	var node := MeshInstance3D.new()

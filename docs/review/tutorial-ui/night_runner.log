@@ -1,0 +1,157 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+
+PASS yard is outdoors with overhead ray
+
+PASS real overhead obstacle blocks yard eligibility
+
+PASS interior excluded
+
+PASS basement excluded
+
+PASS actual camera direction sees sky
+
+PASS horizontal gaze rejected
+
+PASS initial cooldown 4 to 9 minutes
+
+PASS initial cooldown prevents spawn
+
+PASS capture blocks flight
+
+PASS terrestrial chase blocks flight
+
+PASS incompatible director event blocks flight
+
+PASS 736 trees across four layers
+
+PASS continuous surrounding horizon
+
+PASS single pooled winged entity
+
+PASS near forest preserved quality 0
+
+PASS model LOD quality 0
+
+PASS near forest preserved quality 1
+
+PASS model LOD quality 1
+
+PASS near forest preserved quality 2
+
+PASS model LOD quality 2
+
+PASS starts contextual pattern moon_cross
+
+PASS animation exists glide
+
+PASS continuous trajectory moon_cross
+
+PASS own director reservation does not cancel moon_cross
+
+PASS pause freezes trajectory moon_cross
+
+PASS crosses lunar disk moon_cross
+
+PASS hidden and cooldown reset moon_cross
+
+PASS no consecutive repetition moon_cross
+
+PASS starts contextual pattern distant
+
+PASS animation exists glide
+
+PASS continuous trajectory distant
+
+PASS own director reservation does not cancel distant
+
+PASS pause freezes trajectory distant
+
+PASS hidden and cooldown reset distant
+
+PASS no consecutive repetition distant
+
+PASS starts contextual pattern near
+
+PASS animation exists fast_pass
+
+PASS continuous trajectory near
+
+PASS own director reservation does not cancel near
+
+PASS pause freezes trajectory near
+
+PASS hidden and cooldown reset near
+
+PASS no consecutive repetition near
+
+PASS starts contextual pattern tree_rise
+
+PASS animation exists flap
+
+PASS continuous trajectory tree_rise
+
+PASS own director reservation does not cancel tree_rise
+
+PASS pause freezes trajectory tree_rise
+
+PASS hidden and cooldown reset tree_rise
+
+PASS no consecutive repetition tree_rise
+
+PASS starts contextual pattern silent
+
+PASS animation exists glide
+
+PASS continuous trajectory silent
+
+PASS own director reservation does not cancel silent
+
+PASS pause freezes trajectory silent
+
+PASS hidden and cooldown reset silent
+
+PASS no consecutive repetition silent
+
+PASS starts contextual pattern moon_silent
+
+PASS animation exists glide
+
+PASS continuous trajectory moon_silent
+
+PASS own director reservation does not cancel moon_silent
+
+PASS pause freezes trajectory moon_silent
+
+PASS crosses lunar disk moon_silent
+
+PASS completely silent lunar passage
+
+PASS hidden and cooldown reset moon_silent
+
+PASS no consecutive repetition moon_silent
+
+PASS starts contextual pattern unseen_cry
+
+PASS animation exists vanish
+
+PASS continuous trajectory unseen_cry
+
+PASS own director reservation does not cancel unseen_cry
+
+PASS pause freezes trajectory unseen_cry
+
+PASS shadow gone before delayed cry
+
+PASS cry after disappearance
+
+PASS hidden and cooldown reset unseen_cry
+
+PASS no consecutive repetition unseen_cry
+
+PASS bounded spatial scream
+
+PASS three bounded forest voices
+
+NIGHT RESULT 76 passed; 0 failed

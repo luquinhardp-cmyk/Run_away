@@ -1,0 +1,51 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+
+PASS backpack pauses the world and releases pointer lock
+
+PASS slots reflect actual owned IDs and stack
+
+PASS all owned items have model-rendered thumbnails
+
+PASS stack quantity reflects real supplies
+
+PASS mission item discard and incompatible use are disabled
+
+PASS discard callback cannot delete essential items
+
+PASS inspect creates one lightweight 3D viewport
+
+PASS touch drag rotates the inspected model
+
+PASS inspection zoom moves the actual camera
+
+PASS back removes the inspection viewport
+
+PASS inventory does not rebuild every frame
+
+PASS equip operates the real flashlight and restores controls
+
+PASS discard decrements supply and creates a real physical object
+
+PASS key use becomes available near the matching lock
+
+PASS inventory use invokes the real lock interaction
+
+PASS low profile inspects enlarged 2D image without a viewport
+
+PASS Escape closes the backpack without opening pause menu
+
+PASS interface sound does not create a gameplay noise
+
+PASS crouch button reflects the real stance
+
+PASS touch drag drives the existing joystick
+
+PASS second touch independently controls the real camera
+
+PASS releasing joystick preserves the independent look touch
+
+PASS pause clears both touches
+
+INVENTORY RESULT 23 passed; 0 failed

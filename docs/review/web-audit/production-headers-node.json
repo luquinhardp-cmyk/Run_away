@@ -1,0 +1,104 @@
+[
+  {
+    "route": "/",
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "no-cache",
+      "cf-ray": "a534cbf03a241ab3-GRU",
+      "connection": "close",
+      "content-encoding": "br",
+      "content-type": "text/html; charset=utf-8",
+      "date": "Sat, 31 Oct 2026 18:41:55 GMT",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "permissions-policy": "microphone=(self)",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=obyvKjiLNTrPOvN%2FUluGKzz63IYqlWQTKO8HR0iyRciEan%2FRtNt6Eh1VCL3wb%2FIAmYZGSm2ysEDOZihxU1DjHCW2ulyE2RljISZGOtJoVa7%2FRCvlLW3tSBfR%2Bqhx5%2FO3znpcsK8fPBHnjA%3D%3D\"}]}",
+      "server": "cloudflare",
+      "x-content-type-options": "nosniff"
+    }
+  },
+  {
+    "route": "/play/",
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "no-cache",
+      "cf-ray": "a534cbf17c4758e3-GRU",
+      "connection": "close",
+      "content-encoding": "br",
+      "content-type": "text/html; charset=utf-8",
+      "date": "Sat, 31 Oct 2026 18:41:55 GMT",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "permissions-policy": "microphone=(self)",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=d8fdQ8YBIJ7Bl1GT6vmnpum9xiJbgJnec8X7v7WLqlP1%2F7ZNDbLb230ox6LlsxFRrxo9cDuwjC1neSBoPK0bu5nJYQFyzSSUNJ652W6wwfUQBdYDsUQi8r2NhjlQ3FnecyLMluQDaOBImw%3D%3D\"}]}",
+      "server": "cloudflare",
+      "x-content-type-options": "nosniff"
+    }
+  },
+  {
+    "route": "/baixar-apk",
+    "status": 302,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "no-cache",
+      "cf-ray": "a534cbf20d612144-GRU",
+      "connection": "close",
+      "content-type": "text/plain;charset=UTF-8",
+      "date": "Sat, 31 Oct 2026 18:41:55 GMT",
+      "location": "https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.9.0-creature-study/ecos-android.apk",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "permissions-policy": "microphone=(self)",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=Wgb2MhpH2PtxYJsDamwR3WgzN9sMh4vVLUTwotYN4PnFKvwPBhKIbkSeA7uTP%2FZM%2FuFNQBUDdXarQMkyPSn8xkDqSpc%2FT9ot%2F3iEj0j%2FD4pkpF0QxAYYNIIZdyMcZaxLT98dpCzJmLf0rw%3D%3D\"}]}",
+      "server": "cloudflare",
+      "x-content-type-options": "nosniff"
+    }
+  },
+  {
+    "route": "/version.json",
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "no-cache",
+      "cf-ray": "a534cbf29d1e7ec3-GRU",
+      "connection": "close",
+      "content-encoding": "br",
+      "content-type": "application/json",
+      "date": "Sat, 31 Oct 2026 18:41:55 GMT",
+      "etag": "W/\"589d41d422b9e1a85b3afaaecca517e9\"",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "permissions-policy": "microphone=(self)",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=uGOGK7VygbhsvtGU0EgaA3ZXnzXmpS3r8YUZlsHW8dyLrfSaOtQorTWgFauHQ3Mt%2BISXWaHHKDu%2FH1pBLWV%2BJYxbU8WDGBKFr9QLOfq%2FFEAdw7D9clt%2BaKPALlsnEjUCXl4GSyz1b6ormQ%3D%3D\"}]}",
+      "server": "cloudflare",
+      "x-content-type-options": "nosniff"
+    }
+  },
+  {
+    "route": "/play/index.wasm",
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "no-cache",
+      "cf-ray": "a534cbf339415417-GRU",
+      "connection": "close",
+      "content-encoding": "gzip",
+      "content-type": "application/wasm",
+      "date": "Sat, 31 Oct 2026 18:41:55 GMT",
+      "etag": "\"e407201a881f350e566a921556049762\"",
+      "nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "permissions-policy": "microphone=(self)",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "report-to": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=4QOlfSMPaR3vpvCdd5l35Ehaftx05Bsn6YcNHiMG%2FcM1CvQZtaFB4jQIOd7BjxK6LK4xBFXX6kgk3tbko78WVh3AJfrZX4hVWh5CntuB0IZSwtpHVgREsdv941%2BE0%2F6fLtKrAEjmkt6%2F%2BA%3D%3D\"}]}",
+      "server": "cloudflare",
+      "x-content-type-options": "nosniff"
+    }
+  }
+]

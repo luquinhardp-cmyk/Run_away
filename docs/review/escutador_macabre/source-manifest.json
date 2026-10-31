@@ -1,0 +1,11 @@
+{
+  "scripts/enemy/escutador_visual.gd": "4c11871b3b0929c453bc81e46bacb69b3b11c2fd54a852dec83d6e0ddaf2e6e1",
+  "tools/art/integrate_macabre_escutador.py": "083925f3105d98e9304990b23ddf22609578d8fdd7d3ad1cde5188cbb47c4662",
+  "export_presets.cfg": "29669fa9b091512c2d556b32c908e0908f8f7523d79876b7056351482b6ebadc",
+  "tests/macabre_runner.gd": "0d2e353002c4fa99e1d3cf8911af33e9725e86ba370af00d7b30d6e791855c6b",
+  "tests/macabre_review.gd": "164e0e05c27c768281103cafdfbec715ab6e5fdc10a6c4216e63193949319de2",
+  "assets/models/escutador_macabre.glb": "2a89df90a0bbc5ddc45a4d3af99e7634eb06d7eeb67171d3aa488bbcb59f61c5",
+  "assets/models/escutador_macabre_low.glb": "fb21eccaca99f120a8454c21706c3b14753f781a304a7a87fc7738f2458a5e53",
+  "assets/source/macabre_escutador/Escutador_Monstro_3D.glb": "821e5a4771c18fed7ddf9a1e0caf1f1b78a5521558d10786fd1395f767595ad9",
+  "assets/source/macabre_escutador/escutador_macabre.blend": "1adcceea481163b69863bd1d657e43284f61ff41c97c9f0d204c077ae332a442"
+}

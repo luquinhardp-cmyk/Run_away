@@ -23,7 +23,7 @@ func _build() -> void:
 	var capture_time := animator.current_animation_position if is_instance_valid(animator) and capture_clip != "" else 0.0
 	if is_instance_valid(model): model.free()
 	low = Game.settings.quality < 1
-	var path := "res://assets/models/escutador_received_low.glb" if low else "res://assets/models/escutador_received.glb"
+	var path := "res://assets/models/escutador_macabre_low.glb" if low else "res://assets/models/escutador_macabre.glb"
 	model = load(path).instantiate()
 	add_child(model)
 	# GLB +Y (Blender forward) becomes Godot -Z, same as AI perception.
@@ -41,6 +41,14 @@ func _build() -> void:
 			var imported: Material = mesh.mesh.surface_get_material(index)
 			if imported == null: continue
 			var name: String = imported.resource_name
+			if name.begins_with("Received_Macabre_"):
+				# Keep the supplied model's vertex colors, teeth and oral materials.
+				var material := imported.duplicate() as StandardMaterial3D
+				material.vertex_color_use_as_albedo = true
+				material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS if low else BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+				if low: material.normal_enabled = false
+				mesh.set_surface_override_material(index, material)
+				continue
 			mesh.set_surface_override_material(index, _received_material(name, low))
 	active_clip = ""
 	set_motion(motion_state)
@@ -84,6 +92,16 @@ func set_motion(state: int) -> void:
 	if clip_names.has(clip): animator.play(clip_names[clip], 0.16)
 
 func advance_motion(speed: float) -> void:
+	if active_clip.begins_with("capture"): return
+	# Navigation can stop while retaining a locomotion state. Blend into breathing
+	# instead of walking in place; hysteresis prevents flicker near a doorway.
+	if motion_state in [0, 3, 5, 8]:
+		var desired: String = STATE_CLIPS[motion_state]
+		if speed < .06: desired = "breathe"
+		elif speed < .12 and active_clip == "breathe": desired = "breathe"
+		if active_clip != desired:
+			active_clip = desired
+			animator.play(clip_names[desired], .20)
 	if motion_state == 4:
 		var desired := "hide_search" if speed < .05 else "search"
 		if active_clip != desired:
