@@ -1,4 +1,4 @@
-﻿extends Node
+extends Node
 var night: Node3D
 var voices: Array[AudioStreamPlayer3D] = []
 var rng := RandomNumberGenerator.new()
@@ -43,5 +43,3 @@ func _process(delta: float) -> void:
 		voice.play()
 		played += 1
 		break
-
-

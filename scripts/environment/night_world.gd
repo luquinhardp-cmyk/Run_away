@@ -1,4 +1,4 @@
-﻿extends Node3D
+extends Node3D
 var facility: Node3D
 var environment: Environment
 var sky_material: ShaderMaterial
@@ -66,5 +66,3 @@ func _process(delta: float) -> void:
 	environment.ambient_light_energy = lerpf(0.38,0.075,exterior_blend)
 	environment.fog_density = lerpf(0.017,0.013,exterior_blend)
 	environment.fog_light_color = Color(0.06,0.07,0.055).lerp(Color(0.017,0.011,0.014),exterior_blend)
-
-
