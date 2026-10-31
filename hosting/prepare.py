@@ -15,19 +15,32 @@ parser.add_argument("--apk-url", default="https://github.com/luquinhardp-cmyk/Ru
 args = parser.parse_args()
 output = root / args.output
 wasm = output / "play/index.wasm"
+pack_parts = []
 for payload in [wasm, output / "play/index.pck"]:
-    data = payload.read_bytes()
+    data = payload.read_bytes() if payload.exists() else b"".join((payload.parent / name).read_bytes() for name in json.loads((payload.parent / "pack-parts.json").read_text()))
     if not data.startswith(b"\x1f\x8b"):
-        payload.write_bytes(gzip.compress(data, compresslevel=9, mtime=0))
+        data = gzip.compress(data, compresslevel=9, mtime=0)
+    payload.write_bytes(data)
     if payload.stat().st_size > 25 * 1024 * 1024:
-        raise SystemExit(f"Payload exceeds Pages limit: {payload.name}")
+        if payload.suffix != ".pck":
+            raise SystemExit(f"Payload exceeds Pages limit: {payload.name}")
+        compressed = payload.read_bytes()
+        for index, offset in enumerate(range(0, len(compressed), 16 * 1024 * 1024)):
+            name = f"index.pck.part{index}"
+            (payload.parent / name).write_bytes(compressed[offset:offset+16*1024*1024])
+            pack_parts.append(name)
+        (payload.parent / "pack-parts.json").write_text(json.dumps(pack_parts))
+        payload.unlink()
 shutil.copyfile(root / args.landing, output / "index.html")
 shutil.copyfile(root / "hosting/_headers", output / "_headers")
 shutil.copyfile(root / "hosting/wasm-loader.js", output / "play/wasm-loader.js")
 page = output / "play/index.html"
 html = page.read_text(encoding="utf-8")
+html = re.sub(r'<script>window.ECOS_PACK_PARTS=.*?</script>\s*', '', html)
 if 'src="wasm-loader.js"' not in html:
     html = html.replace('<script src="index.js">', '<script src="wasm-loader.js"></script>\n\t\t<script src="index.js">')
+if pack_parts:
+    html = html.replace('<script src="wasm-loader.js">', '<script>window.ECOS_PACK_PARTS=' + json.dumps(pack_parts) + ';</script>\n<script src="wasm-loader.js">')
 page.write_text(html, encoding="utf-8")
 try:
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()

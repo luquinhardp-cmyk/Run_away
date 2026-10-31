@@ -2,10 +2,20 @@
 (() => {
   const fetchOriginal = window.fetch.bind(window);
   window.fetch = async function(input, options) {
-    const response = await fetchOriginal(input, options);
     const url = new URL(typeof input === 'string' ? input : input.url || String(input), location.href);
     const wasm = url.pathname.endsWith('/index.wasm');
     const pack = url.pathname.endsWith('/index.pck');
+    let response;
+    if (pack && Array.isArray(window.ECOS_PACK_PARTS) && window.ECOS_PACK_PARTS.length) {
+      const parts = await Promise.all(window.ECOS_PACK_PARTS.map(async name => {
+        const part = await fetchOriginal(new URL(name, url).href, options);
+        if (!part.ok) throw new Error('Falha ao baixar uma parte do jogo: ' + part.status);
+        return part.arrayBuffer();
+      }));
+      response = new Response(new Blob(parts).stream(), {status: 200});
+    } else {
+      response = await fetchOriginal(input, options);
+    }
     if ((!wasm && !pack) || !response.ok) return response;
     let data = await response.arrayBuffer();
     let bytes = new Uint8Array(data);
