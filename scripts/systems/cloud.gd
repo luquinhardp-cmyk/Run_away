@@ -30,6 +30,8 @@ func _process(delta: float) -> void:
 func _request(method: HTTPClient.Method, url: String, data: Variant = null, auth: bool = false, form: bool = false) -> Dictionary:
 	var request := HTTPRequest.new()
 	request.timeout = 20
+	# Browsers already decompress fetch/XHR responses while retaining encoding headers.
+	if OS.has_feature("web"): request.accept_gzip = false
 	add_child(request)
 	var headers := PackedStringArray(["Content-Type: application/x-www-form-urlencoded" if form else "Content-Type: application/json"])
 	if auth: headers.append("Authorization: Bearer " + _token)
@@ -66,7 +68,7 @@ func authenticate(address: String, password: String, create: bool = false) -> vo
 	status = "Conectando…"
 	changed.emit()
 	var result := await _request(HTTPClient.METHOD_POST, _auth_url("signUp" if create else "signInWithPassword"), {"email": address.strip_edges(), "password": password, "returnSecureToken": true})
-	if not result.ok:
+	if not result.ok or not result.body.has("idToken"):
 		status = "Não foi possível entrar. Confira a conta, a senha e a conexão."
 		if str(result.body.get("error", {}).get("message", "")).contains("CONFIGURATION_NOT_FOUND") or str(result.body.get("error", {}).get("message", "")).contains("OPERATION_NOT_ALLOWED"):
 			status = "Login ainda não ativado no projeto Firebase. Jogue como visitante por enquanto."
