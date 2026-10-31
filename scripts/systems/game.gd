@@ -16,6 +16,8 @@ var last_score := 0
 var run_id := ""
 var record_results := true
 var testing := false
+var capture_in_progress := false
+var last_capture_id := ""
 var history: Dictionary = {}
 var _tick := 0
 var _autosave := 0.0
@@ -93,7 +95,7 @@ var objective: String:
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	settings.merge({"difficulty": 1, "seed": 0, "metrics": false})
+	settings.merge({"difficulty": 1, "seed": 0, "metrics": false, "camera_motion": 0.5, "visual_scares": true, "light_variation": true})
 	select_profile("")
 	var config := ConfigFile.new()
 	if config.load("user://settings.cfg") == OK:
@@ -112,6 +114,7 @@ func _ready() -> void:
 		InputMap.action_add_event(action, event)
 
 func begin(resume: bool = false) -> void:
+	capture_in_progress = false
 	_autosave = 0
 	elapsed_ms = int(checkpoint.get("elapsed_ms", 0)) if resume else 0
 	run_id = Crypto.new().generate_random_bytes(16).hex_encode()
@@ -169,6 +172,7 @@ func finish(won: bool) -> void:
 		write_json(history_path(), history)
 		Cloud.queue_run(run)
 	playing = false
+	capture_in_progress = false
 	Mic.suspend()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	ended.emit(won)

@@ -189,3 +189,9 @@ func _set_open(value: bool) -> void:
 	open = value
 	if collider: collider.set_deferred("disabled", value)
 	if mesh: mesh.position.y = 2.8 if value else 0.0
+
+func reveal_for_capture() -> void:
+	# The real locker shell parts open after occupancy has been confirmed.
+	if kind == "hide" and mesh:
+		var tween := create_tween()
+		tween.tween_property(mesh, "rotation:y", 0.65, 0.3)

@@ -16,10 +16,12 @@ func _ready() -> void:
 	add_child(detail)
 	_corridor()
 	_rooms()
+	_room_stories()
 	_exterior()
 	_basement()
 	_ambience("exterior_wind", Vector3(0, 2, 12), 24, -30)
 	_ambience("basement_drips", Vector3(-19, -1, -32), 12, -27)
+	_ambience("electric_hum", Vector3(-7, 1.4, -33), 8, -34)
 	static_batches = HorrorArt.merge_static(detail, self)
 	Game.updated.connect(apply_quality)
 	apply_quality()
@@ -185,6 +187,43 @@ func _rooms() -> void:
 		box(Vector3(side * 1.65, 0.65, -39), Vector3(0.18, 1.7, 0.16), wood, Vector3(0.12, 0, side * 0.2))
 		box(Vector3(side * 1.5, 0.12, -40), Vector3(0.6, 0.16, 1.2), wood, Vector3(0, side * 0.25, 0))
 	light_at(Vector3(0, 2.5, -40.7), Color(0.46, 0.51, 0.45), 0.7, 4.5)
+
+func _story_sign(id: String, text: String, pos: Vector3, angle: float, size: Vector2, type: String = "paper") -> void:
+	var sign := WorldSign3D.new()
+	sign.sign_id = id
+	sign.text = text
+	sign.position = pos
+	sign.rotation.y = angle
+	sign.dimensions = size
+	sign.sign_type = type
+	add_child(sign)
+
+func _room_stories() -> void:
+	var rust := HorrorArt.surface("rusted_iron")
+	var wood := HorrorArt.surface("rotten_wood")
+	var cloth := HorrorArt.surface("torn_fabric")
+	# Leave all objective approaches, doorways and hide exits free.
+	_story_sign("ward", "ENFERMARIA 01\nNÃO REMOVA OS PROTETORES AURICULARES", Vector3(-9.76, 2.1, 0), PI / 2, Vector2(1.5, 0.55))
+	_story_sign("patient", "LEITO 04 / TRANSFERIDO\nNENHUM SINAL DE RESPOSTA À VOZ", Vector3(-8, 1.45, -1.83), 0, Vector2(1.25, 0.42))
+	# Medical trolley and folded linen remain against the west wall.
+	for y in [0.3, 0.8]: box(Vector3(-9.45, y, 1.1), Vector3(0.65, 0.045, 0.7), rust)
+	for z in [0.82, 1.38]: pipe(Vector3(-9.6, 0.1, z), Vector3(-9.6, 1.1, z), 0.025, rust, 6)
+	box(Vector3(-9.45, 0.92, 1.1), Vector3(0.48, 0.2, 0.5), cloth)
+	_story_sign("maintenance_warning", "MANUTENÇÃO / 02\nDESLIGUE O CIRCUITO ANTES DE OPERAR", Vector3(9.76, 2.0, -8), -PI / 2, Vector2(1.6, 0.55), "danger")
+	box(Vector3(7.7, 1.95, -9.80), Vector3(1.5, 0.75, 0.035), wood)
+	for i in 6:
+		pipe(Vector3(7.13 + i * 0.22, 1.7, -9.74), Vector3(7.13 + i * 0.22, 2.18 - (i % 2) * 0.1, -9.74), 0.022, rust, 6)
+	_story_sign("storage_tags", "DEPÓSITO / 03\nCAIXAS DEVOLVIDAS: NÃO ABRIR", Vector3(-9.76, 2.0, -16), PI / 2, Vector2(1.5, 0.5))
+	for index in 3:
+		box(Vector3(-9.45, 0.3 + index * 0.5, -17.3), Vector3(0.6, 0.45, 0.65), wood, Vector3(0, index * 0.04, 0))
+	_story_sign("physical_map", "INSTALAÇÃO 04 / PLANTA DE SERVIÇO\nENFERMARIA → CORREDOR\nMANUTENÇÃO → GALERIA → SEGURANÇA\nDEPÓSITO → OFICINA [CHAVE]\nENERGIA → SAÍDA DE SERVIÇO", Vector3(9.76, 1.9, -24), -PI / 2, Vector2(1.8, 1.05), "map")
+	_story_sign("security_log", "SEGURANÇA / 04\nCÂMERAS SEM SINAL DESDE 03:17", Vector3(7, 2.2, -25.76), 0, Vector2(1.55, 0.4))
+	_story_sign("electrical_warning", "PERIGO / ALTA TENSÃO\nFUSÍVEL → PAINEL → GERADOR\nEM FALHA: REARME O GERADOR", Vector3(-9.76, 1.8, -32), PI / 2, Vector2(1.6, 0.7), "danger")
+	for i in 4:
+		box(Vector3(-3.1 + i * 0.22, 1.45, -33.78), Vector3(0.16, 0.5, 0.12), rust)
+		pipe(Vector3(-3.1 + i * 0.22, 1.2, -33.8), Vector3(-3.1 + i * 0.22, 0.25, -33.8), 0.012, rust, 6)
+	light_at(Vector3(-9, 2.5, 0), Color("8b9b80"), 0.22, 3)
+	light_at(Vector3(9, 2.5, -24), Color("829b9c"), 0.2, 3)
 
 func _exterior() -> void:
 	var wood := HorrorArt.surface("rotten_wood")

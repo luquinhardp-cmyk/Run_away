@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="HorrorCapture" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/horror/capture_definition.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = "chase"
+clip = "capture_chase"
+weight = 1.1
+camera_roll = 0.06
+camera_pull = 0.035

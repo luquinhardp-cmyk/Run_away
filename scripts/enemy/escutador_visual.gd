@@ -7,7 +7,7 @@ var low := false
 var active_clip := ""
 var motion_state := 0
 var clip_names: Dictionary = {}
-const STATE_CLIPS := {0: "patrol", 1: "breathe", 2: "listen", 3: "investigate", 4: "search", 5: "chase", 6: "attack", 7: "search", 8: "return"}
+const STATE_CLIPS := {0: "patrol", 1: "breathe", 2: "listen", 3: "investigate", 4: "search", 5: "chase", 6: "attack", 7: "lost", 8: "return"}
 
 func _ready() -> void:
 	name = "EscutadorVisual"
@@ -18,9 +18,11 @@ func _quality() -> void:
 	if low != (Game.settings.quality < 1): _build()
 
 func _build() -> void:
+	var capture_clip := active_clip if active_clip.begins_with("capture") else ""
+	var capture_time := animator.current_animation_position if is_instance_valid(animator) and capture_clip != "" else 0.0
 	if is_instance_valid(model): model.free()
 	low = Game.settings.quality < 1
-	var path := "res://assets/models/escutador_low.glb" if low else "res://assets/models/escutador.glb"
+	var path := "res://assets/models/escutador_v2_low.glb" if low else "res://assets/models/escutador_v2.glb"
 	model = load(path).instantiate()
 	add_child(model)
 	# GLB +Y (Blender forward) becomes Godot -Z, same as AI perception.
@@ -30,7 +32,7 @@ func _build() -> void:
 	for name in animator.get_animation_list():
 		var plain: String = str(name).get_slice("/", str(name).get_slice_count("/") - 1)
 		clip_names[plain] = name
-		if plain not in ["listen", "attack", "capture", "RESET"]:
+		if plain not in ["listen", "head_tilt", "attack", "capture", "RESET"] and not plain.begins_with("capture_"):
 			animator.get_animation(name).loop_mode = Animation.LOOP_LINEAR
 	for mesh in model.find_children("*", "MeshInstance3D", true, false):
 		mesh.visibility_range_end = 42.0
@@ -38,7 +40,10 @@ func _build() -> void:
 			var imported: Material = mesh.mesh.surface_get_material(index)
 			if imported == null: continue
 			var name: String = imported.resource_name
-			if name.begins_with("Pele"): mesh.set_surface_override_material(index, HorrorArt.surface("creature_skin", false))
+			if name.begins_with("Pele"):
+				var dermis := HorrorArt.surface("creature_skin", false).duplicate()
+				dermis.albedo_color = Color(0.82, 0.88, 0.73)
+				mesh.set_surface_override_material(index, dermis)
 			elif name.begins_with("Placas"):
 				var keratin := HorrorArt.surface("creature_skin", false).duplicate()
 				keratin.albedo_color = Color(0.53, 0.48, 0.40)
@@ -47,6 +52,9 @@ func _build() -> void:
 			elif name.begins_with("Cartilagem"): mesh.set_surface_override_material(index, HorrorArt.surface("organic_residue", false))
 	active_clip = ""
 	set_motion(motion_state)
+	if Game.capture_in_progress and capture_clip != "":
+		play_capture(capture_clip)
+		animator.seek(capture_time, true)
 
 func set_motion(state: int) -> void:
 	motion_state = state
@@ -60,10 +68,16 @@ func advance_motion(speed: float) -> void:
 	elif active_clip in ["patrol", "walk", "investigate", "return"]: animator.speed_scale = clampf(speed / 1.55, 0.65, 1.2)
 	else: animator.speed_scale = 1.0
 
-func play_capture() -> void:
-	if active_clip == "capture": return
-	active_clip = "capture"
-	animator.play(clip_names["capture"], 0.08)
+func play_capture(clip: String = "capture") -> void:
+	var chosen := clip if clip_names.has(clip) else ("capture" if clip_names.has("capture") else "attack")
+	if active_clip == chosen: return
+	active_clip = chosen
+	if clip_names.has(chosen): animator.play(clip_names[chosen], 0.08)
+
+func inspect_hide() -> void:
+	if clip_names.has("hide_search"):
+		active_clip = "hide_search"
+		animator.play(clip_names[active_clip], 0.12)
 
 func head_position() -> Vector3:
 	var bone := skeleton.find_bone("head")

@@ -1,0 +1,122 @@
+[
+  {
+    "file": "assets/audio/creature_v2/patrol_0.wav",
+    "peak": 0.3217874613873258,
+    "duration": 2.3
+  },
+  {
+    "file": "assets/audio/creature_v2/patrol_1.wav",
+    "peak": 0.27680999737036993,
+    "duration": 2.3
+  },
+  {
+    "file": "assets/audio/creature_v2/joint_0.wav",
+    "peak": 0.19265350711865156,
+    "duration": 0.32
+  },
+  {
+    "file": "assets/audio/creature_v2/joint_1.wav",
+    "peak": 0.14533819029479667,
+    "duration": 0.32
+  },
+  {
+    "file": "assets/audio/creature_v2/drag_0.wav",
+    "peak": 0.2039688987932469,
+    "duration": 0.7
+  },
+  {
+    "file": "assets/audio/creature_v2/drag_1.wav",
+    "peak": 0.21457313249551624,
+    "duration": 0.7
+  },
+  {
+    "file": "assets/audio/creature_v2/alert_0.wav",
+    "peak": 0.1762024491897158,
+    "duration": 0.8
+  },
+  {
+    "file": "assets/audio/creature_v2/alert_1.wav",
+    "peak": 0.20349193506816846,
+    "duration": 0.8
+  },
+  {
+    "file": "assets/audio/creature_v2/investigate_0.wav",
+    "peak": 0.19614304919196882,
+    "duration": 1.2
+  },
+  {
+    "file": "assets/audio/creature_v2/investigate_1.wav",
+    "peak": 0.20373032594917898,
+    "duration": 1.2
+  },
+  {
+    "file": "assets/audio/creature_v2/search_0.wav",
+    "peak": 0.3049290069631596,
+    "duration": 1.6
+  },
+  {
+    "file": "assets/audio/creature_v2/search_1.wav",
+    "peak": 0.32655626996521175,
+    "duration": 1.6
+  },
+  {
+    "file": "assets/audio/creature_v2/sniff_0.wav",
+    "peak": 0.23042380301749174,
+    "duration": 1.0
+  },
+  {
+    "file": "assets/audio/creature_v2/sniff_1.wav",
+    "peak": 0.26590031474140763,
+    "duration": 1.0
+  },
+  {
+    "file": "assets/audio/creature_v2/chase_0.wav",
+    "peak": 0.33969792564582424,
+    "duration": 1.6
+  },
+  {
+    "file": "assets/audio/creature_v2/chase_1.wav",
+    "peak": 0.31108365558434686,
+    "duration": 1.6
+  },
+  {
+    "file": "assets/audio/creature_v2/attack_0.wav",
+    "peak": 0.3258709390997946,
+    "duration": 0.65
+  },
+  {
+    "file": "assets/audio/creature_v2/attack_1.wav",
+    "peak": 0.30979687283563373,
+    "duration": 0.65
+  },
+  {
+    "file": "assets/audio/creature_v2/capture_0.wav",
+    "peak": 0.30711460414495245,
+    "duration": 1.0
+  },
+  {
+    "file": "assets/audio/creature_v2/capture_1.wav",
+    "peak": 0.2949713050482771,
+    "duration": 1.0
+  },
+  {
+    "file": "assets/audio/creature_v2/knock_0.wav",
+    "peak": 0.2024535377973951,
+    "duration": 0.5
+  },
+  {
+    "file": "assets/audio/creature_v2/knock_1.wav",
+    "peak": 0.18638020466062108,
+    "duration": 0.5
+  },
+  {
+    "file": "assets/audio/creature_v2/creak_0.wav",
+    "peak": 0.24784301606476325,
+    "duration": 1.5
+  },
+  {
+    "file": "assets/audio/creature_v2/creak_1.wav",
+    "peak": 0.24429440720015289,
+    "duration": 1.5
+  }
+]

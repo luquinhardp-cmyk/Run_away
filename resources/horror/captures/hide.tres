@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="HorrorCapture" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/horror/capture_definition.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = "hide"
+clip = "capture_hide"
+weight = 2
+camera_roll = 0.03
+camera_pull = 0.02

@@ -12,6 +12,7 @@ var hide_timer := 0.0
 var captured_hide: Node3D
 var ai_usec := 0
 var navigation_recoveries := 0
+var capture_sequence: Node
 enum State { PATROL, IDLE, ALERT, INVESTIGATE, SEARCH, CHASE, ATTACK, LOST, RETURN }
 var state := State.PATROL
 var agent: NavigationAgent3D
@@ -55,6 +56,9 @@ func _ready() -> void:
 	agent.radius = 0.35
 	add_child(agent)
 	_build_visual()
+	capture_sequence = Node.new()
+	capture_sequence.set_script(preload("res://scripts/horror/capture_sequence.gd"))
+	add_child(capture_sequence)
 	NoiseBus.emitted.connect(_hear)
 	previous = global_position
 
@@ -72,17 +76,17 @@ func transition(next: State) -> void:
 	if is_instance_valid(visual): visual.set_motion(int(next))
 	if next == State.ALERT:
 		hearing_cooldown = 2.8
-		Sound.at("listen", global_position + Vector3.UP * 2.1, -21)
-	if next == State.INVESTIGATE: Sound.at("investigate", global_position, -25)
+		Sound.creature_cue("alert", global_position + Vector3.UP * 2.1, -21)
+	if next == State.INVESTIGATE: Sound.creature_cue("investigate", global_position, -25)
 	if next == State.SEARCH:
 		search.build(self, last_known, memory)
 		checked_hides.clear()
 		checking_hide = null
 		target = last_known
-	if next == State.ATTACK: Sound.at("attack", global_position, -16 - (1 - Game.settings.scares) * 12)
+	if next == State.ATTACK: Sound.creature_cue("attack", global_position, -16 - (1 - Game.settings.scares) * 12)
 	if next == State.CHASE:
 		unseen = 0.0
-		Sound.at("chase", global_position, -10 * Game.settings.scares)
+		Sound.creature_cue("chase", global_position, -18 - (1 - Game.settings.scares) * 10)
 	state_changed.emit(int(prior), int(next))
 
 func _hear(event: Dictionary) -> void:
@@ -127,8 +131,8 @@ func _search_hides(delta: float) -> bool:
 	if global_position.distance_to(checking_hide.approach_position()) > 1.1: return false
 	if hide_timer == 0:
 		checking_hide.notified.emit("O Escutador examina o esconderijo. Saia e busque outra rota!")
-		Sound.at("listen", checking_hide.global_position, -17)
-		visual.set_motion(State.ALERT)
+		Sound.creature_cue("sniff", global_position + Vector3.UP * 2.1, -19)
+		visual.inspect_hide()
 	hide_timer += delta
 	if hide_timer >= profile.hide_warning:
 		checked_hides.append(checking_hide.item_id)
@@ -144,6 +148,9 @@ func _search_hides(delta: float) -> bool:
 
 func _physics_process(delta: float) -> void:
 	if not Game.playing: return
+	if Game.capture_in_progress:
+		velocity = Vector3.ZERO
+		return
 	var started := Time.get_ticks_usec()
 	age += delta
 	hearing_cooldown = maxf(0, hearing_cooldown - delta)
@@ -171,8 +178,10 @@ func _physics_process(delta: float) -> void:
 			unseen += 0.18
 			visual_evidence = maxf(0, visual_evidence - 0.22)
 	if sound_clock <= 0:
-		Sound.at("breath", global_position, -12)
-		sound_clock = 3.8 if state != State.CHASE else 1.4
+		var cue := "chase" if state == State.CHASE else ("search" if state in [State.SEARCH, State.LOST] else "patrol")
+		Sound.creature_cue(cue, global_position + Vector3.UP * 1.8, -22)
+		if state in [State.PATROL, State.IDLE] and int(age) % 3 == 0: Sound.creature_cue("joint", global_position, -29)
+		sound_clock = 2.0 if state == State.CHASE else 5.2
 	var speed := profile.patrol_speed
 	match state:
 		State.PATROL:
@@ -217,11 +226,7 @@ func _physics_process(delta: float) -> void:
 			if not valid_hide and (not sees_player() or global_position.distance_to(Game.player.global_position) > profile.attack_distance + 0.5):
 				transition(State.LOST)
 				return
-			_capture_focus(delta)
-			if timer > 0.3 and visual.active_clip != "capture":
-				visual.play_capture()
-				Sound.at("capture", global_position, -15 - (1 - Game.settings.scares) * 18)
-			if timer > 0.65: Game.finish(false)
+			if timer > 0.3: capture_sequence.begin()
 		State.LOST:
 			target = last_known
 			if timer > 2 or global_position.distance_to(target) < 0.8: transition(State.SEARCH)

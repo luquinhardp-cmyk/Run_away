@@ -5,6 +5,9 @@
 /play/*.wasm
   Content-Type: application/wasm
   Content-Encoding: gzip
+/play/*.pck
+  Content-Type: application/octet-stream
+  Content-Encoding: gzip
 /*.html
   Cache-Control: no-cache
 /play/*.html

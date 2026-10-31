@@ -15,6 +15,8 @@ var events: Node
 var nav_update_pending := false
 var nav_rebuilds := 0
 var nav_gates: Dictionary = {}
+var horror: Node
+var horror_light_multiplier := 1.0
 
 func _ready() -> void:
 	HorrorArt.set_quality(int(Game.settings.quality))
@@ -59,6 +61,9 @@ func _ready() -> void:
 	events = Node.new()
 	events.set_script(preload("res://scripts/world/events.gd"))
 	add_child(events)
+	horror = Node.new()
+	horror.set_script(preload("res://scripts/horror/horror_director.gd"))
+	add_child(horror)
 	var metrics := Node.new()
 	metrics.set_script(preload("res://scripts/world/metrics.gd"))
 	add_child(metrics)
@@ -142,15 +147,16 @@ func _tile(cell: Vector2i) -> void:
 		box(center + Vector3(0, 2.98, 0), Vector3(0.52, 0.04, 0.12), HorrorArt.solid(light.light_color, 0.5), false)
 
 func _label(text: String, pos: Vector3, angle: float = 0.0, font_size: int = 36) -> void:
-	var label := Label3D.new()
-	label.text = text
-	label.position = pos
-	label.rotation.y = angle
-	label.font_size = font_size
-	label.pixel_size = 0.007
-	label.modulate = Color("b5ac8e")
-	label.no_depth_test = false
-	add_child(label)
+	var sign := WorldSign3D.new()
+	sign.text = text
+	sign.sign_id = "sign_" + str(get_tree().get_nodes_in_group("world_signs").size())
+	sign.position = pos
+	sign.rotation.y = angle
+	sign.dimensions = Vector2(1.65 if font_size < 30 else 2.3, 0.38)
+	sign.sign_type = "emergency" if text.contains("SAÍDA") else ("danger" if text.contains("RESTRITO") or text.contains("FUSÍVEL") else "metal")
+	sign.illuminated = sign.sign_type == "emergency"
+	sign.post_mounted = pos.z > 4
+	add_child(sign)
 
 func _environment() -> void:
 	var world := WorldEnvironment.new()
@@ -250,8 +256,8 @@ func _process(delta: float) -> void:
 	if not Game.playing: return
 	age += delta
 	for light in lights:
-		light.light_energy = (1.15 if Game.power else (0.12 if Game.world.get("blackout", false) else 0.55))
-	if lights.size() > 2 and fmod(age, 17.0) > 16.8: lights[2].light_energy *= 0.75
+		light.light_energy = (1.15 if Game.power else (0.12 if Game.world.get("blackout", false) else 0.55)) * horror_light_multiplier
+	if Game.settings.get("light_variation", true) and lights.size() > 2 and fmod(age, 17.0) > 16.8: lights[2].light_energy *= 0.75
 
 func find_interaction(id: String) -> Node3D:
 	for child in get_children():

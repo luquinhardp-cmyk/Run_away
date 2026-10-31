@@ -187,7 +187,7 @@ func _run() -> void:
 	var basement_path := NavigationServer3D.map_get_path(enemy.agent.get_navigation_map(), Vector3(-8, 0.1, -32), Vector3(-20, -1.7, -32), true)
 	check(basement_path.size() > 2 and basement_path[-1].distance_to(Vector3(-20, -1.7, -32)) < 1, "rampa conecta subsolo à navegação")
 	check(enemy.visual.skeleton.get_bone_count() == 29, "rig real com 29 ossos")
-	check(enemy.visual.clip_names.size() == 12, "12 animações glTF importadas")
+	check(enemy.visual.clip_names.size() == 23, "23 animações glTF importadas, incluindo capturas contextuais")
 	var skinned_mesh: MeshInstance3D = enemy.visual.model.find_children("*", "MeshInstance3D", true, false)[0]
 	check(skinned_mesh.skin != null, "mesh associado ao Skin e Skeleton3D")
 	check(not skinned_mesh.mesh.surface_get_arrays(0)[Mesh.ARRAY_TEX_UV].is_empty(), "UVs reais no modelo")
@@ -244,6 +244,7 @@ func _run() -> void:
 	Game.enemy.transition(Game.enemy.State.ATTACK)
 	Game.enemy.timer = 1
 	Game.enemy._physics_process(0.01)
+	await get_tree().create_timer(1.5).timeout
 	check(outcome == [true, false], "ataque termina em derrota")
 	main.to_menu()
 	check(main.screen == "menu" and not Game.playing and not get_tree().paused, "retorno ao menu limpa a sessão")

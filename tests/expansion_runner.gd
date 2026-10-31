@@ -33,6 +33,7 @@ func run() -> void:
 	main.start(false, false)
 	await frames(15)
 	main.level.events.enabled = false
+	main.level.horror.enabled = false
 	var player := Game.player
 	var enemy := Game.enemy
 	enemy.set_physics_process(false)

@@ -259,6 +259,21 @@ func settings_screen(back: String) -> void:
 	metrics.button_pressed = Game.settings.get("metrics", false)
 	metrics.toggled.connect(func(value: bool): Game.settings.metrics = value; Game.save_settings())
 	column.add_child(metrics)
+	for option in [["visual_scares", "Efeitos visuais de terror"], ["light_variation", "Variações lentas de iluminação"]]:
+		var toggle := CheckBox.new()
+		toggle.text = option[1]
+		toggle.button_pressed = Game.settings.get(option[0], true)
+		var setting: String = option[0]
+		toggle.toggled.connect(func(value: bool): Game.settings[setting] = value; Game.save_settings())
+		column.add_child(toggle)
+	text("Movimento da câmera: zero desativa balanço e movimento de captura.", 17)
+	var camera_motion := HSlider.new()
+	camera_motion.min_value = 0
+	camera_motion.max_value = 1
+	camera_motion.step = 0.1
+	camera_motion.value = Game.settings.get("camera_motion", 0.5)
+	camera_motion.value_changed.connect(func(value: float): Game.settings.camera_motion = value; Game.save_settings())
+	column.add_child(camera_motion)
 	for data in [["sensitivity", "Sensibilidade da câmera", 0.001, 0.008, 0.0002], ["fov", "Campo de visão", 65, 95, 1], ["master", "Volume geral", 0, 1, 0.05], ["effects", "Efeitos", 0, 1, 0.05], ["music", "Música", 0, 1, 0.05], ["mic_sensitivity", "Sensibilidade do microfone", 0.5, 3, 0.1], ["scares", "Intensidade dos sustos", 0, 1, 0.1], ["quality", "Qualidade: 0 baixa / 1 média / 2 alta", 0, 2, 1], ["controls", "Tamanho dos controles", 0.8, 1.3, 0.1], ["opacity", "Opacidade dos botões", 0.2, 1, 0.05], ["control_x", "Posição horizontal dos controles", -20, 100, 5], ["control_y", "Posição vertical dos controles", -80, 0, 5]]:
 		var caption := text(data[1] + " : " + str(Game.settings[data[0]]), 17)
 		var slider := HSlider.new()

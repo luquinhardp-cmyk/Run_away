@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="CreatureCue" load_steps=4 format=3]
+[ext_resource type="Script" path="res://scripts/horror/creature_cue.gd" id="1"]
+[ext_resource type="AudioStream" path="res://assets/audio/creature_v2/capture_0.wav" id="2"]
+[ext_resource type="AudioStream" path="res://assets/audio/creature_v2/capture_1.wav" id="3"]
+[resource]
+script = ExtResource("1")
+samples = Array[AudioStream]([ExtResource("2"), ExtResource("3")])
+min_interval = 0.1

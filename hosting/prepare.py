@@ -1,4 +1,4 @@
-"""Run after exporting Web; compress the WASM for the Pages per-file limit."""
+"""Run after exporting Web; compress game payloads for the Pages per-file limit."""
 import gzip
 import shutil
 import json
@@ -15,9 +15,12 @@ parser.add_argument("--apk-url", default="https://github.com/luquinhardp-cmyk/Ru
 args = parser.parse_args()
 output = root / args.output
 wasm = output / "play/index.wasm"
-data = wasm.read_bytes()
-if not data.startswith(b"\x1f\x8b"):
-    wasm.write_bytes(gzip.compress(data, compresslevel=9, mtime=0))
+for payload in [wasm, output / "play/index.pck"]:
+    data = payload.read_bytes()
+    if not data.startswith(b"\x1f\x8b"):
+        payload.write_bytes(gzip.compress(data, compresslevel=9, mtime=0))
+    if payload.stat().st_size > 25 * 1024 * 1024:
+        raise SystemExit(f"Payload exceeds Pages limit: {payload.name}")
 shutil.copyfile(root / args.landing, output / "index.html")
 shutil.copyfile(root / "hosting/_headers", output / "_headers")
 shutil.copyfile(root / "hosting/wasm-loader.js", output / "play/wasm-loader.js")

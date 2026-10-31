@@ -39,6 +39,7 @@ func run() -> void:
 	checkpoint.world.generator_started = true
 	checkpoint.world.unlocks.workshop = true
 	checkpoint.world.events.pipe = true
+	checkpoint.world.horror = {"counts": {"knock": 1}, "history": ["knock"], "cooldown_remaining": 24.5, "rng_state": "123456789"}
 	checkpoint.items.append("chave_oficina")
 	Cloud.queue_checkpoint(checkpoint)
 	await Cloud.sync()

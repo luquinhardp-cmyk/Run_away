@@ -16,6 +16,8 @@ var head_clock := 0.0
 var lamp_on := false
 var prompt := ""
 var throw_selected := true
+var lamp_fault := 0.0
+var breathing_age := 0.0
 
 func _ready() -> void:
 	Game.player = self
@@ -47,11 +49,11 @@ func _ready() -> void:
 
 func apply_settings() -> void:
 	camera.fov = Game.settings.fov
-	lamp.visible = lamp_on and Game.inventory.has("lanterna")
+	lamp.visible = lamp_on and Game.inventory.has("lanterna") and lamp_fault <= 0
 	lamp.shadow_enabled = Game.settings.quality >= 2
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not Game.playing or Game.paused: return
+	if not Game.playing or Game.paused or Game.capture_in_progress: return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED: look(event.relative)
 	if event.is_action_pressed("interact"): interact()
 	if event.is_action_pressed("flashlight"): toggle_lamp()
@@ -60,13 +62,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed: Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func look(relative: Vector2) -> void:
-	if not Game.playing or Game.paused: return
+	if not Game.playing or Game.paused or Game.capture_in_progress: return
 	rotate_y(-relative.x * Game.settings.sensitivity)
 	pitch = clampf(pitch - relative.y * Game.settings.sensitivity, -1.35, 1.35)
 	camera.rotation.x = pitch
 
 func toggle_crouch() -> void:
-	if hidden: return
+	if hidden or Game.capture_in_progress: return
 	if crouched:
 		var query := PhysicsRayQueryParameters3D.create(global_position + Vector3.UP * 0.8, global_position + Vector3.UP * 1.75, 1)
 		if not get_world_3d().direct_space_state.intersect_ray(query).is_empty(): return
@@ -75,6 +77,7 @@ func toggle_crouch() -> void:
 	shape.position.y = 0.5 if crouched else 0.85
 
 func toggle_lamp() -> void:
+	if Game.capture_in_progress: return
 	if not Game.inventory.has("lanterna"): return
 	lamp_on = not lamp_on
 	apply_settings()
@@ -82,6 +85,12 @@ func toggle_lamp() -> void:
 
 func _physics_process(delta: float) -> void:
 	if not Game.playing: return
+	if Game.capture_in_progress:
+		velocity = Vector3.ZERO
+		return
+	breathing_age += delta
+	lamp_fault = maxf(0, lamp_fault - delta)
+	lamp.visible = lamp_on and Game.inventory.has("lanterna") and lamp_fault <= 0
 	if not hidden:
 		var input := Input.get_vector("left", "right", "forward", "back") + touch_move
 		input = input.limit_length()
@@ -105,7 +114,10 @@ func _physics_process(delta: float) -> void:
 				NoiseBus.emit_noise(self, 0.08 if crouched else (0.65 if running else 0.25), "passos", 3.0 if crouched else (18.0 if running else 8.0))
 				Sound.at("step", global_position, -26 if crouched else (-13 if running else -21))
 		var height := 0.9 if crouched else 1.56
-		camera.position.y = lerpf(camera.position.y, height + sin(head_clock) * 0.014, minf(1, delta * 12))
+		var motion: float = Game.settings.get("camera_motion", 0.5)
+		camera.position.y = lerpf(camera.position.y, height + (sin(head_clock) * 0.014 + sin(breathing_age * 1.4) * 0.004) * motion, minf(1, delta * 12))
+		camera.rotation.z = sin(breathing_age * 1.1) * 0.003 * motion
+		camera.fov = lerpf(camera.fov, float(Game.settings.fov) + (2.0 * motion if running and input.length() > 0.1 else 0.0), minf(1, delta * 3))
 	_detect_interaction()
 
 func _detect_interaction() -> void:
@@ -121,6 +133,7 @@ func _detect_interaction() -> void:
 		else: focus = null
 
 func interact() -> void:
+	if Game.capture_in_progress: return
 	if hidden:
 		var query := PhysicsShapeQueryParameters3D.new()
 		query.shape = shape.shape
@@ -165,7 +178,7 @@ func enter_hide(spot: Node3D) -> void:
 	NoiseBus.emit_noise(self, 0.15, "armario", 6.0)
 
 func throw_object() -> Node3D:
-	if not Game.playing or Game.paused or hidden or not throw_selected or int(Game.world.get("throwables", 0)) <= 0: return null
+	if not Game.playing or Game.paused or Game.capture_in_progress or hidden or not throw_selected or int(Game.world.get("throwables", 0)) <= 0: return null
 	if get_tree().get_nodes_in_group("throwables").size() >= 8: return null
 	var start := camera.global_position
 	var direction := -camera.global_basis.z

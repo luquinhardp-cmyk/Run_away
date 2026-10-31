@@ -12,7 +12,8 @@ service cloud.firestore {
         && c.elapsed_ms is number && c.elapsed_ms >= 0 && c.elapsed_ms <= 604800000;
     }
     function world(w) {
-      return w.keys().hasOnly(['seed', 'variant', 'difficulty', 'unlocks', 'events', 'fuse_installed', 'generator_started', 'blackout', 'throwables', 'collected_props', 'escaped'])
+      return w.keys().hasOnly(['seed', 'variant', 'difficulty', 'unlocks', 'events', 'fuse_installed', 'generator_started', 'blackout', 'throwables', 'collected_props', 'escaped', 'horror'])
+        && (!w.keys().hasAny(['horror']) || horror(w.horror))
         && w.seed is number && w.seed >= 0 && w.seed <= 2147483647
         && w.variant in [0, 1] && w.difficulty in [0, 1, 2]
         && w.unlocks is map && w.unlocks.keys().hasOnly(['workshop'])
@@ -22,6 +23,13 @@ service cloud.firestore {
         && w.throwables is number && w.throwables >= 0 && w.throwables <= 7
         && w.collected_props is list && w.collected_props.size() <= 7
         && w.collected_props.hasOnly(['metal_0','metal_1','metal_2','metal_3','metal_4','metal_5','metal_6']);
+    }
+    function horror(h) {
+      return h.keys().hasOnly(['counts','history','cooldown_remaining','rng_state'])
+        && h.counts is map && h.counts.size() <= 9
+        && h.history is list && h.history.size() <= 6
+        && h.cooldown_remaining is number && h.cooldown_remaining >= 0 && h.cooldown_remaining <= 120
+        && h.rng_state is string && h.rng_state.size() <= 32;
     }
     function validRun(r, id) {
       return id.matches('^[a-f0-9]{32}$') && r.id == id

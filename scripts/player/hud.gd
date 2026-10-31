@@ -178,7 +178,7 @@ func toggle_inventory() -> void:
 	show_message("MOCHILA: " + (", ".join(Game.inventory) if not Game.inventory.is_empty() else "vazia") + "\nPeças metálicas selecionadas: %d · Q / ARREMESSAR\n%s" % [int(Game.world.get("throwables", 0)), Game.objectives.definitions[-1].caption])
 
 func _process(delta: float) -> void:
-	root.visible = Game.playing and not Game.paused
+	root.visible = Game.playing and not Game.paused and not Game.capture_in_progress
 	if not is_instance_valid(Game.player): return
 	if Game.paused:
 		stick_id = -1
