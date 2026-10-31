@@ -97,7 +97,7 @@ func menu() -> void:
 	button("CONTA / PROGRESSO", account_screen)
 	menu_status = text(Cloud.status, 16)
 	if not OS.has_feature("android") and not OS.has_feature("web"): button("SAIR", func(): get_tree().quit())
-	text("Versão 0.6 • Sobreviva ao Escutador\nRecomendado: fones de ouvido. Sustos moderados, sem flashes.", 16)
+	text("Versão 0.7 • Sob a lua de sangue\nRecomendado: fones de ouvido. Sustos moderados, sem flashes.", 16)
 
 func _cloud_updated() -> void:
 	if screen == "menu" and is_instance_valid(menu_status): menu_status.text = Cloud.status

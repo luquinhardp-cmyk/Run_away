@@ -1,0 +1,24 @@
+{
+  "engine": "Godot 4.7.2 stable",
+  "suites": {
+    "night": 76,
+    "regression": 79,
+    "expansion": 41,
+    "horror": 23,
+    "physics": 47
+  },
+  "failures": 0,
+  "android_hardware": false,
+  "apk": {
+    "path": "builds/forest/ecos-android.apk",
+    "bytes": 47402155,
+    "sha256": "fbafe96305f3bb6585d17329304b8e9ff60beb8d4d739fcf34fd1f07361bb20d",
+    "signature": "debug, v2 and v3 verified",
+    "version": "0.7.0",
+    "code": 7
+  },
+  "web": {
+    "pck_gzip_bytes": 22629587,
+    "wasm_gzip_bytes": 10054758
+  }
+}

@@ -1,0 +1,86 @@
+[
+  {
+    "file": "scream_0.wav",
+    "duration": 3.6,
+    "peak": 0.55,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "wing_0.wav",
+    "duration": 1.3,
+    "peak": 0.55,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "whoosh_0.wav",
+    "duration": 1.3,
+    "peak": 0.55,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "scream_1.wav",
+    "duration": 3.6,
+    "peak": 0.55,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "wing_1.wav",
+    "duration": 1.3,
+    "peak": 0.55,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "whoosh_1.wav",
+    "duration": 1.3,
+    "peak": 0.55,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "scream_2.wav",
+    "duration": 3.6,
+    "peak": 0.55,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "wing_2.wav",
+    "duration": 1.3,
+    "peak": 0.55,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "whoosh_2.wav",
+    "duration": 1.3,
+    "peak": 0.5409098876496936,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "forest_wind.wav",
+    "duration": 16.0,
+    "peak": 0.34464893231196253,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "forest_leaves.wav",
+    "duration": 11.0,
+    "peak": 0.25181426760587167,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "forest_insects.wav",
+    "duration": 13.0,
+    "peak": 0.06479821032404562,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "forest_branch.wav",
+    "duration": 7.0,
+    "peak": 0.20125629479845913,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "forest_animal.wav",
+    "duration": 8.0,
+    "peak": 0.10954121347987096,
+    "origin": "original synthesis"
+  }
+]

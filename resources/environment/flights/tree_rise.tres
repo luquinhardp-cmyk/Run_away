@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="FlyingShadowPattern" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/environment/flying_pattern.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = "tree_rise"
+weight = 1.0
+duration = 15.0
+distance = 65.0
+vocal = true
+wings = true
+clip = "flap"
+requires_moon = false
+scream_time = 0.4

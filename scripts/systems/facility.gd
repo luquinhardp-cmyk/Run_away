@@ -81,6 +81,9 @@ func _ready() -> void:
 	var physics := Node.new()
 	physics.set_script(preload("res://scripts/physics/world_physics.gd"))
 	add_child(physics)
+	var night := Node3D.new()
+	night.set_script(preload("res://scripts/environment/night_world.gd"))
+	add_child(night)
 
 func material(color: Color, emission: bool = false) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()

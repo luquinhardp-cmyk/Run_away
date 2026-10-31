@@ -18,6 +18,7 @@ var record_results := true
 var testing := false
 var capture_in_progress := false
 var last_capture_id := ""
+var last_flight_pattern := ""
 var history: Dictionary = {}
 var _tick := 0
 var _autosave := 0.0

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="FlyingShadowPattern" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/environment/flying_pattern.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = "moon_silent"
+weight = 0.75
+duration = 14.0
+distance = 72.0
+vocal = false
+wings = false
+clip = "glide"
+requires_moon = true
+scream_time = 0.35

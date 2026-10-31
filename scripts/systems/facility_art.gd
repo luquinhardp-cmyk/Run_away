@@ -20,7 +20,7 @@ func _ready() -> void:
 	_room_stories()
 	_exterior()
 	_basement()
-	_ambience("exterior_wind", Vector3(0, 2, 12), 24, -30)
+	# The night system schedules spatial forest ambience and intentional silence.
 	_ambience("basement_drips", Vector3(-19, -1, -32), 12, -27)
 	_ambience("electric_hum", Vector3(-7, 1.4, -33), 8, -34)
 	static_batches = HorrorArt.merge_static(detail, self)
@@ -261,8 +261,8 @@ func _exterior() -> void:
 	pipe(Vector3(-3, 0, 9), Vector3(-3.3, 4.5, 9), 0.09, wood)
 	pipe(Vector3(-3.3, 4.5, 9), Vector3(-2.3, 4.5, 9), 0.04, rust)
 	box(Vector3(-2.3, 4.4, 9), Vector3(0.45, 0.12, 0.25), rust)
-	light_at(Vector3(-2.3, 4.2, 9), Color("b19a64"), 1.25, 8)
-	light_at(Vector3(3, 5, 16), Color(0.44, 0.49, 0.53), 0.6, 16)
+	light_at(Vector3(-2.3, 4.2, 9), Color("b19a64"), 0.4, 6)
+	light_at(Vector3(3, 5, 16), Color(0.28, 0.08, 0.06), 0.06, 8)
 	# Withered vegetation is batched into a single MultiMesh draw.
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
