@@ -1,8 +1,10 @@
 # ECOS — Instalação Abandonada
 
-Protótipo vertical de survival horror 3D nativo em GDScript. Projeto independente; nenhum arquivo do Desolação RPG foi alterado. Desenvolvido e testado com **Godot 4.7.2 stable**, renderer Mobile (Vulkan). A versão 0.2 inclui materiais PBR originais, ambientação rural/industrial e uma criatura 3D articulada. A arte procedural ainda está em polimento.
+Protótipo vertical de survival horror 3D em GDScript, desenvolvido com **Godot 4.7.2 stable**. A versão 0.6 acrescenta materiais físicos, objetos manipuláveis e impactos ouvidos pela criatura. A arte e a simulação usam soluções procedurais e simplificadas; desempenho e microfone em Android físico ainda precisam de validação.
 
-Esta branch contém a **expansão 0.4**: percepção/memória/busca modular, arremessáveis físicos, rádio/alarme, circuito lateral, chave de atalho, painel de fusível, apagão recuperável, eventos com seed e três dificuldades. [Jogar prévia 0.4](https://feature-survival-horror-game.run-away-ecos.pages.dev/) · [APK 0.4](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.4.0-gameplay/ecos-android.apk) · [Relatório de entrega](docs/RELATORIO_EXPANSAO.md) · [Auditoria anterior às mudanças](docs/AUDITORIA_GAMEPLAY.md). O hosting de produção 0.3 fica separado da prévia desta branch.
+**Prévia atual 0.6:** [jogar na web](https://feature-physical-world-mater.run-away-ecos.pages.dev/) · [APK Android r2](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.6.0-physics/ecos-android-r2.apk) · [relatório completo](docs/RELATORIO_FISICA_OBJETOS.md). O Firebase cuida de login/progresso; o Cloudflare hospeda o jogo. Após entrar, use **IMPORTAR CHECKPOINT DO VISITANTE** se quiser levar o progresso local de visitante à conta.
+
+Histórico: a [expansão 0.4](docs/RELATORIO_EXPANSAO.md) introduziu percepção/memória/busca modular, distrações, rotas, chave, painel e dificuldades; a [0.5](docs/RELATORIO_TERROR_VISUAL.md) acrescentou criatura redesenhada, placas e terror contextual. A produção 0.3 permanece separada das prévias.
 
 ## Executar
 

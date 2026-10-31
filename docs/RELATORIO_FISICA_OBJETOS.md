@@ -41,10 +41,10 @@ Os testes reais do Firebase confirmaram upload e restauração do estado físico
 - Expansão: 41 passaram, aguardando agora a abertura real da folha da porta.
 - Terror/capturas: 23 passaram.
 - Física: 47 passaram. Queda, repouso/sleeping, atrito comparado, impulso/rolamento, CCD em parede, manipulação, arrasto sem levantar, arremesso limitado, gaveta, balanço amortecido, quebra, limite de fragmentos, cooldown, deduplicação, fonte sonora, reação da IA, 12 quedas simultâneas, passagem da criatura e restauração foram exercitados.
-- Firebase real: 20 verificações incluem estado dos 12 corpos, restauração e rejeição de transformações fora de limite ou malformadas. Falhas anteriores de codec e orçamento das regras foram diagnosticadas e corrigidas antes da entrega.
+- Firebase real: 20 verificações passaram, incluindo estado dos 12 corpos, restauração e rejeição de transformações fora de limite ou malformadas. Falhas anteriores de codec e orçamento das regras foram diagnosticadas e corrigidas antes da entrega.
 - Travessia completa: Fácil, seed 70421, entradas de movimento/visada reais e criatura ativa, sem teleporte. Completou fusível, painel, gerador, cartão e saída com 1.100 pontos. A rota usa a galeria para perder perseguição; tentativas de voltar diretamente pelo caminho da criatura terminaram em derrota. Isso não certifica equilíbrio de todas as dificuldades.
 
-Total previsto dos cinco conjuntos atuais de verificações: 210; o resultado final do Firebase será confirmado após a publicação das regras compactas. Capturas desktop em `docs/review/physics`, geradas por `tests/physics_review.tscn`; inspeção visual corrigiu enquadramento e folgas dos móveis. Métricas: 37–175 draw calls e aproximadamente 74,2 MB de memória estática monitorada, sem equivalência a FPS ou RAM total Android.
+Total dos cinco conjuntos atuais de verificações: 210 aprovadas. Capturas desktop em `docs/review/physics`, geradas por `tests/physics_review.tscn`; inspeção visual corrigiu enquadramento e folgas dos móveis. Métricas: 37–175 draw calls e aproximadamente 74,6 MB de memória estática monitorada, sem equivalência a FPS ou RAM total Android.
 
 ## Limitações e pendências
 
@@ -60,4 +60,14 @@ Integrações em player/HUD, creature, interactable/throwable, facility/facility
 
 [Física](SISTEMA_FISICA_OBJETOS.md), [PBR](BIBLIOTECA_MATERIAIS_PBR.md), [interação](INTERACAO_OBJETOS_3D.md), [áudio](AUDIO_IMPACTOS.md), [Android](OTIMIZACAO_FISICA_ANDROID.md).
 
-Links de publicação, assinatura e verificação do navegador serão anexados após a validação dos pacotes.
+## Publicação — 31/10/2026
+
+- [Jogar a prévia 0.6](https://feature-physical-world-mater.run-away-ecos.pages.dev/), [deployment imutável final](https://905363f4.run-away-ecos.pages.dev/).
+- [APK Android final r2](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.6.0-physics/ecos-android-r2.apk), [prerelease GitHub](https://github.com/luquinhardp-cmyk/Run_away/releases/tag/v0.6.0-physics).
+- Fonte do pacote: `2ab73a0232fa9fa0591d922e9c51ad99a0d4ce21`. r2 corrige o rótulo antigo do menu, preservando o primeiro APK da prévia como artefato anterior.
+- APK 0.6.0/código 6, ARM64, 46.591.693 bytes, assinatura debug v2/v3 verificada. SHA-256 `706961a2c2f500c5701548f7a33baf7254fdf8a1ae359bd80f50b21376aefa3c`. Permissões INTERNET e RECORD_AUDIO conferidas. O exportador usou build tools 30.0.3 como fallback; exportação e verificação concluíram.
+- Pacotes web comprimidos: PCK aproximadamente 21,9 MB e WASM 10,05 MB, abaixo do limite por arquivo do Cloudflare. Texturas legadas do modelo antigo foram retiradas apenas dos pacotes novos, mantendo os arquivos no Git.
+- Chromium/Playwright carregou a publicação real, entrou na fase, pausou e criou conta pela interface, confirmando documento protegido no Firestore. A validação final da r2 acionou **IMPORTAR CHECKPOINT DO VISITANTE** e confirmou os 12 props mais a gaveta no documento da conta. Zero erros de execução. Imagem em `docs/review/physics/07_web_gameplay.png`. Contas e documentos temporários foram removidos após os testes.
+- A produção `run-away-ecos.pages.dev` foi consultada e permanece em 0.3.0. Esta entrega usa branch, prévia e prerelease separadas conforme autorização anterior para testes. Firebase recebeu regras compatíveis; Hosting Firebase não foi substituído.
+
+Se já jogou como visitante, após entrar na conta use **IMPORTAR CHECKPOINT DO VISITANTE**. Essa ação transfere o checkpoint local; não transfere pontuação de partidas de visitante. Novas partidas autenticadas salvam na conta normalmente.
