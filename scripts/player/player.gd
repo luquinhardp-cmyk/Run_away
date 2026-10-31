@@ -18,11 +18,12 @@ var prompt := ""
 var throw_selected := true
 var lamp_fault := 0.0
 var breathing_age := 0.0
+var manipulator: Node
 
 func _ready() -> void:
 	Game.player = self
 	collision_layer = 2
-	collision_mask = 1 | 4
+	collision_mask = 1 | 4 | 16
 	floor_snap_length = 0.3
 	shape = CollisionShape3D.new()
 	var capsule := CapsuleShape3D.new()
@@ -46,6 +47,9 @@ func _ready() -> void:
 	camera.add_child(lamp)
 	Game.updated.connect(apply_settings)
 	apply_settings()
+	manipulator = Node.new()
+	manipulator.set_script(preload("res://scripts/physics/manipulator.gd"))
+	add_child(manipulator)
 
 func apply_settings() -> void:
 	camera.fov = Game.settings.fov
@@ -59,6 +63,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("flashlight"): toggle_lamp()
 	if event.is_action_pressed("crouch"): toggle_crouch()
 	if event.is_action_pressed("throw"): throw_object()
+	if event.is_action_pressed("hold"): begin_hold()
+	if event.is_action_released("hold"): manipulator.release()
 	if event is InputEventMouseButton and event.pressed: Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func look(relative: Vector2) -> void:
@@ -99,13 +105,14 @@ func _physics_process(delta: float) -> void:
 		var direction := global_basis * Vector3(input.x, 0, input.y)
 		velocity.x = move_toward(velocity.x, direction.x * speed, 12 * delta)
 		velocity.z = move_toward(velocity.z, direction.z * speed, 12 * delta)
-		velocity.y -= 18 * delta
+		velocity += get_gravity() * delta
 		# A low forward probe permits 18 cm steps; overhead and landing are checked.
 		if is_on_floor() and input.length() > 0.1 and test_move(global_transform, direction * 0.12):
 			var raised := global_transform
 			raised.origin.y += 0.18
 			if not test_move(global_transform, Vector3.UP * 0.18) and not test_move(raised, direction * 0.2): global_position.y += 0.18
 		move_and_slide()
+		CharacterPhysicsPush.apply(self)
 		if Vector2(velocity.x, velocity.z).length() > 0.4 and is_on_floor():
 			step_clock -= delta
 			head_clock += delta * (11 if running else 7)
@@ -125,8 +132,9 @@ func _detect_interaction() -> void:
 	prompt = "E / Sair do esconderijo" if hidden else ""
 	if hidden: return
 	var start := camera.global_position
-	var query := PhysicsRayQueryParameters3D.create(start, start - camera.global_basis.z * 2.7, 1 | 8, [get_rid()])
+	var query := PhysicsRayQueryParameters3D.create(start, start - camera.global_basis.z * 2.7, 1 | 8 | 16, [get_rid()])
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if not hit.is_empty() and hit.collider.has_meta("interaction_owner"): hit.collider = hit.collider.get_meta("interaction_owner")
 	if not hit.is_empty() and hit.collider.has_method("interact"):
 		focus = hit.collider
 		if start.distance_to(hit.position) <= focus.interaction_distance: prompt = "E / " + focus.get_prompt()
@@ -134,10 +142,11 @@ func _detect_interaction() -> void:
 
 func interact() -> void:
 	if Game.capture_in_progress: return
+	if is_instance_valid(manipulator.held): manipulator.release(); return
 	if hidden:
 		var query := PhysicsShapeQueryParameters3D.new()
 		query.shape = shape.shape
-		query.collision_mask = 1 | 4
+		query.collision_mask = 1 | 4 | 16
 		query.exclude = [get_rid()]
 		var candidates: Array[Vector3] = [exit_position]
 		if is_instance_valid(hide_spot):
@@ -161,6 +170,7 @@ func interact() -> void:
 
 func enter_hide(spot: Node3D) -> void:
 	if spot.has_occupant(): return
+	manipulator.release()
 	if is_instance_valid(Game.enemy): Game.enemy.witness_hide(spot)
 	spot.occupant = self
 	exit_position = global_position
@@ -178,6 +188,9 @@ func enter_hide(spot: Node3D) -> void:
 	NoiseBus.emit_noise(self, 0.15, "armario", 6.0)
 
 func throw_object() -> Node3D:
+	if is_instance_valid(manipulator.held):
+		if Game.playing and not Game.paused and not Game.capture_in_progress: return manipulator.release(true)
+		return null
 	if not Game.playing or Game.paused or Game.capture_in_progress or hidden or not throw_selected or int(Game.world.get("throwables", 0)) <= 0: return null
 	if get_tree().get_nodes_in_group("throwables").size() >= 8: return null
 	var start := camera.global_position
@@ -193,3 +206,8 @@ func throw_object() -> Node3D:
 	if Game.record_results: Game.save_checkpoint()
 	Game.updated.emit()
 	return object
+
+func begin_hold() -> void:
+	if is_instance_valid(focus) and focus is PhysicalProp3D:
+		if focus.profile.category == "C": manipulator.begin_drag(focus)
+		else: manipulator.begin(focus)

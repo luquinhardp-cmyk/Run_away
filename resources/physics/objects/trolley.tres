@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ObjectPhysicsProfile" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/physics/object_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = "trolley"
+category = "C"
+title = "Carrinho"
+mass_kg = 18.0
+surface = "metal"
+pbr = "brushed_metal"
+shape = "trolley"
+can_hold = false
+can_throw = false
+break_speed = 0.0
+size = Vector3(0.7, 0.8, 0.55)

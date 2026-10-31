@@ -12,8 +12,9 @@ service cloud.firestore {
         && c.elapsed_ms is number && c.elapsed_ms >= 0 && c.elapsed_ms <= 604800000;
     }
     function world(w) {
-      return w.keys().hasOnly(['seed', 'variant', 'difficulty', 'unlocks', 'events', 'fuse_installed', 'generator_started', 'blackout', 'throwables', 'collected_props', 'escaped', 'horror'])
+      return w.keys().hasOnly(['seed', 'variant', 'difficulty', 'unlocks', 'events', 'fuse_installed', 'generator_started', 'blackout', 'throwables', 'collected_props', 'escaped', 'horror', 'physics'])
         && (!w.keys().hasAny(['horror']) || horror(w.horror))
+        && (!w.keys().hasAny(['physics']) || physics(w.physics))
         && w.seed is number && w.seed >= 0 && w.seed <= 2147483647
         && w.variant in [0, 1] && w.difficulty in [0, 1, 2]
         && w.unlocks is map && w.unlocks.keys().hasOnly(['workshop'])
@@ -23,6 +24,30 @@ service cloud.firestore {
         && w.throwables is number && w.throwables >= 0 && w.throwables <= 7
         && w.collected_props is list && w.collected_props.size() <= 7
         && w.collected_props.hasOnly(['metal_0','metal_1','metal_2','metal_3','metal_4','metal_5','metal_6']);
+    }
+    function physicalVector(v, low, high) {
+      return v is list && v.size() == 3 && v[0] is number && v[1] is number && v[2] is number
+        && v[0] >= low && v[0] <= high && v[1] >= low && v[1] <= high && v[2] >= low && v[2] <= high;
+    }
+    function optionalProp(p, id) {
+      return !p.keys().hasAny([id]) || (p[id].keys().hasOnly(['p','r','broken'])
+        && physicalVector(p[id].p,-50,50) && physicalVector(p[id].r,-3.15,3.15) && p[id].broken is bool);
+    }
+    function physics(p) {
+      return p is map && p.keys().hasOnly(['can', 'bottle_ward', 'tool_edge', 'small_crate', 'chair_maintenance', 'crate_storage', 'trolley_ward', 'bucket_power', 'rubber_gallery', 'fragile_workshop', 'bottle_shelf', 'drawer_tool', 'drawer'])
+        && optionalProp(p, 'can')
+        && optionalProp(p, 'bottle_ward')
+        && optionalProp(p, 'tool_edge')
+        && optionalProp(p, 'small_crate')
+        && optionalProp(p, 'chair_maintenance')
+        && optionalProp(p, 'crate_storage')
+        && optionalProp(p, 'trolley_ward')
+        && optionalProp(p, 'bucket_power')
+        && optionalProp(p, 'rubber_gallery')
+        && optionalProp(p, 'fragile_workshop')
+        && optionalProp(p, 'bottle_shelf')
+        && optionalProp(p, 'drawer_tool')
+        && (!p.keys().hasAny(['drawer']) || (p.drawer.keys().hasOnly(['open']) && p.drawer.open is bool));
     }
     function horror(h) {
       return h.keys().hasOnly(['counts','history','cooldown_remaining','rng_state'])

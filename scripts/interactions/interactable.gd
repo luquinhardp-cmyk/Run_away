@@ -18,10 +18,11 @@ var mesh: MeshInstance3D
 var collider: CollisionShape3D
 var original_position := Vector3.ZERO
 var message := ""
+var mechanism: Node
 signal notified(text: String)
 
 func _ready() -> void:
-	collision_layer = 8 if kind != "door" else 1 | 8
+	collision_layer = (1 | 8) if kind in ["door","generator","hide","radio","alarm","fuse_panel","pickup"] else 8
 	collision_mask = 0
 	if kind == "door": set_meta("door", true)
 	if kind == "hide":
@@ -45,6 +46,11 @@ func _ready() -> void:
 		add_child(indicator)
 		Game.updated.connect(_visual_state)
 		_visual_state()
+	PhysicsSurfaces.attach(self, "metal" if kind in ["door","generator","hide","alarm","fuse_panel"] else "wood")
+	if kind in ["door","drawer"]:
+		mechanism = Node.new()
+		mechanism.set_script(preload("res://scripts/physics/mechanism.gd"))
+		add_child(mechanism)
 
 func _visual_state() -> void:
 	var complete: bool = Game.world.get("fuse_installed", false) if kind == "fuse_panel" else Game.power
@@ -54,6 +60,7 @@ func get_prompt() -> String:
 	if kind in ["radio", "alarm"]: return ("Desligar " if enabled else "Ligar ") + ("rádio" if kind == "radio" else "alarme")
 	if kind == "fuse_panel": return "Fusível instalado" if Game.world.get("fuse_installed", false) else "Instalar fusível no painel"
 	if kind == "door": return "Fechar porta" if open else title
+	if kind == "drawer": return "Fechar gaveta" if open else "Abrir gaveta"
 	if kind == "generator" and Game.power: return "Energia restaurada"
 	return title
 
@@ -176,19 +183,23 @@ func interact(player: CharacterBody3D) -> void:
 			queue_free()
 		"drawer":
 			open = not open
-			mesh.position.z = 0.3 if open else 0.0
-			Sound.at("metal", global_position, -22)
-			notified.emit("Gaveta vazia. Há marcas de unhas no fundo.")
+			mechanism.set_state(open)
+			Sound.physics_impact("slide",global_position,-26)
+			NoiseBus.emit_noise(self,0.15,"gaveta",6)
+			Game.world.get_or_add("physics",{})[item_id] = {"open":open}
+			if Game.record_results: Game.save_checkpoint()
+			notified.emit("Uma ferramenta e um bilhete: NÃO LIGUE O ALARME SE ELE ESTIVER PERTO.")
 		"object":
 			NoiseBus.emit_noise(self, 1.0, "objeto", 26.0)
 			Sound.at("metal", global_position, -8)
 			mesh.rotation.z += 0.7
 			notified.emit("O metal ecoa pelo corredor. Afaste-se.")
 
-func _set_open(value: bool) -> void:
+func _set_open(value: bool, seconds := 0.65) -> void:
 	open = value
 	if collider: collider.set_deferred("disabled", value)
-	if mesh: mesh.position.y = 2.8 if value else 0.0
+	if is_instance_valid(mechanism): mechanism.set_state(value, seconds)
+	elif mesh: mesh.position.y = 0.0
 
 func reveal_for_capture() -> void:
 	# The real locker shell parts open after occupancy has been confirmed.

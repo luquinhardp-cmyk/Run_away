@@ -67,12 +67,13 @@ func run() -> void:
 	var content := FileAccess.get_file_as_string(Game.checkpoint_path()) if existed else ""
 	Game.record_results = false
 	Game.testing = true
-	Game.settings.seed = 70421
+	Game.settings.seed = int(OS.get_environment("ECOS_TEST_SEED")) if OS.has_environment("ECOS_TEST_SEED") else 70421
 	Game.settings.difficulty = int(OS.get_environment("ECOS_TEST_DIFFICULTY")) if OS.has_environment("ECOS_TEST_DIFFICULTY") else 0
 	Engine.time_scale = 4
 	main = preload("res://scenes/main/main.tscn").instantiate()
 	add_child(main)
 	main.start(false, false)
+	print("PLAYTHROUGH seed=",Game.world.seed," variant=",Game.world.variant," difficulty=",Game.world.difficulty)
 	Game.enemy.state_changed.connect(func(_old: int, next: int): transitions.append(next))
 	for i in 15: await get_tree().physics_frame
 	# Visit each actual source/object using capsule movement, actual colliders and aim.

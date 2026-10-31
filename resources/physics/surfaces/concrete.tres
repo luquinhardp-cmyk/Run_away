@@ -1,0 +1,5 @@
+[gd_resource type="PhysicsMaterial" format=3]
+[resource]
+resource_name = "concrete"
+friction = 0.8
+bounce = 0.04

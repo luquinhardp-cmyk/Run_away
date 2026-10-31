@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ObjectPhysicsProfile" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/physics/object_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = "small_crate"
+category = "B"
+title = "Caixa pequena"
+mass_kg = 2.5
+surface = "wood"
+pbr = "damp_wood"
+shape = "box"
+can_hold = true
+can_throw = true
+break_speed = 0.0
+size = Vector3(0.36, 0.3, 0.32)

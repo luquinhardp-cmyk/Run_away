@@ -126,7 +126,7 @@ func run() -> void:
 	await frames()
 	check(not enemy.sees_player(), "closed door blocks actual vision ray")
 	item("security")._set_open(true)
-	await frames()
+	await frames(45) # Wait for the real hinged leaf to clear the line of sight.
 	check(enemy.sees_player(), "opening same door restores actual line of sight")
 	enemy.age = 10
 	enemy.global_position = Vector3(0, 0.1, -10)
@@ -188,6 +188,8 @@ func run() -> void:
 	check(not Game.playing and main.screen == "ended" and Game.last_score == 1100, "integrated puzzle and survival results lead to successful escape")
 	main.to_menu()
 	main.free()
+	Sound.stop_all()
+	await get_tree().create_timer(0.3).timeout
 	await frames()
 	Game.checkpoint = backup
 	Game.settings = settings

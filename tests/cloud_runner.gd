@@ -39,6 +39,9 @@ func run() -> void:
 	checkpoint.world.generator_started = true
 	checkpoint.world.unlocks.workshop = true
 	checkpoint.world.events.pipe = true
+	checkpoint.world.physics = {"can":{"p":[-4.0,0.13,-17.2],"r":[0.0,0.0,0.0],"broken":false},"drawer":{"open":true}}
+	for physical_id in ["bottle_ward","tool_edge","small_crate","chair_maintenance","crate_storage","trolley_ward","bucket_power","rubber_gallery","fragile_workshop","bottle_shelf","drawer_tool"]:
+		checkpoint.world.physics[physical_id] = checkpoint.world.physics.can.duplicate(true)
 	checkpoint.world.horror = {"counts": {"knock": 1}, "history": ["knock"], "cooldown_remaining": 24.5, "rng_state": "123456789"}
 	checkpoint.items.append("chave_oficina")
 	Cloud.queue_checkpoint(checkpoint)

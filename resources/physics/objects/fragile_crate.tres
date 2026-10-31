@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ObjectPhysicsProfile" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/physics/object_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = "fragile_crate"
+category = "B"
+title = "Caixa fragil"
+mass_kg = 1.5
+surface = "wood"
+pbr = "damp_wood"
+shape = "box"
+can_hold = true
+can_throw = true
+break_speed = 6.0
+size = Vector3(0.32, 0.3, 0.32)

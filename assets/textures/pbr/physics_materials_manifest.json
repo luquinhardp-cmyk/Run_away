@@ -1,0 +1,92 @@
+[
+  {
+    "id": "brushed_metal",
+    "size": 256,
+    "low": 128,
+    "roughness": 0.42,
+    "metallic": 0.8,
+    "origin": "original deterministic synthesis",
+    "glass_note": ""
+  },
+  {
+    "id": "wet_steel",
+    "size": 256,
+    "low": 128,
+    "roughness": 0.3,
+    "metallic": 0.65,
+    "origin": "original deterministic synthesis",
+    "glass_note": ""
+  },
+  {
+    "id": "dirty_glass",
+    "size": 256,
+    "low": 128,
+    "roughness": 0.35,
+    "metallic": 0,
+    "origin": "original deterministic synthesis",
+    "glass_note": "opaque dirty surface, no refraction or destruction shader"
+  },
+  {
+    "id": "cracked_glass",
+    "size": 256,
+    "low": 128,
+    "roughness": 0.5,
+    "metallic": 0,
+    "origin": "original deterministic synthesis",
+    "glass_note": "opaque dirty surface, no refraction or destruction shader"
+  },
+  {
+    "id": "aged_plastic",
+    "size": 256,
+    "low": 128,
+    "roughness": 0.72,
+    "metallic": 0,
+    "origin": "original deterministic synthesis",
+    "glass_note": ""
+  },
+  {
+    "id": "worn_rubber",
+    "size": 256,
+    "low": 128,
+    "roughness": 0.9,
+    "metallic": 0,
+    "origin": "original deterministic synthesis",
+    "glass_note": ""
+  },
+  {
+    "id": "damp_wood",
+    "size": 256,
+    "low": 128,
+    "roughness": 0.7,
+    "metallic": 0,
+    "origin": "original deterministic synthesis",
+    "glass_note": ""
+  },
+  {
+    "id": "industrial_sheet",
+    "size": 256,
+    "low": 128,
+    "roughness": 0.68,
+    "metallic": 0.7,
+    "origin": "original deterministic synthesis",
+    "glass_note": ""
+  },
+  {
+    "id": "moss",
+    "size": 256,
+    "low": 128,
+    "roughness": 0.98,
+    "metallic": 0,
+    "origin": "original deterministic synthesis",
+    "glass_note": ""
+  },
+  {
+    "id": "old_upholstery",
+    "size": 256,
+    "low": 128,
+    "roughness": 0.94,
+    "metallic": 0,
+    "origin": "original deterministic synthesis",
+    "glass_note": ""
+  }
+]

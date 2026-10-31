@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ObjectPhysicsProfile" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/physics/object_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = "chair"
+category = "C"
+title = "Cadeira"
+mass_kg = 6.0
+surface = "metal"
+pbr = "wet_steel"
+shape = "chair"
+can_hold = false
+can_throw = false
+break_speed = 0.0
+size = Vector3(0.48, 0.9, 0.48)

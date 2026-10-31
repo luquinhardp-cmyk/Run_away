@@ -1,0 +1,128 @@
+[
+  {
+    "file": "metal_0.wav",
+    "duration": 0.7,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "metal_1.wav",
+    "duration": 0.7,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "metal_2.wav",
+    "duration": 0.7,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "wood_0.wav",
+    "duration": 0.45,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "wood_1.wav",
+    "duration": 0.45,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "wood_2.wav",
+    "duration": 0.45,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "glass_0.wav",
+    "duration": 0.45,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "glass_1.wav",
+    "duration": 0.45,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "glass_2.wav",
+    "duration": 0.45,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "rubber_0.wav",
+    "duration": 0.45,
+    "peak": 0.6500000000000001,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "rubber_1.wav",
+    "duration": 0.45,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "rubber_2.wav",
+    "duration": 0.45,
+    "peak": 0.6500000000000001,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "heavy_0.wav",
+    "duration": 0.7,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "heavy_1.wav",
+    "duration": 0.7,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "heavy_2.wav",
+    "duration": 0.7,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "chain_0.wav",
+    "duration": 0.45,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "chain_1.wav",
+    "duration": 0.45,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "chain_2.wav",
+    "duration": 0.45,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "slide_0.wav",
+    "duration": 0.45,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "slide_1.wav",
+    "duration": 0.45,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  },
+  {
+    "file": "slide_2.wav",
+    "duration": 0.45,
+    "peak": 0.65,
+    "origin": "original synthesis"
+  }
+]

@@ -16,6 +16,7 @@ var touch_buttons: Array[Button] = []
 var inventory_open := false
 var actions: Array[Button] = []
 var throw_button: Button
+var hold_button: Button
 
 func _ready() -> void:
 	root = Control.new()
@@ -75,6 +76,10 @@ func _ready() -> void:
 	button("MOCHILA", Vector2(-410, -98), toggle_inventory)
 	button("ARREMESSAR", Vector2(-410, -188), func(): Game.player.throw_object())
 	throw_button = actions[-1]
+	button("SEGURAR", Vector2(-542, -188), func(): pass)
+	hold_button = actions[-1]
+	hold_button.button_down.connect(func(): Game.player.begin_hold())
+	hold_button.button_up.connect(func(): Game.player.manipulator.release())
 	var pause := Button.new()
 	pause.text = "Ⅱ  PAUSA"
 	pause.set_anchors_preset(Control.PRESET_TOP_RIGHT)
@@ -181,12 +186,17 @@ func _process(delta: float) -> void:
 	root.visible = Game.playing and not Game.paused and not Game.capture_in_progress
 	if not is_instance_valid(Game.player): return
 	if Game.paused:
+		Game.player.manipulator.release()
 		stick_id = -1
 		look_id = -1
 		move = Vector2.ZERO
 		Game.player.touch_run = false
 	Game.player.touch_move = move
-	throw_button.visible = int(Game.world.get("throwables", 0)) > 0 and not Game.player.hidden
+	throw_button.visible = (int(Game.world.get("throwables", 0)) > 0 or is_instance_valid(Game.player.manipulator.held)) and not Game.player.hidden
+	hold_button.visible = not Game.player.hidden and ((is_instance_valid(Game.player.focus) and Game.player.focus is PhysicalProp3D) or is_instance_valid(Game.player.manipulator.held))
+	var medium_focus: bool = is_instance_valid(Game.player.focus) and Game.player.focus is PhysicalProp3D and Game.player.focus.profile.category == "C"
+	hold_button.text = "ARRASTAR" if Game.player.manipulator.dragging or medium_focus else "SEGURAR"
+	throw_button.text = "SOLTAR" if is_instance_valid(Game.player.manipulator.held) and not Game.player.manipulator.held.profile.can_throw else "ARREMESSAR"
 	objective.text = Game.objective
 	prompt.text = Game.player.prompt
 	mic_label.text = Mic.status + ("  ▰".repeat(Mic.level) if Mic.active else " · sons do jogo ativos")

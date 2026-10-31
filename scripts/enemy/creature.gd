@@ -42,7 +42,7 @@ func _ready() -> void:
 	listen_duration = profile.listen_duration
 	if int(Game.world.get("variant", 0)) == 1: patrol.reverse()
 	collision_layer = 4
-	collision_mask = 1 | 2
+	collision_mask = 1 | 2 | 16
 	var collision := CollisionShape3D.new()
 	var capsule := CapsuleShape3D.new()
 	capsule.height = 2.4
@@ -238,9 +238,11 @@ func _physics_process(delta: float) -> void:
 	var direction := next - global_position
 	direction.y = 0
 	if agent.is_navigation_finished(): direction = Vector3.ZERO
+	var falling := velocity.y
 	velocity = direction.normalized() * speed
-	velocity.y = -2.0
+	velocity.y = falling + get_gravity().y * delta
 	move_and_slide()
+	CharacterPhysicsPush.apply(self, true)
 	if direction.length() > 0.1 and speed > 0:
 		_face(global_position + direction, delta)
 		if foot_clock <= 0:

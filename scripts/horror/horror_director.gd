@@ -157,14 +157,8 @@ func trigger(definition: HorrorScare, source: Node3D) -> bool:
 		"knock": Sound.creature_cue("knock", source.global_position, -24)
 		"door_slow":
 			Sound.creature_cue("creak", source.global_position, -23)
-			active_tween = source.create_tween()
-			tween_source = source
-			active_tween.tween_property(source.mesh, "position:y", 2.8, 1.6)
-			active_tween.tween_callback(func():
-				if not Game.capture_in_progress:
-					source._set_open(true)
-					Game.doors[source.item_id] = true
-					Game.updated.emit())
+			source._set_open(true, 1.6)
+			Game.doors[source.item_id] = true
 		"door_slam":
 			if source.closing_blocked(): return false
 			source._set_open(false)
@@ -174,12 +168,7 @@ func trigger(definition: HorrorScare, source: Node3D) -> bool:
 		"light_dip": dip_remaining = 1.8
 		"lamp_fault": Game.player.lamp_fault = 0.65
 		"object_slide":
-			var tween := source.create_tween()
-			cosmetic_tweens = cosmetic_tweens.filter(func(item: Tween): return item.is_running())
-			cosmetic_tweens.append(tween)
-			tween.tween_property(source.mesh, "position:x", 0.2, 0.6)
-			NoiseBus.emit_noise(source, 0.4, "objeto", 16)
-			Sound.at("metal", source.global_position, -24)
+			if source is PhysicalProp3D: source.nudge(Vector3(0.7,0.2,0),0.6)
 		"radio_start": source.set_device(true)
 		"creature_scratch": Sound.creature_cue("drag", Game.enemy.global_position, -24)
 		"real_presence":

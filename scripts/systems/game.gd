@@ -105,9 +105,9 @@ func _ready() -> void:
 		if data is Dictionary and data.get("version") in [1, 2]: checkpoint = data
 	settings["difficulty"] = config.get_value("settings", "difficulty", 1)
 	settings["seed"] = config.get_value("settings", "seed", 0)
-	for action in ["forward", "back", "left", "right", "run", "crouch", "interact", "flashlight", "pause", "inventory", "throw"]:
+	for action in ["forward", "back", "left", "right", "run", "crouch", "interact", "flashlight", "pause", "inventory", "throw", "hold"]:
 		InputMap.add_action(action)
-	var keys := {"forward": KEY_W, "back": KEY_S, "left": KEY_A, "right": KEY_D, "run": KEY_SHIFT, "crouch": KEY_C, "interact": KEY_E, "flashlight": KEY_F, "pause": KEY_ESCAPE, "inventory": KEY_TAB, "throw": KEY_Q}
+	var keys := {"forward": KEY_W, "back": KEY_S, "left": KEY_A, "right": KEY_D, "run": KEY_SHIFT, "crouch": KEY_C, "interact": KEY_E, "flashlight": KEY_F, "pause": KEY_ESCAPE, "inventory": KEY_TAB, "throw": KEY_Q, "hold": KEY_R}
 	for action in keys:
 		var event := InputEventKey.new()
 		event.physical_keycode = keys[action]
@@ -146,6 +146,7 @@ func collect(item: String) -> void:
 
 func save_checkpoint() -> void:
 	# Always resume in the safe infirmary; inventory and mechanisms persist.
+	for manager in get_tree().get_nodes_in_group("physics_managers"): manager.snapshot()
 	update_clock()
 	checkpoint = {"version": 2, "items": inventory.duplicate(), "power": power, "doors": doors.duplicate(true), "elapsed_ms": elapsed_ms, "world": world.duplicate(true)}
 	write_json(checkpoint_path(), checkpoint)

@@ -230,7 +230,7 @@ static func encode(value: Variant) -> Dictionary:
 	match typeof(value):
 		TYPE_BOOL: return {"booleanValue": value}
 		TYPE_INT: return {"integerValue": str(value)}
-		TYPE_FLOAT: return {"integerValue": str(int(value))} if value == floor(value) else {"doubleValue": value}
+		TYPE_FLOAT: return {"doubleValue": value} # Preserve numeric array types in physical transforms.
 		TYPE_STRING: return {"stringValue": value}
 		TYPE_DICTIONARY: return {"mapValue": {"fields": encode_fields(value)}}
 		TYPE_ARRAY:

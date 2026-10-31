@@ -1,4 +1,23 @@
 extends Node
+var last_impact_sample := -1
+func physics_impact(bank: String, point: Vector3, gain: float, previous := -1) -> void:
+	if get_child_count() >= 24: return
+	var index := (previous + 1 + int(Time.get_ticks_msec() % 2)) % 3
+	if index == previous: index = (index + 1) % 3
+	last_impact_sample = index
+	var key := "impact_" + bank + str(index)
+	if not clips.has(key): clips[key] = load("res://assets/audio/impacts/%s_%d.wav" % [bank, index])
+	var sound := AudioStreamPlayer3D.new()
+	sound.stream = clips[key]
+	sound.bus = "Effects"
+	sound.volume_db = clampf(gain, -38, -10)
+	sound.pitch_scale = 0.97 + (index * 0.03)
+	sound.max_distance = 32
+	add_child(sound)
+	sound.global_position = point
+	sound.finished.connect(sound.queue_free)
+	sound.play()
+	if gain > -17: Mic.output_guard = maxf(Mic.output_guard, 0.25)
 var clips: Dictionary = {}
 var last_spawn_usec := 0
 var cue_clock: Dictionary = {}

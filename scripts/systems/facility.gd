@@ -31,7 +31,7 @@ func _ready() -> void:
 	nav.cell_size = 0.15
 	nav.cell_height = 0.1
 	nav.geometry_parsed_geometry_type = NavigationMesh.PARSED_GEOMETRY_STATIC_COLLIDERS
-	nav.geometry_collision_mask = 1
+	nav.geometry_collision_mask = 1 | 32
 	region.navigation_mesh = nav
 	add_child(region)
 	NavigationServer3D.map_set_cell_size(get_world_3d().navigation_map, 0.15)
@@ -55,6 +55,7 @@ func _ready() -> void:
 	nav_ready = true
 	_doors()
 	_expansion_objects()
+	_navigation_furniture()
 	_sync_accessibility()
 	Game.updated.connect(_sync_accessibility)
 	_search_points()
@@ -77,6 +78,9 @@ func _ready() -> void:
 	HorrorArt.merge_static(geometry, batches)
 	Game.updated.connect(_quality)
 	_quality()
+	var physics := Node.new()
+	physics.set_script(preload("res://scripts/physics/world_physics.gd"))
+	add_child(physics)
 
 func material(color: Color, emission: bool = false) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()
@@ -100,6 +104,7 @@ func box(pos: Vector3, size: Vector3, mat: Material, solid: bool = true, parent:
 	mesh.material_override = mat
 	node.add_child(mesh)
 	if solid:
+		PhysicsSurfaces.attach(node, PhysicsSurfaces.identify(mat))
 		var collision := CollisionShape3D.new()
 		var shape := BoxShape3D.new()
 		shape.size = size
@@ -229,9 +234,9 @@ func interaction(kind: String, id: String, title: String, pos: Vector3, size: Ve
 	return node
 
 func _items() -> void:
-	interaction("pickup", "lanterna", "Lanterna", Vector3(-7.8, 0.85, 0.8), Vector3(0.45, 0.22, 0.22), Color(0.65, 0.85, 0.62))
-	interaction("pickup", "fusivel", "Fusível", Vector3(7.7 if Game.world.variant == 0 else 6.6, 0.85, -9), Vector3(0.18, 0.3, 0.18), Color(0.95, 0.59, 0.22))
-	interaction("pickup", "cartao", "Cartão de segurança", Vector3(7.8, 0.85, -25), Vector3(0.32, 0.07, 0.24), Color(0.35, 0.78, 0.85))
+	interaction("pickup", "lanterna", "Lanterna", Vector3(-7.8, 0.79, 0.8), Vector3(0.34, 0.12, 0.12), Color(0.65, 0.85, 0.62))
+	interaction("pickup", "fusivel", "Fusível", Vector3(7.7 if Game.world.variant == 0 else 6.6, 0.76, -9), Vector3(0.18, 0.07, 0.07), Color(0.95, 0.59, 0.22))
+	interaction("pickup", "cartao", "Cartão de segurança", Vector3(7.8, 0.765, -25), Vector3(0.32, 0.07, 0.24), Color(0.35, 0.78, 0.85))
 	interaction("generator", "generator", "Instalar fusível / ligar gerador", Vector3(-8, 1.0, -32), Vector3(1.3, 2, 0.8), Color(0.3, 0.35, 0.2))
 	interaction("exit", "exit", "Usar cartão / escapar", Vector3(0, 1.3, -41.7), Vector3(1.8, 2.6, 0.2), Color(0.18, 0.37, 0.3))
 	for pos in [Vector3(-5, 1, 1.2), Vector3(-5, 1, -15), Vector3(5, 1, -7), Vector3(-5, 1, -31)]:
@@ -239,8 +244,11 @@ func _items() -> void:
 		locker.rotation.y = PI / 2 if pos.x < 0 else -PI / 2
 	var document := interaction("document", "note", "Ler anotação", Vector3(-8.5, 1, -1.7), Vector3(0.6, 0.6, 0.08), Color(0.65, 0.59, 0.4))
 	document.message = "ELE ESCUTA. Fusível: manutenção → painel e gerador: energia → cartão: segurança → saída.\nGaleria lateral conecta manutenção e segurança. Chave da oficina no depósito abre o atalho central. Q arremessa peças. Rádio e alarme atraem para sua fonte real."
-	interaction("drawer", "drawer", "Abrir gaveta", Vector3(8, 0.4, -7), Vector3(1.3, 0.6, 0.65), Color(0.25, 0.2, 0.14))
-	interaction("object", "can", "Derrubar lata / distrair", Vector3(-4, 0.7, -17.2), Vector3(0.25, 0.4, 0.25), Color(0.5, 0.3, 0.2))
+	interaction("drawer", "drawer", "Abrir gaveta", Vector3(5.8, 0.4, -9.3), Vector3(1.3, 0.6, 0.65), Color(0.25, 0.2, 0.14))
+	# The can is now a real body, spawned by world_physics after geometry is built.
+	box(Vector3(5.8,0.1,-9.3),Vector3(1.35,0.2,0.7),HorrorArt.surface("rotten_wood"))
+	box(Vector3(5.8,0.56,-9.3),Vector3(1.35,0.04,0.7),HorrorArt.surface("damp_wood"))
+	for side in [-1,1]: box(Vector3(5.8+side*0.67,0.38,-9.3),Vector3(0.04,0.4,0.7),HorrorArt.surface("damp_wood"))
 
 func _doors() -> void:
 	for info in [[2, -8, "maintenance"], [-2, -16, "storage"], [2, -24, "security"], [-2, -32, "power"]]:
@@ -268,6 +276,22 @@ func request_navigation_update() -> void:
 	if nav_update_pending: return
 	nav_update_pending = true
 	_rebuild_navigation.call_deferred()
+
+func _navigation_furniture() -> void:
+	# Interactions live outside the region for stable IDs. Mirror only anchored
+	# hulls into its bake input; layer 32 is invisible to gameplay collisions.
+	for item in get_children():
+		if item.get("kind") not in ["hide","generator","radio","alarm","fuse_panel"]: continue
+		var proxy := StaticBody3D.new()
+		proxy.name = "NavFixed_" + item.item_id
+		proxy.collision_layer = 32
+		proxy.collision_mask = 0
+		proxy.transform = item.transform
+		var shape := CollisionShape3D.new()
+		shape.shape = item.collider.shape
+		proxy.add_child(shape)
+		geometry.add_child(proxy)
+	request_navigation_update()
 
 func _rebuild_navigation() -> void:
 	await get_tree().process_frame
@@ -301,7 +325,7 @@ func _search_points() -> void:
 func _expansion_objects() -> void:
 	interaction("fuse_panel", "fuse_panel", "Instalar fusível", Vector3(-5.3, 1.4, -33.7), Vector3(0.7, 0.9, 0.2), Color(0.25, 0.3, 0.2))
 	_label("PAINEL / FUSÍVEL", Vector3(-5.3, 2.2, -33.7), 0, 22)
-	interaction("radio", "radio", "Ligar rádio", Vector3(12, 0.85, -12), Vector3(0.5, 0.4, 0.25), Color(0.3, 0.25, 0.2))
+	interaction("radio", "radio", "Ligar rádio", Vector3(12, 0.9, -12), Vector3(0.5, 0.4, 0.25), Color(0.3, 0.25, 0.2))
 	interaction("alarm", "alarm", "Ligar alarme", Vector3(13.7, 1.4, -22), Vector3(0.35, 0.4, 0.25), Color(0.7, 0.2, 0.12))
 	box(Vector3(12, 0.35, -12), Vector3(0.8, 0.7, 0.55), metal)
 	for z in [-8, -16, -24]:
@@ -313,6 +337,8 @@ func _expansion_objects() -> void:
 		add_child(light)
 		lights.append(light)
 	interaction("pickup", "chave_oficina", "Chave da oficina", Vector3(-7.5, 0.9, -14.8), Vector3(0.22, 0.12, 0.12), Color(0.8, 0.6, 0.2))
+	box(Vector3(-7.5,0.81,-14.8),Vector3(0.5,0.06,0.35),HorrorArt.surface("damp_wood"),true,self)
+	box(Vector3(-7.5,0.39,-14.8),Vector3(0.3,0.78,0.25),HorrorArt.surface("rotten_wood"))
 	var door := interaction("door", "workshop", "Destrancar oficina", Vector3(2, 1.3, -16), Vector3(0.15, 2.6, 1.8), Color(0.3, 0.25, 0.2))
 	door.add_to_group("doors")
 	# Gate only the short central connector; the long loop remains usable without a key.
@@ -320,7 +346,7 @@ func _expansion_objects() -> void:
 	_label("MANUTENÇÃO ←    SEGURANÇA →", Vector3(13.85, 2.1, -16), -PI / 2, 22)
 	var profile := Game.difficulty_profile()
 	for index in profile.throwable_supply:
-		var pos := Vector3(6 + (index % 2) * 1.2, 0.85, -8 - int(index / 2) * 4)
+		var pos := Vector3(6 + (index % 2) * 1.2, 0.1, -8 - int(index / 2) * 4)
 		interaction("throw_pickup", "metal_" + str(index), "Coletar peça metálica", pos, Vector3(0.2, 0.18, 0.2), Color(0.4, 0.3, 0.2))
 	var bed := interaction("hide", "under_table", "Esconder-se sob a bancada", Vector3(11.6, 0.5, -18), Vector3(1.8, 1.0, 0.9), Color(0.2, 0.2, 0.18))
 	bed.visual_protection = 0.55
@@ -356,13 +382,13 @@ func _decor_box(parent: Node3D, pos: Vector3, size: Vector3, mat: Material) -> M
 	return mesh
 
 func _decorate_interaction(node: StaticBody3D) -> void:
-	var mesh: MeshInstance3D = node.get_node("Mesh")
+	var mesh: MeshInstance3D = node.mesh
 	var rust := HorrorArt.surface("rusted_iron")
 	var dark := HorrorArt.solid(Color("191d1b"))
 	mesh.material_override = rust
 	match node.kind:
 		"pickup":
-			mesh.material_override = HorrorArt.solid(Color("b8ab7a"))
+			mesh.material_override = HorrorArt.surface("brushed_metal" if node.item_id == "chave_oficina" else "aged_plastic")
 			if node.item_id in ["lanterna", "fusivel"]:
 				var cylinder := CylinderMesh.new()
 				cylinder.height = 0.32 if node.item_id == "lanterna" else 0.18
@@ -392,12 +418,16 @@ func _decorate_interaction(node: StaticBody3D) -> void:
 				louver.rotation.x = -0.35
 			_decor_box(mesh, Vector3(0.4, -0.1, 0.52), Vector3(0.035, 0.17, 0.045), dark)
 		"door", "exit":
+			mesh.material_override = HorrorArt.surface("industrial_sheet")
 			var x_axis: bool = node.kind == "door"
 			for sign_value in [-1, 1]:
 				_decor_box(mesh, Vector3(sign_value * 0.09, 0, 0) if x_axis else Vector3(0, 0, sign_value * 0.12), Vector3(0.03, 2.2, 0.055) if x_axis else Vector3(0.06, 2.3, 0.03), dark)
 			_decor_box(mesh, Vector3(0.12, 0, 0.55) if x_axis else Vector3(0.55, 0, 0.15), Vector3(0.08, 0.22, 0.045), dark)
 		"generator":
+			mesh.material_override = HorrorArt.surface("wet_steel")
 			for y in [-0.65, -0.4, -0.15, 0.10]: _decor_box(mesh, Vector3(0, y, 0.42), Vector3(1.1, 0.035, 0.035), dark)
 			_decor_box(mesh, Vector3(0.25, 0.55, 0.43), Vector3(0.4, 0.5, 0.04), dark)
 		"document": mesh.material_override = HorrorArt.surface("torn_fabric")
+		"drawer": mesh.material_override = HorrorArt.surface("damp_wood")
+		"radio", "alarm": mesh.material_override = HorrorArt.surface("aged_plastic")
 	if mesh.get_child_count() > 0: HorrorArt.merge_static(mesh, mesh)

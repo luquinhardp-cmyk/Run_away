@@ -53,8 +53,7 @@ func trigger(id: String) -> bool:
 		"impact":
 			var source: Node3D = facility.find_interaction("can")
 			if is_instance_valid(source):
-				NoiseBus.emit_noise(source, 0.65, "objeto_derrubado", 24)
-				Sound.at("metal", source.global_position, -13)
+				if source is PhysicalProp3D: source.nudge(Vector3(1,0.2,0),0.6)
 	if Game.record_results: Game.save_checkpoint()
 	Game.updated.emit()
 	triggered.emit(id)

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ObjectPhysicsProfile" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/physics/object_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+id = "can"
+category = "B"
+title = "Lata"
+mass_kg = 0.2
+surface = "metal"
+pbr = "rusted_iron"
+shape = "cylinder"
+can_hold = true
+can_throw = true
+break_speed = 0.0
+size = Vector3(0.18, 0.26, 0.18)

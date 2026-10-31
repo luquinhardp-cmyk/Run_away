@@ -16,6 +16,7 @@ func _ready() -> void:
 	add_child(detail)
 	_corridor()
 	_rooms()
+	_solid_dressing()
 	_room_stories()
 	_exterior()
 	_basement()
@@ -97,7 +98,7 @@ func _corridor() -> void:
 		# Cable droop is geometry, not a physics rope.
 		for i in 5:
 			var z1: float = z + 1.8 - i * 0.75
-			pipe(Vector3(1.5, 2.8 - sin(float(i) / 5 * PI) * 0.28, z1), Vector3(1.5, 2.8 - sin(float(i + 1) / 5 * PI) * 0.28, z1 - 0.75), 0.012, rust, 6)
+			pipe(Vector3(1.5, 2.8 - sin(float(i) / 5 * PI) * 0.28, z1), Vector3(1.5, 2.8 - sin(float(i + 1) / 5 * PI) * 0.28, z1 - 0.75), 0.012, HorrorArt.surface("worn_rubber"), 6)
 		# Small debris confined to edges, preserving the chase lane.
 		for i in 5:
 			var p := Vector3(rng.randf_range(1.35, 1.75), 0.035, z + rng.randf_range(-1.5, 1.5))
@@ -151,13 +152,12 @@ func _rooms() -> void:
 	for x in [-8.7, -7.3]:
 		for z in [-1.4, -0.7]: pipe(Vector3(x, 0, z), Vector3(x, 0.55, z), 0.035, rust)
 	# Window is an opaque wall inset, no fake transparency through solid geometry.
-	box(Vector3(-9.86, 1.9, 0), Vector3(0.05, 1.25, 1.6), dark)
+	box(Vector3(-9.86, 1.9, 0), Vector3(0.05, 1.25, 1.6), HorrorArt.surface("dirty_glass"))
 	for z in [-0.8, 0, 0.8]: box(Vector3(-9.82, 1.9, z), Vector3(0.06, 1.3, 0.045), wood)
 	# Storage side aisles; central navigation left free.
 	_shelf(Vector3(-8.3, 0, -17.2))
 	_shelf(Vector3(-8.3, 0, -14.8))
-	box(Vector3(-6.6, 0.55, -17), Vector3(0.85, 1.1, 0.85), wood)
-	box(Vector3(-6.6, 1.16, -17), Vector3(1, 0.13, 1), cloth, Vector3(0.03, 0.08, 0.07))
+	# Loose crates are instantiated as physical bodies instead of merged decoration.
 	# Workshop machines: press, motor housing, tools and short hanging chain.
 	box(Vector3(8.7, 0.65, -6.8), Vector3(1.1, 1.3, 0.65), rust)
 	box(Vector3(8.7, 1.45, -6.8), Vector3(0.16, 0.6, 0.4), rust)
@@ -172,9 +172,10 @@ func _rooms() -> void:
 	for i in 4:
 		pipe(Vector3(7.2 + i * 0.2, 1.5, -9.85), Vector3(7.2 + i * 0.2, 1.85, -9.85), 0.018, rust, 6)
 	# Security analogue consoles and dangling cables.
-	for x in [6.3, 7.5]:
-		box(Vector3(x, 1.25, -25.5), Vector3(0.65, 0.45, 0.42), rust)
-		box(Vector3(x, 1.27, -25.26), Vector3(0.52, 0.33, 0.025), dark)
+	for x in [7.4, 8.6]:
+		box(Vector3(x, 1.1, -25), Vector3(0.65, 0.45, 0.42), HorrorArt.surface("aged_plastic"))
+		box(Vector3(x, 0.8, -25), Vector3(0.2, 0.15, 0.2), rust)
+		box(Vector3(x, 1.12, -24.76), Vector3(0.52, 0.33, 0.025), HorrorArt.surface("cracked_glass"))
 	for i in 6:
 		box(Vector3(8.8, 1.7 + i * 0.07, -25.78), Vector3(0.6, 0.025, 0.025), dark)
 	# Power room: tanks and warm industrial indicators.
@@ -187,6 +188,15 @@ func _rooms() -> void:
 		box(Vector3(side * 1.65, 0.65, -39), Vector3(0.18, 1.7, 0.16), wood, Vector3(0.12, 0, side * 0.2))
 		box(Vector3(side * 1.5, 0.12, -40), Vector3(0.6, 0.16, 1.2), wood, Vector3(0, side * 0.25, 0))
 	light_at(Vector3(0, 2.5, -40.7), Color(0.46, 0.51, 0.45), 0.7, 4.5)
+
+func _solid_dressing() -> void:
+	# Coarse fixed hulls match bulky dressing, never thin decals/cables or empty aisles.
+	var facility := get_parent()
+	for entry in [[Vector3(-8,0.38,-1.05),Vector3(1.6,0.76,0.85),"cloth"], [Vector3(8.7,0.65,-6.8),Vector3(1.1,1.3,0.65),"metal"], [Vector3(-9.45,0.5,1.1),Vector3(0.65,1.0,0.7),"metal"]]:
+		var hull: StaticBody3D = facility.box(entry[0],entry[1],HorrorArt.surface("aged_concrete"))
+		hull.visible = false
+		PhysicsSurfaces.attach(hull,entry[2])
+	facility.request_navigation_update()
 
 func _story_sign(id: String, text: String, pos: Vector3, angle: float, size: Vector2, type: String = "paper") -> void:
 	var sign := WorldSign3D.new()
@@ -291,7 +301,7 @@ func _exterior() -> void:
 
 func _basement() -> void:
 	var rust := HorrorArt.surface("rusted_iron")
-	var organic := HorrorArt.surface("organic_residue")
+	var organic := HorrorArt.surface("moss")
 	for z in [-35, -34.7, -29.1]: pipe(Vector3(-21.8, -0.2, z), Vector3(-16.1, -0.2, z), 0.085, rust)
 	for x in [-21, -19, -17]:
 		_puddle(Vector3(x, -1.785, -32.5), Vector2(1.3, 1.6))
