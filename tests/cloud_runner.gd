@@ -39,7 +39,7 @@ func run() -> void:
 	checkpoint.world.generator_started = true
 	checkpoint.world.unlocks.workshop = true
 	checkpoint.world.events.pipe = true
-	checkpoint.world.physics = {"can":{"p":[-4.0,0.13,-17.2],"r":[0.0,0.0,0.0],"broken":false},"drawer":{"open":true}}
+	checkpoint.world.physics = {"can":{"t":"-4.00,0.13,-17.20;0.00,0.00,0.00","broken":false},"drawer":{"open":true}}
 	for physical_id in ["bottle_ward","tool_edge","small_crate","chair_maintenance","crate_storage","trolley_ward","bucket_power","rubber_gallery","fragile_workshop","bottle_shelf","drawer_tool"]:
 		checkpoint.world.physics[physical_id] = checkpoint.world.physics.can.duplicate(true)
 	checkpoint.world.horror = {"counts": {"knock": 1}, "history": ["knock"], "cooldown_remaining": 24.5, "rng_state": "123456789"}
@@ -47,6 +47,14 @@ func run() -> void:
 	Cloud.queue_checkpoint(checkpoint)
 	await Cloud.sync()
 	check(Cloud.pending.checkpoint.is_empty(), "v2 world checkpoint uploads without breaking v1")
+	for invalid_transform in ["99.00,0.13,-17.20;0.00,0.00,0.00", "invalid"]:
+		var invalid_physics := checkpoint.duplicate(true)
+		invalid_physics.world.physics.can.t = invalid_transform
+		var rejected := await Cloud._commit([{"update":{"name":Cloud._name(),"fields":{"checkpoint":Cloud.encode(invalid_physics)}},"updateMask":{"fieldPaths":["checkpoint"]}}])
+		check(not rejected.ok and rejected.code == 403, "rules reject invalid physical transform: " + invalid_transform)
+	if not Cloud.pending.checkpoint.is_empty():
+		var diagnostic := await Cloud._commit([{"update":{"name":Cloud._name(),"fields":{"checkpoint":Cloud.encode(checkpoint)}},"updateMask":{"fieldPaths":["checkpoint"]}}])
+		print("PHYSICS RULE DIAGNOSTIC ",diagnostic.code," ",diagnostic.body.get("error",{}).get("message",""))
 	var event := {"id": Crypto.new().generate_random_bytes(16).hex_encode(), "won": true, "elapsed_ms": 105432, "score": 1100, "items": ["lanterna", "fusivel", "cartao"], "power": true}
 	event.items.append("chave_oficina")
 	Cloud.queue_run(event)

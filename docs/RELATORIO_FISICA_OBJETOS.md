@@ -30,7 +30,7 @@ Quebráveis usam estados pré-definidos e fragmentos visuais limitados/temporár
 
 ## Persistência e Firebase
 
-`world.physics` salva transformações e quebra de IDs conhecidos, além da gaveta. Retoma em repouso; não salva velocidades ou objeto ainda preso à mão. Snapshot ocorre periodicamente e antes de salvar. Campo opcional mantém checkpoints 1/2 compatíveis. Regras Firestore validam estrutura, IDs e limites. O codec preserva floats em arrays, corrigindo falso conflito de progresso causado por conversão para inteiros.
+`world.physics` salva transformações e quebra de IDs conhecidos, além da gaveta. Retoma em repouso; não salva velocidades ou objeto ainda preso à mão. Snapshot ocorre periodicamente e antes de salvar. Campo opcional mantém checkpoints 1/2 compatíveis. Regras Firestore validam estrutura, IDs e limites. Transformações usam texto numérico compacto validado por expressão regular. O emulador confirmou que a validação anterior de arrays dos 12 corpos excedia o [limite de 1.000 expressões do Firestore](https://firebase.google.com/docs/firestore/quotas); o formato compacto passou com 0, 1, 4, 8 e 12 corpos. O codec também preserva floats em arrays, evitando conversões indevidas quando esses tipos são utilizados.
 
 Os testes reais do Firebase confirmaram upload e restauração do estado físico, isolamento entre contas, pontuação, melhor tempo e fila offline. Contas/documentos de QA são temporários e removidos após uso. Hosting Firebase continua separado da hospedagem do jogo no Cloudflare.
 
@@ -41,10 +41,10 @@ Os testes reais do Firebase confirmaram upload e restauração do estado físico
 - Expansão: 41 passaram, aguardando agora a abertura real da folha da porta.
 - Terror/capturas: 23 passaram.
 - Física: 47 passaram. Queda, repouso/sleeping, atrito comparado, impulso/rolamento, CCD em parede, manipulação, arrasto sem levantar, arremesso limitado, gaveta, balanço amortecido, quebra, limite de fragmentos, cooldown, deduplicação, fonte sonora, reação da IA, 12 quedas simultâneas, passagem da criatura e restauração foram exercitados.
-- Firebase real: 18 passaram com o novo campo físico; a primeira execução encontrou dois falsos conflitos, corrigidos no codec e reexecutados com sucesso.
+- Firebase real: 20 verificações incluem estado dos 12 corpos, restauração e rejeição de transformações fora de limite ou malformadas. Falhas anteriores de codec e orçamento das regras foram diagnosticadas e corrigidas antes da entrega.
 - Travessia completa: Fácil, seed 70421, entradas de movimento/visada reais e criatura ativa, sem teleporte. Completou fusível, painel, gerador, cartão e saída com 1.100 pontos. A rota usa a galeria para perder perseguição; tentativas de voltar diretamente pelo caminho da criatura terminaram em derrota. Isso não certifica equilíbrio de todas as dificuldades.
 
-Total dos cinco conjuntos atuais de verificações: 208. Capturas desktop em `docs/review/physics`, geradas por `tests/physics_review.tscn`; inspeção visual corrigiu enquadramento e folgas dos móveis. Métricas: 37–175 draw calls e aproximadamente 74,2 MB de memória estática monitorada, sem equivalência a FPS ou RAM total Android.
+Total previsto dos cinco conjuntos atuais de verificações: 210; o resultado final do Firebase será confirmado após a publicação das regras compactas. Capturas desktop em `docs/review/physics`, geradas por `tests/physics_review.tscn`; inspeção visual corrigiu enquadramento e folgas dos móveis. Métricas: 37–175 draw calls e aproximadamente 74,2 MB de memória estática monitorada, sem equivalência a FPS ou RAM total Android.
 
 ## Limitações e pendências
 

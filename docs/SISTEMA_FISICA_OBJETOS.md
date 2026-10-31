@@ -44,6 +44,6 @@ Formas: caixas/cilindros/esfera e composição de assento, encosto e pernas para
 
 Quebra usa estado pré-definido: oculta corpo, remove colisões, cria até três fragmentos visuais que são projetados no piso e limpos em oito segundos. Limite global de 12 fragmentos. Não é fratura volumétrica ou simulação de cacos. Armários e máquinas não quebram.
 
-Regras Firestore aceitam somente IDs e estrutura conhecidos, coordenadas/rotações limitadas e estados corretos. Campo opcional mantém compatibilidade com checkpoints antigos. O codec cloud preserva arrays de float para evitar falso conflito após sincronização. IDs novos exigem atualização das regras.
+Regras Firestore aceitam somente IDs e estrutura conhecidos, coordenadas/rotações limitadas e estados corretos. Campo opcional mantém compatibilidade com checkpoints antigos. Cada estado usa `t: "x,y,z;rx,ry,rz"` com duas casas e flag broken; a expressão regular limita cada posição a ±50 e rotação a ±3,15. Essa representação cabe no orçamento de expressões do Firestore para os 12 objetos juntos. O cliente também valida valores finitos e intervalos antes de restaurar, e lê arrays locais de desenvolvimento como migração. O codec cloud preserva arrays de float quando utilizados em outros campos. IDs novos exigem atualização das regras.
 
 Base técnica: [RigidBody3D/estado de contato](https://docs.godotengine.org/en/stable/classes/class_physicsdirectbodystate3d.html) e [AnimatableBody3D](https://docs.godotengine.org/en/stable/classes/class_animatablebody3d.html).

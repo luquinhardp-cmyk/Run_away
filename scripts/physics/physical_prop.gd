@@ -41,10 +41,12 @@ func _ready() -> void:
 	spawn_position = position
 	var saved: Dictionary = Game.world.get("physics", {}).get(item_id, {})
 	if persistent and not saved.is_empty():
-		position = Vector3(saved.p[0], saved.p[1], saved.p[2])
-		rotation = Vector3(saved.r[0], saved.r[1], saved.r[2])
-		sleeping = true
-		if saved.get("broken", false): _restore_broken()
+		var decoded := decode_snapshot(saved)
+		if not decoded.is_empty():
+			position = decoded.position
+			rotation = decoded.rotation
+			sleeping = true
+			if saved.get("broken", false): _restore_broken()
 func _part(pos: Vector3, size: Vector3, mat: Material) -> void:
 	var visual := MeshInstance3D.new()
 	var cube := BoxMesh.new()
@@ -159,4 +161,23 @@ func _restore_broken() -> void:
 	held_by = null
 func snapshot() -> Dictionary:
 	var point := position if position.y >= -6 else spawn_position
-	return {"p":[snappedf(point.x,0.01),snappedf(point.y,0.01),snappedf(point.z,0.01)], "r":[snappedf(rotation.x,0.01),snappedf(rotation.y,0.01),snappedf(rotation.z,0.01)], "broken":broken}
+	return {"t":"%.2f,%.2f,%.2f;%.2f,%.2f,%.2f" % [point.x,point.y,point.z,rotation.x,rotation.y,rotation.z], "broken":broken}
+
+static func decode_snapshot(saved: Dictionary) -> Dictionary:
+	var coordinates: Array = []
+	if saved.get("t") is String:
+		var halves: PackedStringArray = saved.t.split(";")
+		if halves.size() != 2: return {}
+		for half in halves:
+			var values := half.split(",")
+			if values.size() != 3: return {}
+			for value in values:
+				if not value.is_valid_float(): return {}
+				coordinates.append(float(value))
+	elif saved.get("p") is Array and saved.get("r") is Array:
+		if saved.p.size() != 3 or saved.r.size() != 3: return {}
+		coordinates = saved.p + saved.r # Local migration from development snapshots.
+	else: return {}
+	for i in 6:
+		if not (coordinates[i] is float or coordinates[i] is int) or not is_finite(float(coordinates[i])) or absf(float(coordinates[i])) > (50 if i < 3 else 3.15): return {}
+	return {"position":Vector3(coordinates[0],coordinates[1],coordinates[2]),"rotation":Vector3(coordinates[3],coordinates[4],coordinates[5])}

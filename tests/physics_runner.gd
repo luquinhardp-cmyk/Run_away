@@ -171,7 +171,7 @@ func run() -> void:
 	main.start(true,false)
 	Game.enemy.set_physics_process(false)
 	await frames(3)
-	check(main.level.find_interaction("can").position.distance_to(Vector3(expected.p[0],expected.p[1],expected.p[2])) < 0.06,"resume restores moved prop transform")
+	check(main.level.find_interaction("can").position.distance_to(PhysicalProp3D.decode_snapshot(expected).position) < 0.06,"resume restores moved prop transform")
 	check(main.level.find_interaction("drawer").open,"resume restores drawer state")
 	print("PHYSICS RESULT ",passed," passed; ",failed," failed")
 	main.to_menu()

@@ -25,13 +25,10 @@ service cloud.firestore {
         && w.collected_props is list && w.collected_props.size() <= 7
         && w.collected_props.hasOnly(['metal_0','metal_1','metal_2','metal_3','metal_4','metal_5','metal_6']);
     }
-    function physicalVector(v, low, high) {
-      return v is list && v.size() == 3 && v[0] is number && v[1] is number && v[2] is number
-        && v[0] >= low && v[0] <= high && v[1] >= low && v[1] <= high && v[2] >= low && v[2] <= high;
-    }
     function optionalProp(p, id) {
-      return !p.keys().hasAny([id]) || (p[id].keys().hasOnly(['p','r','broken'])
-        && physicalVector(p[id].p,-50,50) && physicalVector(p[id].r,-3.15,3.15) && p[id].broken is bool);
+      let state = p.get(id, null);
+      return !p.keys().hasAny([id]) || (state.keys().hasOnly(['t','broken'])
+        && state.t is string && state.t.matches('^-?([0-4]?[0-9](\\.[0-9]{1,2})?|50(\\.0{1,2})?),-?([0-4]?[0-9](\\.[0-9]{1,2})?|50(\\.0{1,2})?),-?([0-4]?[0-9](\\.[0-9]{1,2})?|50(\\.0{1,2})?);-?([0-2](\\.[0-9]{1,2})?|3(\\.(0[0-9]?|1[0-5]?))?),-?([0-2](\\.[0-9]{1,2})?|3(\\.(0[0-9]?|1[0-5]?))?),-?([0-2](\\.[0-9]{1,2})?|3(\\.(0[0-9]?|1[0-5]?))?)$') && state.broken is bool);
     }
     function physics(p) {
       return p is map && p.keys().hasOnly(['can', 'bottle_ward', 'tool_edge', 'small_crate', 'chair_maintenance', 'crate_storage', 'trolley_ward', 'bucket_power', 'rubber_gallery', 'fragile_workshop', 'bottle_shelf', 'drawer_tool', 'drawer'])
