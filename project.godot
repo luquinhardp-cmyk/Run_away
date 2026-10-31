@@ -20,6 +20,7 @@ Cloud="*res://scripts/systems/cloud.gd"
 NoiseBus="*res://scripts/audio/noise.gd"
 Mic="*res://scripts/audio/microphone.gd"
 Sound="*res://scripts/audio/sound.gd"
+Graphics="*res://scripts/systems/graphics.gd"
 
 [display]
 window/size/viewport_width=1280
@@ -32,6 +33,8 @@ renderer/rendering_method="mobile"
 renderer/rendering_method.mobile="mobile"
 renderer/rendering_method.web="gl_compatibility"
 textures/default_filters/use_nearest_mipmap_filter=false
+textures/default_filters/anisotropic_filtering_level=3
+lights_and_shadows/directional_shadow/size=2048
 textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0.008, 0.012, 0.016, 1)
 

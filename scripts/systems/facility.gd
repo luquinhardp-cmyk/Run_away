@@ -281,7 +281,7 @@ func _quality() -> void:
 	HorrorArt.set_quality(int(Game.settings.quality))
 	for light in lights:
 		light.omni_range = 4.8 if Game.settings.quality < 1 else 5.6
-	get_viewport().scaling_3d_scale = [0.65, 0.85, 1.0][int(Game.settings.quality)]
+	Graphics.apply()
 
 func _process(delta: float) -> void:
 	if not Game.playing: return

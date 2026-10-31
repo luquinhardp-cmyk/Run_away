@@ -35,6 +35,9 @@ var stuck_time := 0.0
 var previous := Vector3.ZERO
 var ready_navigation := false
 var heard_hide := false
+var chase_prediction := Vector3.ZERO
+var prediction_valid := false
+var projection_queries := 0
 
 func _ready() -> void:
 	Game.enemy = self
@@ -85,6 +88,7 @@ func transition(next: State) -> void:
 		target = last_known
 	if next == State.ATTACK: Sound.creature_cue("attack", global_position, -16 - (1 - Game.settings.scares) * 12)
 	if next == State.CHASE:
+		prediction_valid=false
 		unseen = 0.0
 		Sound.creature_cue("chase", global_position, -18 - (1 - Game.settings.scares) * 10)
 	state_changed.emit(int(prior), int(next))
@@ -164,7 +168,9 @@ func _physics_process(delta: float) -> void:
 		ready_navigation = NavigationServer3D.map_get_iteration_id(agent.get_navigation_map()) > 0
 		return
 	if age < 8: return
+	var sensor_updated := false
 	if perceive_clock <= 0:
+		sensor_updated=true
 		perceive_clock = 0.18
 		var strength := perception.visual_strength(self, Game.player, profile)
 		visible_now = strength > 0
@@ -212,8 +218,12 @@ func _physics_process(delta: float) -> void:
 			speed = profile.chase_speed
 			target = memory.visual_position
 			if visible_now and memory.direction.length() > 0.2:
-				var projected := NavigationServer3D.map_get_closest_point(agent.get_navigation_map(), target + memory.direction * 0.6)
-				if projected.distance_to(target) < 0.8: target = projected
+				if sensor_updated or not prediction_valid:
+					projection_queries+=1
+					var projected := NavigationServer3D.map_get_closest_point(agent.get_navigation_map(), target + memory.direction * 0.6)
+					chase_prediction = projected if projected.distance_to(target)<0.8 else target
+					prediction_valid=true
+				target=chase_prediction
 			if unseen > profile.lost_after:
 				last_known = memory.visual_position
 				transition(State.LOST)

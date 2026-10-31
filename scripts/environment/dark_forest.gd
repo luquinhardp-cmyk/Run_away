@@ -118,6 +118,7 @@ func _layer(transforms: Array[Transform3D], variant: int, title: String, distanc
 		var multi := MultiMesh.new()
 		multi.transform_format = MultiMesh.TRANSFORM_3D
 		multi.mesh = source[part]
+		if title.begins_with("Mid") or title=="BoundaryShrubs": node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		multi.instance_count = transforms.size()
 		for i in transforms.size(): multi.set_instance_transform(i,transforms[i])
 		node.multimesh = multi
@@ -224,5 +225,6 @@ func apply_quality() -> void:
 		var title := str(node.get_meta("layer_type"))
 		var secondary := title.begins_with("Mid")
 		node.multimesh.visible_instance_count = int(node.multimesh.instance_count * ([0.42,0.72,1.0][quality] if secondary else 1.0))
-		node.visibility_range_end = [70,95,115][quality] if secondary else 90
+		var custom := float(Game.settings.get("vegetation_distance",0.0))
+		node.visibility_range_end = (custom if custom>0 else [70,95,115][quality]) if secondary else 90
 	leaf_material.set_shader_parameter("wind_strength",[0.02,0.05,0.07][quality])

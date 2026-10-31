@@ -41,6 +41,7 @@ static func _update(mat: StandardMaterial3D) -> void:
 	mat.metallic_texture = orm
 	mat.ao_texture = orm
 	mat.normal_enabled = quality > 0
+	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC if quality>0 else BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	mat.ao_enabled = quality > 0
 	mat.ao_light_affect = 0.35
 

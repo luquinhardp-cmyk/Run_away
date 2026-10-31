@@ -10,6 +10,7 @@ var moon_light: DirectionalLight3D
 var outdoors := false
 var evaluation := 0.0
 var exterior_blend := 0.0
+var roof_rays := 0
 func _ready() -> void:
 	name = "BloodMoonNight"
 	facility = get_parent()
@@ -31,6 +32,7 @@ func _ready() -> void:
 	moon_light = DirectionalLight3D.new()
 	moon_light.light_color = Color(0.52,0.1,0.06)
 	moon_light.light_energy = 0.055
+	moon_light.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
 	add_child(moon_light)
 	moon_light.look_at(-moon_direction)
 	forest = Node3D.new()
@@ -46,14 +48,17 @@ func _ready() -> void:
 	apply_quality()
 func is_outdoors(point: Vector3) -> bool:
 	# The currently playable exterior is the fenced yard, not the basement or roof.
-	if absf(point.x)>10.9 or point.z<2.3 or point.z>21.0 or point.y<0.2 or point.y>4: return false
+	if not in_exterior_region(point): return false
 	var ray := PhysicsRayQueryParameters3D.create(point,point+Vector3.UP*60,1)
+	roof_rays += 1
 	return get_world_3d().direct_space_state.intersect_ray(ray).is_empty()
+func in_exterior_region(point: Vector3) -> bool:
+	return absf(point.x)<=10.9 and point.z>=2.3 and point.z<=21.0 and point.y>=0.2 and point.y<=4
 func sky_clear(camera: Camera3D) -> bool:
 	var ray := PhysicsRayQueryParameters3D.create(camera.global_position,camera.global_position-camera.global_basis.z*100,1)
 	return get_world_3d().direct_space_state.intersect_ray(ray).is_empty()
 func apply_quality() -> void:
-	moon_light.shadow_enabled = Game.settings.quality>=2
+	moon_light.shadow_enabled = Graphics.shadow_tier>=2
 	moon_light.directional_shadow_max_distance = 32
 	sky_material.set_shader_parameter("star_strength",0.24)
 func _process(delta: float) -> void:

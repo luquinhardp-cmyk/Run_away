@@ -20,7 +20,7 @@ func _ready() -> void:
 		voices.append(voice)
 func _process(delta: float) -> void:
 	if not enabled or not Game.playing or Game.paused: return
-	var outdoors: bool = is_instance_valid(Game.player) and night.is_outdoors(Game.player.camera.global_position)
+	var outdoors: bool = is_instance_valid(Game.player) and night.outdoors
 	var hush: bool = night.flying.active or Game.capture_in_progress
 	for voice in voices:
 		var desired := -48.0 if not outdoors or hush else -27.0

@@ -31,7 +31,7 @@ Arquitetura ganha batentes, vigas/treliças, rodapés, drenos e estrutura exteri
 
 ## Verificação e limites
 
-229 verificações específicas de geometria/integração; 80 gerais; 41 expansão; 23 horror; 76 ambiente noturno; 47 física: **496 aprovadas, zero falhas**. As verificações de 74 exports incluem carregamento, normais, PBR, UVs não degeneradas, dimensões e redução de triângulos. Integração verifica porta/batente, gaveta, fusível instalado, massas/CCD/som, câmera, janela, floresta e orientação do terreno. A expansão automatizada conclui objetivos e fuga. Não equivale a testes manuais de touchscreen/microfone reais.
+229 verificações específicas de geometria/integração; 80 gerais; 41 expansão; 29 horror; 76 ambiente noturno; 47 física; 20 gráficos: **522 aprovadas, zero falhas**. As verificações de 74 exports incluem carregamento, normais, PBR, UVs não degeneradas, dimensões e redução de triângulos. Integração verifica porta/batente, gaveta, fusível instalado, massas/CCD/som, câmera, janela, floresta e orientação do terreno. A expansão automatizada conclui objetivos e fuga. Não equivale a testes manuais de touchscreen/microfone reais.
 
 Revisão visual reproduzível: `tests/geometry_review.tscn`, Compatibility/Intel UHD, viewport 1280×720. Imagens reais em `review/geometry/`, comparações no subdiretório `before`; detalhes de itens usam uma mesa de inspeção com luz neutra, escala real e FOV 40, separada da iluminação do jogo. A imagem de raízes usa câmera de inspeção além da cerca; não representa uma nova área acessível. Contadores em `metrics.json` não são FPS Android.
 

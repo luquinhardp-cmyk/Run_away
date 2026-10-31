@@ -21,6 +21,7 @@ var previous_db := -80.0
 var gate_open := false
 var last_rms_usec := 0
 var output_guard := 0.0
+var sample_clock := 0.0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -82,6 +83,7 @@ func disable() -> void:
 	suspend()
 
 func suspend() -> void:
+	sample_clock=0
 	gate_open = false
 	stable_time = 0
 	if is_instance_valid(stream): stream.stop()
@@ -131,6 +133,7 @@ func update_gate(db: float, delta: float) -> int:
 
 func _process(delta: float) -> void:
 	if not active: return
+	sample_clock+=delta
 	output_guard = maxf(0, output_guard - delta)
 	cooldown = maxf(0, cooldown - delta)
 	var count := capture.get_frames_available()
@@ -142,9 +145,13 @@ func _process(delta: float) -> void:
 		return
 	var started := Time.get_ticks_usec()
 	var db := rms_db(capture.get_buffer(count))
+	var frame_delta := delta
+	# Include frames spent waiting for 256 samples, preserving gate timing at high FPS.
+	delta=sample_clock
+	sample_clock=0
 	last_rms_usec = Time.get_ticks_usec() - started
 	volume_db = lerpf(volume_db, db, 1.0 - exp(-delta * 14.0))
-	if db <= -79.0: silent_time += delta
+	if db <= -79.0: silent_time += frame_delta
 	else: silent_time = 0.0
 	if silent_time > 6.0:
 		disable()

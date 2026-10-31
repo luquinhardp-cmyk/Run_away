@@ -96,7 +96,7 @@ var objective: String:
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	settings.merge({"difficulty": 1, "seed": 0, "metrics": false, "camera_motion": 0.5, "visual_scares": true, "light_variation": true})
+	settings.merge({"difficulty": 1, "seed": 0, "metrics": false, "camera_motion": 0.5, "visual_scares": true, "light_variation": true,"fps_limit":0,"render_scale":0.0,"shadow_quality":-1,"vegetation_distance":0.0,"adaptive_resolution":false})
 	select_profile("")
 	var config := ConfigFile.new()
 	if config.load("user://settings.cfg") == OK:
@@ -159,7 +159,6 @@ func save_settings() -> void:
 	for key in settings: config.set_value("settings", key, settings[key])
 	if not testing: config.save("user://settings.cfg")
 	AudioServer.set_bus_volume_db(0, linear_to_db(settings.master))
-	Engine.max_fps = 30 if settings.quality < 1 else 60
 	updated.emit()
 
 func finish(won: bool) -> void:

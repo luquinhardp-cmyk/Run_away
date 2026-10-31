@@ -69,6 +69,24 @@ func run() -> void:
 		banks_ok = banks_ok and bank.samples.size() >= 2 and bank.min_interval > 0
 	check(banks_ok, "twelve audio banks supply variations and cooldowns")
 	enemy.global_position = Vector3(0, 0.1, -13)
+	Game.settings.camera_motion = 0.5
+	Game.settings.visual_scares = true
+	var original_fov: float = player.camera.fov
+	var original_camera: Vector3 = player.camera.position
+	var original_body: Vector3 = player.global_position
+	check(sequence.begin(), "visible contact starts face closeup")
+	sequence._process(sequence.selected.duration * 0.35)
+	var face: Vector3 = sequence.face_position()
+	check(is_equal_approx(player.camera.fov, 42.0) and player.camera.global_position.distance_to(face) < 0.85, "capture zoom tightly frames face")
+	check((-player.camera.global_basis.z).dot((face-player.camera.global_position).normalized()) > 0.98, "capture camera points at monster face")
+	check(player.global_position == original_body and sequence.face_light.light_energy > 0, "closeup lights face without moving physical player")
+	var capture_audio := false
+	for voice in Sound.get_children():
+		if voice is AudioStreamPlayer3D and voice.bus == "Threat":
+			capture_audio = voice.volume_db > -12 and voice.max_db <= -6 and voice.unit_size == 3
+	check(capture_audio, "capture uses louder bounded priority sound")
+	sequence._release()
+	check(player.camera.position == original_camera and is_equal_approx(player.camera.fov, original_fov), "capture releases camera position and FOV")
 	Game.settings.camera_motion = 0.0
 	Game.settings.visual_scares = false
 	var initial_pos: Vector3 = player.camera.position

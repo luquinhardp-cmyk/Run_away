@@ -93,7 +93,9 @@ func play_clip(plain: String) -> bool:
 	return false
 func compatible() -> bool:
 	if not enabled or not Game.playing or Game.paused or Game.capture_in_progress or not is_instance_valid(Game.player): return false
-	if not night.is_outdoors(Game.player.camera.global_position): return false
+	if active:
+		if not night.in_exterior_region(Game.player.camera.global_position) or not night.outdoors: return false
+	elif not night.is_outdoors(Game.player.camera.global_position): return false
 	var director: Node = night.facility.horror
 	if director.tension>=4 or director.since_chase<20: return false
 	if not active and (director.since_scare<25 or director.clock<director.active_until): return false
@@ -119,6 +121,8 @@ func choose() -> FlyingShadowPattern:
 	return choices[-1]
 func begin(pattern: FlyingShadowPattern) -> bool:
 	if active or cooldown>0 or exploration<config.minimum_exploration or not compatible(): return false
+	# compatible() just checked the roof at the current camera position.
+	night.outdoors = true
 	if pattern.id != "unseen_cry" and not looking_up(): return false
 	if pattern.requires_moon and not moon_visible_direction(): return false
 	selected = pattern

@@ -54,7 +54,7 @@ func _ready() -> void:
 func apply_settings() -> void:
 	camera.fov = Game.settings.fov
 	lamp.visible = lamp_on and Game.inventory.has("lanterna") and lamp_fault <= 0
-	lamp.shadow_enabled = Game.settings.quality >= 2
+	lamp.shadow_enabled = Graphics.shadow_tier>=1
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not Game.playing or Game.paused or Game.capture_in_progress: return

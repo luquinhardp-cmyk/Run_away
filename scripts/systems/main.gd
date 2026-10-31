@@ -97,7 +97,7 @@ func menu() -> void:
 	button("CONTA / PROGRESSO", account_screen)
 	menu_status = text(Cloud.status, 16)
 	if not OS.has_feature("android") and not OS.has_feature("web"): button("SAIR", func(): get_tree().quit())
-	text("Versão 0.7 • Sob a lua de sangue\nRecomendado: fones de ouvido. Sustos moderados, sem flashes.", 16)
+	text("Versão 0.8 • Ecos na escuridão\nRecomendado: fones de ouvido. Sustos moderados, sem flashes.", 16)
 
 func _cloud_updated() -> void:
 	if screen == "menu" and is_instance_valid(menu_status): menu_status.text = Cloud.status
@@ -259,6 +259,16 @@ func settings_screen(back: String) -> void:
 	metrics.button_pressed = Game.settings.get("metrics", false)
 	metrics.toggled.connect(func(value: bool): Game.settings.metrics = value; Game.save_settings())
 	column.add_child(metrics)
+	text("GRÁFICOS · Baixo: meta 30 FPS. Médio/alto: até 60, conforme o aparelho.",17)
+	_graphics_choice("Limite de FPS","fps_limit",["Pelo perfil","30 FPS","60 FPS"],[0,30,60])
+	_graphics_choice("Resolução 3D","render_scale",["Pelo perfil","80%","100%","130%","170% · maior consumo"],[0.0,0.8,1.0,1.3,1.7])
+	_graphics_choice("Sombras","shadow_quality",["Pelo perfil","Desativadas","Lanterna","Lanterna e lua"],[-1,0,1,2])
+	_graphics_choice("Distância da vegetação","vegetation_distance",["Pelo perfil","60 m","90 m","115 m"],[0.0,60.0,90.0,115.0])
+	var adaptive := CheckBox.new()
+	adaptive.text = "Ajustar resolução gradualmente para manter fluidez"
+	adaptive.button_pressed = Game.settings.get("adaptive_resolution",false)
+	adaptive.toggled.connect(func(value: bool): Game.settings.adaptive_resolution=value;Game.save_settings())
+	column.add_child(adaptive)
 	for option in [["visual_scares", "Efeitos visuais de terror"], ["light_variation", "Variações lentas de iluminação"]]:
 		var toggle := CheckBox.new()
 		toggle.text = option[1]
@@ -297,3 +307,11 @@ func settings_screen(back: String) -> void:
 		Game.save_settings()
 		if back == "pause": pause_screen()
 		else: menu())
+func _graphics_choice(caption: String,key: String,labels: Array,values: Array):
+	text(caption,17)
+	var choice := OptionButton.new()
+	for label in labels: choice.add_item(label)
+	for i in values.size():
+		if is_equal_approx(float(Game.settings.get(key,values[0])),float(values[i])): choice.selected=i
+	choice.item_selected.connect(func(index: int): Game.settings[key]=values[index];Game.save_settings())
+	column.add_child(choice)

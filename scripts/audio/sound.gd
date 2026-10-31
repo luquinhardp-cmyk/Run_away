@@ -41,7 +41,11 @@ func creature_cue(kind: String, pos: Vector3, gain: float = -20) -> void:
 	if now - float(cue_clock.get(kind, -1000)) < cue.min_interval or cue.samples.is_empty(): return
 	var index := voice_rng.randi_range(0, cue.samples.size() - 1)
 	if cue.samples.size() > 1 and index == int(cue_last.get(kind, -1)): index = (index + 1) % cue.samples.size()
-	if get_child_count() >= 24: return
+	if get_child_count() >= 24:
+		if kind!="capture": return
+		for child in get_children():
+			if child is AudioStreamPlayer3D and child.bus!="Threat": child.free();break
+		if get_child_count()>=24: return
 	cue_clock[kind] = now
 	cue_last[kind] = index
 	var sound := AudioStreamPlayer3D.new()
@@ -50,6 +54,9 @@ func creature_cue(kind: String, pos: Vector3, gain: float = -20) -> void:
 	sound.volume_db = gain
 	sound.pitch_scale = voice_rng.randf_range(cue.pitch_min, cue.pitch_max)
 	sound.max_distance = cue.max_distance
+	if kind=="capture":
+		sound.unit_size=3
+		sound.max_db=-6
 	add_child(sound)
 	sound.global_position = pos
 	sound.finished.connect(sound.queue_free)
