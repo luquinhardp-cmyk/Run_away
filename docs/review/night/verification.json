@@ -20,5 +20,17 @@
   "web": {
     "pck_gzip_bytes": 22629587,
     "wasm_gzip_bytes": 10054758
+  },
+  "remote_preview": {
+    "url": "https://feature-blood-moon-dark-fore.run-away-ecos.pages.dev/",
+    "immutable": "https://48a87d6a.run-away-ecos.pages.dev/",
+    "build_commit": "bd99071b83bf619424b3a59d4779dc0379a7bf64",
+    "browser": "Chrome / Playwright / SwiftShader",
+    "boot_game_pause": true,
+    "signup_and_firestore": true,
+    "guest_physics_checkpoint": true,
+    "runtime_errors": 0,
+    "temporary_account_and_documents_cleaned": true,
+    "production_version": "0.3.0"
   }
 }

@@ -1,8 +1,10 @@
 # ECOS — Instalação Abandonada
 
+**Prévia atual 0.7 — Lua de sangue:** [Jogar na web](https://feature-blood-moon-dark-fore.run-away-ecos.pages.dev/) · [APK Android](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.7.0-night/ecos-android.apk) · [Relatório técnico](docs/RELATORIO_CEU_FLORESTA.md). 266 testes automáticos aprovados. Arte procedural; validação em Android físico pendente. A produção 0.3 permanece separada.
+
 Protótipo vertical de survival horror 3D em GDScript, desenvolvido com **Godot 4.7.2 stable**. A versão 0.6 acrescenta materiais físicos, objetos manipuláveis e impactos ouvidos pela criatura. A arte e a simulação usam soluções procedurais e simplificadas; desempenho e microfone em Android físico ainda precisam de validação.
 
-**Prévia atual 0.6:** [jogar na web](https://feature-physical-world-mater.run-away-ecos.pages.dev/) · [APK Android r2](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.6.0-physics/ecos-android-r2.apk) · [relatório completo](docs/RELATORIO_FISICA_OBJETOS.md). O Firebase cuida de login/progresso; o Cloudflare hospeda o jogo. Após entrar, use **IMPORTAR CHECKPOINT DO VISITANTE** se quiser levar o progresso local de visitante à conta.
+**Prévia anterior 0.6:** [jogar na web](https://feature-physical-world-mater.run-away-ecos.pages.dev/) · [APK Android r2](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.6.0-physics/ecos-android-r2.apk) · [relatório completo](docs/RELATORIO_FISICA_OBJETOS.md). O Firebase cuida de login/progresso; o Cloudflare hospeda o jogo. Após entrar, use **IMPORTAR CHECKPOINT DO VISITANTE** se quiser levar o progresso local de visitante à conta.
 
 Histórico: a [expansão 0.4](docs/RELATORIO_EXPANSAO.md) introduziu percepção/memória/busca modular, distrações, rotas, chave, painel e dificuldades; a [0.5](docs/RELATORIO_TERROR_VISUAL.md) acrescentou criatura redesenhada, placas e terror contextual. A produção 0.3 permanece separada das prévias.
 

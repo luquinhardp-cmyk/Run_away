@@ -1,5 +1,9 @@
 # Entrega 0.7 — céu, floresta e Sombra Alada
 
+Prévia: https://feature-blood-moon-dark-fore.run-away-ecos.pages.dev/ · [APK de testes](https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.7.0-night/ecos-android.apk) · [GitHub](https://github.com/luquinhardp-cmyk/Run_away/tree/feature/blood-moon-dark-forest).
+
+Build runtime `bd99071b83bf619424b3a59d4779dc0379a7bf64`, deployment imutável https://48a87d6a.run-away-ecos.pages.dev/. Publicação somente como prévia/prerelease, conforme autorização anterior; a produção segue 0.3.0. APK ARM64 de depuração: 47.402.155 bytes, versão 0.7.0/code7, assinatura v2/v3 verificada. Web PCK gzip 22.629.587 bytes e WASM gzip 10.054.758 bytes, ambos dentro do limite de arquivo do Pages. Hash em `review/night/verification.json`.
+
 Implementação no projeto existente, branch `feature/blood-moon-dark-forest`. Não substitui o Escutador nem cria outra IA de perseguição. A auditoria antecedeu as alterações. Recursos novos são originais, procedurais e simplificados; as referências orientam clima/composição, sem copiar personagens.
 
 Concluído: Sky permanente com lua distante craterada, estrelas e halo; floresta 360° em quatro camadas com 736 árvores/arbustos, vento e limites vegetados; névoa leve e iluminação externa reduzida; modelo alado com rig de 11 ossos, dois LODs e seis animações; sete padrões contextuais raros com áudio espacial original, passagem muda e grito após desaparecer; integração com câmera/teto, captura, perseguição, pausa e HorrorDirector; três perfis gráficos; documentação e revisão visual.
@@ -7,6 +11,8 @@ Concluído: Sky permanente com lua distante craterada, estrelas e halo; floresta
 Arquivos existentes alterados: `scripts/systems/facility.gd` adiciona o subsistema; `facility_art.gd` reduz duas luzes externas e remove loop redundante; `game.gd` mantém último padrão da sessão; `main.gd` identifica versão; `export_presets.cfg` usa diretório isolado `builds/forest` e versão 0.7/code7. Novos módulos em `scripts/environment`, configurações em `resources/environment`, shaders em `shaders`, modelos/textura/sons em `assets`, geradores em `tools/art`. Nenhuma alteração em regras de Firebase, IA terrestre, controles, objetivos ou schema de checkpoint.
 
 Validação: importação Godot 4.7.2 sem erros, 76 testes de ambiente + 79 gerais + 41 expansão + 23 horror + 47 física = **266 aprovados, zero falhas**. A expansão automatizada termina em fuga com objetivos integrados; a regressão verifica checkpoint e retorno ao menu. Capturas reais Compatibility/Intel UHD em `review/night`: lua, floresta com lanterna, Sombra cruzando disco e perfis baixo/médio/alto. Os resultados não representam FPS de Android físico.
+
+Validação da prévia remota: Chrome/Playwright com SwiftShader carregou a versão 0.7.0, abriu jogo/consentimento/pausa, criou conta temporária e sincronizou checkpoint de visitante com 12 objetos físicos e gaveta no Firestore protegido. **Zero erros de execução**. A primeira tentativa excedeu 20 segundos na captura de tela por software; com prazo de captura maior, o fluxo completo passou. Isso não é medição de fluidez nem de desempenho de GPU real. A conta temporária foi excluída e os documentos de teste foram limpos. Os 20 testes específicos de regras da entrega anterior não foram repetidos; nenhuma regra foi alterada.
 
 Guias técnicos: [céu](CEU_LUA_DE_SANGUE.md), [floresta](FLORESTA_DENSA.md), [modelo](CRIATURA_ALADA.md), [eventos](EVENTO_VOO_CRIATURA.md), [áudio](AUDIO_AMBIENTAL_FLORESTA.md), [otimização/testes/pendências](OTIMIZACAO_AMBIENTE_ANDROID.md).
 
