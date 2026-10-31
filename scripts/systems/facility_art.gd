@@ -20,6 +20,7 @@ func _ready() -> void:
 	_room_stories()
 	_exterior()
 	_basement()
+	_architecture_modules()
 	# The night system schedules spatial forest ambience and intentional silence.
 	_ambience("basement_drips", Vector3(-19, -1, -32), 12, -27)
 	_ambience("electric_hum", Vector3(-7, 1.4, -33), 8, -34)
@@ -68,6 +69,7 @@ func light_at(pos: Vector3, color: Color, energy: float, radius: float) -> void:
 	light.light_color = color
 	light.light_energy = energy
 	light.omni_range = radius
+	light.set_meta("base_energy",energy)
 	light.shadow_enabled = false
 	add_child(light)
 	lamps.append(light)
@@ -86,14 +88,14 @@ func _corridor() -> void:
 		box(Vector3(-1.65, 2.53, z), Vector3(0.55, 0.04, 0.09), rust)
 		box(Vector3(0, 2.92, z), Vector3(0.7, 0.08, 0.24), rust)
 		box(Vector3(0, 2.85, z), Vector3(0.52, 0.025, 0.12), glow)
-		for i in 4:
+		for i in (4 if z % 8 != 0 else 0):
 			var p := Vector3(1.86, 1.1 + i * 0.12, z + rng.randf_range(-1.3, 1.3))
 			box(p, Vector3(0.014, 0.035, rng.randf_range(0.3, 0.7)), stain, Vector3(0.1, 0, -0.25))
 		# Damp lower wall band, imperfect concrete expansion joints.
 		for side in [-1, 1]:
 			if z % 8 != 0:
 				box(Vector3(side * 1.9, 0.32, z), Vector3(0.025, 0.6, 3.5), concrete)
-			for i in 3:
+			for i in (3 if z % 8 != 0 else 0):
 				box(Vector3(side * 1.91, 0.95 + i * 0.15, z + 0.7 + i * 0.15), Vector3(0.025, 0.025, 0.65), stain, Vector3(-0.4, 0, 0))
 		# Cable droop is geometry, not a physics rope.
 		for i in 5:
@@ -151,17 +153,16 @@ func _rooms() -> void:
 	box(Vector3(-8, 0.65, -1.05), Vector3(1.5, 0.22, 0.78), cloth)
 	for x in [-8.7, -7.3]:
 		for z in [-1.4, -0.7]: pipe(Vector3(x, 0, z), Vector3(x, 0.55, z), 0.035, rust)
-	# Window is an opaque wall inset, no fake transparency through solid geometry.
-	box(Vector3(-9.86, 1.9, 0), Vector3(0.05, 1.25, 1.6), HorrorArt.surface("dirty_glass"))
-	for z in [-0.8, 0, 0.8]: box(Vector3(-9.82, 1.9, z), Vector3(0.06, 1.3, 0.045), wood)
-	# Storage side aisles; central navigation left free.
-	_shelf(Vector3(-8.3, 0, -17.2))
-	_shelf(Vector3(-8.3, 0, -14.8))
+	# The masonry now has an actual aperture; opaque broken shards avoid alpha sorting.
+	var window := Node3D.new()
+	window.position = Vector3(-10,1.84,0)
+	window.rotation.y = PI/2
+	detail.add_child(window)
+	ModelLibrary.fit("broken_window",Vector3(1.6,1.28,0.23),window,Vector3.ZERO,Game.settings.quality<1)
+	# Storage shelves are now authored models in facility._props, without overlapping cabinets.
 	# Loose crates are instantiated as physical bodies instead of merged decoration.
 	# Workshop machines: press, motor housing, tools and short hanging chain.
-	box(Vector3(8.7, 0.65, -6.8), Vector3(1.1, 1.3, 0.65), rust)
-	box(Vector3(8.7, 1.45, -6.8), Vector3(0.16, 0.6, 0.4), rust)
-	box(Vector3(8.7, 1.8, -6.8), Vector3(1, 0.12, 0.65), rust)
+	ModelLibrary.fit("workshop_press",Vector3(1.1,1.86,0.65),detail,Vector3(8.7,0.93,-6.8),Game.settings.quality<1)
 	for i in 9:
 		var link := TorusMesh.new()
 		link.inner_radius = 0.035
@@ -173,15 +174,12 @@ func _rooms() -> void:
 		pipe(Vector3(7.2 + i * 0.2, 1.5, -9.85), Vector3(7.2 + i * 0.2, 1.85, -9.85), 0.018, rust, 6)
 	# Security analogue consoles and dangling cables.
 	for x in [7.4, 8.6]:
-		box(Vector3(x, 1.1, -25), Vector3(0.65, 0.45, 0.42), HorrorArt.surface("aged_plastic"))
-		box(Vector3(x, 0.8, -25), Vector3(0.2, 0.15, 0.2), rust)
-		box(Vector3(x, 1.12, -24.76), Vector3(0.52, 0.33, 0.025), HorrorArt.surface("cracked_glass"))
+		ModelLibrary.fit("crt_monitor",Vector3(0.65,0.62,0.42),detail,Vector3(x,1.035,-25),Game.settings.quality<1)
 	for i in 6:
 		box(Vector3(8.8, 1.7 + i * 0.07, -25.78), Vector3(0.6, 0.025, 0.025), dark)
 	# Power room: tanks and warm industrial indicators.
 	for x in [-8.8, -7.8]:
-		pipe(Vector3(x, 0.1, -33.3), Vector3(x, 2.4, -33.3), 0.24, rust, 14)
-		pipe(Vector3(x, 2.4, -33.3), Vector3(x, 2.65, -33.3), 0.07, rust)
+		ModelLibrary.fit("tank",Vector3(0.58,2.65,0.58),detail,Vector3(x,1.325,-33.3),Game.settings.quality<1)
 	light_at(Vector3(-7.3, 2.4, -31.4), Color("b19a64"), 0.45, 4)
 	# End passage: collapsed edge timbers leave >2 m central clearance.
 	for side in [-1, 1]:
@@ -213,7 +211,7 @@ func _room_stories() -> void:
 	var wood := HorrorArt.surface("rotten_wood")
 	var cloth := HorrorArt.surface("torn_fabric")
 	# Leave all objective approaches, doorways and hide exits free.
-	_story_sign("ward", "ENFERMARIA 01\nNÃO REMOVA OS PROTETORES AURICULARES", Vector3(-9.76, 2.1, 0), PI / 2, Vector2(1.5, 0.55))
+	_story_sign("ward", "ENFERMARIA 01\nNÃO REMOVA OS PROTETORES AURICULARES", Vector3(-9.76, 2.75, 0), PI / 2, Vector2(1.5, 0.42))
 	_story_sign("patient", "LEITO 04 / TRANSFERIDO\nNENHUM SINAL DE RESPOSTA À VOZ", Vector3(-8, 1.45, -1.83), 0, Vector2(1.25, 0.42))
 	# Medical trolley and folded linen remain against the west wall.
 	for y in [0.3, 0.8]: box(Vector3(-9.45, y, 1.1), Vector3(0.65, 0.045, 0.7), rust)
@@ -225,7 +223,9 @@ func _room_stories() -> void:
 		pipe(Vector3(7.13 + i * 0.22, 1.7, -9.74), Vector3(7.13 + i * 0.22, 2.18 - (i % 2) * 0.1, -9.74), 0.022, rust, 6)
 	_story_sign("storage_tags", "DEPÓSITO / 03\nCAIXAS DEVOLVIDAS: NÃO ABRIR", Vector3(-9.76, 2.0, -16), PI / 2, Vector2(1.5, 0.5))
 	for index in 3:
-		box(Vector3(-9.45, 0.3 + index * 0.5, -17.3), Vector3(0.6, 0.45, 0.65), wood, Vector3(0, index * 0.04, 0))
+		var crate_model := ModelLibrary.fit("crate",Vector3(0.6,0.45,0.65),detail,Vector3(-9.45,0.345+index*0.46,-17.3),true)
+		crate_model.rotation.y = index*0.04
+	ModelLibrary.fit("pallet",Vector3(0.75,0.12,0.8),detail,Vector3(-9.45,0.06,-17.3),true)
 	_story_sign("physical_map", "INSTALAÇÃO 04 / PLANTA DE SERVIÇO\nENFERMARIA → CORREDOR\nMANUTENÇÃO → GALERIA → SEGURANÇA\nDEPÓSITO → OFICINA [CHAVE]\nENERGIA → SAÍDA DE SERVIÇO", Vector3(9.76, 1.9, -24), -PI / 2, Vector2(1.8, 1.05), "map")
 	_story_sign("security_log", "SEGURANÇA / 04\nCÂMERAS SEM SINAL DESDE 03:17", Vector3(7, 2.2, -25.76), 0, Vector2(1.55, 0.4))
 	_story_sign("electrical_warning", "PERIGO / ALTA TENSÃO\nFUSÍVEL → PAINEL → GERADOR\nEM FALHA: REARME O GERADOR", Vector3(-9.76, 1.8, -32), PI / 2, Vector2(1.6, 0.7), "danger")
@@ -241,7 +241,8 @@ func _exterior() -> void:
 	var concrete := HorrorArt.surface("aged_concrete")
 	var mud := HorrorArt.surface("mud_leaves")
 	# Roof silhouette and facade stay outside existing interior walls.
-	box(Vector3(-4, 3.12, 0), Vector3(12.2, 0.15, 4.5), rust, Vector3(0, 0, 0.035))
+	box(Vector3(-4, 3.45, 0), Vector3(12.2, 0.15, 4.5), rust, Vector3(0, 0, 0.035))
+	box(Vector3(-4,3.17,2.22),Vector3(12.2,0.28,0.10),wood)
 	for x in [-9.8, -2.1, 2.1]: box(Vector3(x, 1.55, 2.16), Vector3(0.17, 3.1, 0.24), wood)
 	box(Vector3(0, 2.7, 2.13), Vector3(4.6, 0.6, 0.14), wood)
 	# Gravel ruts: layered opaque patches, not a costly transparent decal stack.
@@ -314,9 +315,35 @@ func apply_quality() -> void:
 	HorrorArt.set_quality(int(Game.settings.quality))
 	if grass: grass.multimesh.visible_instance_count = [80, 160, 220][int(Game.settings.quality)]
 
+func _architecture_modules() -> void:
+	var wood := HorrorArt.surface("rotten_wood")
+	var rust := HorrorArt.surface("weathered_iron")
+	for z in [-2,-10,-18,-26,-34,-38]:
+		ModelLibrary.fit("roof_truss",Vector3(3.72,0.36,0.14),detail,Vector3(0,2.80,z),true)
+	for center in [Vector3(-6,2.80,0),Vector3(6,2.80,-8),Vector3(-6,2.80,-16),Vector3(6,2.80,-24),Vector3(-6,2.80,-32)]:
+		ModelLibrary.fit("roof_truss",Vector3(7.4,0.34,0.16),detail,center,true)
+	for z in [-4,-12,-20,-28,-36]:
+		for side in [-1,1]:
+			box(Vector3(side*1.86,0.10,z),Vector3(0.075,0.16,3.7),wood)
+			box(Vector3(side*1.86,1.5,z),Vector3(0.085,2.96,0.12),rust)
+	for position in [Vector3(8.9,0.012,-8.4),Vector3(-6.5,0.012,-32.5),Vector3(-19,-1.788,-33.3)]:
+		ModelLibrary.fit("drain",Vector3(0.7,0.025,0.4),detail,position,true)
+	# Small service items sit on existing supports, without new gameplay pickups.
+	for offset in [-0.10,0.10]: ModelLibrary.fit("battery",Vector3(0.018,0.048,0.018),detail,Vector3(8.45+offset,0.749,-9.1),true)
+	_puddle(Vector3(8.7,0.014,-7.7),Vector2(0.85,0.55))
+	# Eaves and exposed supports refine the exterior silhouette above the playable map.
+	for x in [-9.5,-7.5,-5.5,-3.5,-1.5]:
+		box(Vector3(x,3.14,0),Vector3(0.09,0.18,4.65),wood,Vector3(0.01,0,0.025))
+
 func _process(delta: float) -> void:
 	age += delta
-	if lamps.size() > 2:
-		# One slow isolated dip every 13 s; no strobing.
-		var cycle := fmod(age, 13.0)
-		lamps[2].light_energy = 1.25 * (0.65 if cycle > 12.5 else 1.0)
+	for i in lamps.size():
+		var light := lamps[i]
+		var weight := 1.0
+		if is_instance_valid(Game.player):
+			var quality := int(Game.settings.quality)
+			weight = 1-smoothstep([9.0,14.0,22.0][quality],[14.0,22.0,32.0][quality],light.global_position.distance_to(Game.player.camera.global_position))
+		light.visible = weight>0.01
+		var base: float = 1.25 if i==2 else light.get_meta("base_energy",0.5)
+		# Preserve the existing single slow dip while fading only distant light sources.
+		light.light_energy = base*weight*(0.65 if i==2 and fmod(age,13.0)>12.5 else 1.0)

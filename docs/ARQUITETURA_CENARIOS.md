@@ -1,0 +1,15 @@
+# Arquitetura dos cenários
+
+O layout lógico, os corredores e as rotas de fuga permanecem. `facility.gd` continua construindo a malha de navegação sobre colisores estáticos; `facility_art.gd` aplica detalhes e modelos, com mesclagem por material/região de 8 m. Paredes, pisos e tetos planos adequados à construção permanecem módulos simples; não foram trocados por malhas densas apenas para aumentar polígonos.
+
+Corredores: rodapés e pilastras nos trechos fechados, treliças abaixo do teto, conduítes/tubos e cabos existentes, juntas e detritos junto às bordas. Adornos deixam de cruzar vãos. Piso não recebe novos buracos ou ressaltos que prejudiquem movimento. Ralos têm moldura, recessos e barras visíveis; o piso existente dá suporte físico, sem simular cada barra.
+
+Portas: folhas de madeira e aço com painéis, reforços, dobradiças, alavanca e fechadura; saída com barra de emergência. Portas de manutenção/segurança/energia usam aço; depósito/oficina usam madeira reforçada. Batentes fixos possuem folga coerente; a folha acompanha o pivô físico anterior. A fechadura tem representação visual; o desbloqueio continua sendo a interação por chave existente, sem uma nova animação de inserção manual. Puxador da gaveta acompanha seu corpo deslizante e o conteúdo continua físico.
+
+Enfermaria: cama e carrinho preservados/refinados conforme função; janela oeste deixou de ser uma textura sobre parede sólida. Alvenaria dividida conserva peitoril a 1,20 m, topo a 2,48 m e abertura de 1,60 m; barras possuem colisores correspondentes. Vidro quebrado opaco evita transparência cara. A floresta pode ser vista pelos espaços livres. A placa foi deslocada acima do vão. Telhado exterior foi elevado para não penetrar o teto interno inclinado.
+
+Manutenção/oficina: bancadas com pés e travessas, prensa hidráulica com pistão/mangueira, ferramentas, gaveta e pilhas decorativas. Depósito: estantes modeladas substituem os volumes de armário sobrepostos, caixas em tábuas e palete. Segurança: monitores CRT têm carcaça, tela rebaixada, pedestal, controles e ventilação; o cartão permanece acessível. Energia: gerador reconhecível, motor auxiliar, tanques com válvulas e painel com contatos; instalar o fusível altera o seu visual. Subsolo: preserva rampa, concreto úmido e tubulações, com dreno gradeado adicional.
+
+Exterior: floresta conserva camadas e instanciamento. Modelos próximos têm troncos em segmentos inclinados, raízes e galhos bifurcados; copas distantes recebem irregularidade geométrica de baixo custo. 28 pedras assimétricas são mescladas. Solo decorativo ondula gradualmente além das rotas, com abertura preservada para porão/rampa e terreno sob a nova janela. O pátio jogável mantém sua colisão e altura. A floresta além das cercas não foi tornada explorável.
+
+Validação: imagens antes/depois em `review/geometry`; testes de janela aberta/barras, pivôs, altura da câmera, superfície do terreno e populações; regressão de navegação, perseguição, física e fuga. Limites: arquitetura ainda modular e estilizada, sem destruição de alvenaria, vidros físicos ou simulação estrutural.

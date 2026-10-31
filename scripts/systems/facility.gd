@@ -124,6 +124,16 @@ func _tile(cell: Vector2i) -> void:
 		var edge := center + Vector3(direction.x * 2, 1.5, -direction.y * 2)
 		var along_x: bool = direction.x == 0
 		if not cells.has(neighbor):
+			if cell==Vector2i(-2,0) and direction==Vector2i(-1,0):
+				# Real aperture: sill 1.20 m, head 2.48 m, width 1.60 m.
+				for offset in [-1.425,1.425]: box(edge+Vector3(0,0,offset),Vector3(0.18,3,1.25),wall_material)
+				box(Vector3(edge.x,0.6,edge.z),Vector3(0.18,1.2,1.6),wall_material)
+				box(Vector3(edge.x,2.74,edge.z),Vector3(0.18,0.52,1.6),wall_material)
+				# Bars have matching physical hulls, preserving the map boundary.
+				for z in [-0.5,0.0,0.5]:
+					var bar := box(Vector3(edge.x,1.84,z),Vector3(0.035,1.28,0.04),metal)
+					bar.get_child(0).hide()
+				continue
 			var entrance: bool = cell == Vector2i.ZERO and direction == Vector2i(0, -1)
 			var basement: bool = cell == Vector2i(-2, 8) and direction == Vector2i(-1, 0)
 			if entrance or basement:
@@ -202,10 +212,19 @@ func _environment() -> void:
 func _props() -> void:
 	# Furniture stays clear of the navigation route.
 	for pos in [Vector3(-8, 0.65, 0.8), Vector3(8, 0.65, -9), Vector3(8, 0.65, -25)]:
-		box(pos, Vector3(2, 0.15, 0.8), metal)
-		for x in [-0.8, 0.8]: box(pos + Vector3(x, -0.32, 0), Vector3(0.1, 0.65, 0.7), metal)
+		var top := box(pos, Vector3(2, 0.15, 0.8), metal)
+		top.get_child(0).hide()
+		ModelLibrary.fit("workbench",Vector3(2,0.725,0.8),geometry,Vector3(pos.x,0.3625,pos.z),Game.settings.quality<1)
+		for x in [-0.8, 0.8]:
+			var leg := box(pos + Vector3(x, -0.32, 0), Vector3(0.1, 0.65, 0.7), metal)
+			leg.get_child(0).hide()
 	for pos in [Vector3(-8.6, 0.8, -17), Vector3(-8.6, 0.8, -15), Vector3(-7, 0.45, -33)]:
-		box(pos, Vector3(1, 1.6, 0.9), metal)
+		var hull := box(pos, Vector3(1, 1.6, 0.9), metal)
+		hull.get_child(0).hide()
+		if pos.z>-20:
+			ModelLibrary.fit("shelf",Vector3(1,1.6,0.9),geometry,pos,Game.settings.quality<1)
+			for x in [-0.23,0.23]: ModelLibrary.fit("crate",Vector3(0.35,0.30,0.45),geometry,Vector3(pos.x+x,0.25,pos.z),true)
+		else: ModelLibrary.fit("motor",Vector3(1,1.25,0.9),geometry,Vector3(pos.x,0.625,pos.z),Game.settings.quality<1)
 	for z in [-4, -12, -20, -28, -36]:
 		box(Vector3(-1.86, 1.1, z), Vector3(0.05, 0.7, 0.9), material(Color(0.25, 0.29, 0.24)), false)
 		for i in 3:
@@ -260,14 +279,22 @@ func _doors() -> void:
 
 func _quality() -> void:
 	HorrorArt.set_quality(int(Game.settings.quality))
-	for light in lights: light.omni_range = 4.8 if Game.settings.quality < 1 else 5.6
+	for light in lights:
+		light.omni_range = 4.8 if Game.settings.quality < 1 else 5.6
 	get_viewport().scaling_3d_scale = [0.65, 0.85, 1.0][int(Game.settings.quality)]
 
 func _process(delta: float) -> void:
 	if not Game.playing: return
 	age += delta
 	for light in lights:
-		light.light_energy = (1.15 if Game.power else (0.12 if Game.world.get("blackout", false) else 0.55)) * horror_light_multiplier
+		var weight := 1.0
+		if is_instance_valid(Game.player):
+			var quality := int(Game.settings.quality)
+			var distance := light.global_position.distance_to(Game.player.camera.global_position)
+			weight = 1-smoothstep([9.0,14.0,22.0][quality],[14.0,22.0,32.0][quality],distance)
+		# CPU visibility also removes additive light passes in Compatibility/WebGL.
+		light.visible = weight>0.01
+		light.light_energy = (1.15 if Game.power else (0.12 if Game.world.get("blackout", false) else 0.55)) * horror_light_multiplier*weight
 	if Game.settings.get("light_variation", true) and lights.size() > 2 and fmod(age, 17.0) > 16.8: lights[2].light_energy *= 0.75
 
 func find_interaction(id: String) -> Node3D:
@@ -330,7 +357,9 @@ func _expansion_objects() -> void:
 	_label("PAINEL / FUSÍVEL", Vector3(-5.3, 2.2, -33.7), 0, 22)
 	interaction("radio", "radio", "Ligar rádio", Vector3(12, 0.9, -12), Vector3(0.5, 0.4, 0.25), Color(0.3, 0.25, 0.2))
 	interaction("alarm", "alarm", "Ligar alarme", Vector3(13.7, 1.4, -22), Vector3(0.35, 0.4, 0.25), Color(0.7, 0.2, 0.12))
-	box(Vector3(12, 0.35, -12), Vector3(0.8, 0.7, 0.55), metal)
+	var radio_support := box(Vector3(12, 0.35, -12), Vector3(0.8, 0.7, 0.55), metal)
+	radio_support.get_child(0).hide()
+	ModelLibrary.fit("workbench",Vector3(0.8,0.7,0.55),geometry,Vector3(12,0.35,-12),Game.settings.quality<1)
 	for z in [-8, -16, -24]:
 		var light := OmniLight3D.new()
 		light.position = Vector3(12, 2.6, z)
@@ -340,8 +369,11 @@ func _expansion_objects() -> void:
 		add_child(light)
 		lights.append(light)
 	interaction("pickup", "chave_oficina", "Chave da oficina", Vector3(-7.5, 0.9, -14.8), Vector3(0.22, 0.12, 0.12), Color(0.8, 0.6, 0.2))
-	box(Vector3(-7.5,0.81,-14.8),Vector3(0.5,0.06,0.35),HorrorArt.surface("damp_wood"),true,self)
-	box(Vector3(-7.5,0.39,-14.8),Vector3(0.3,0.78,0.25),HorrorArt.surface("rotten_wood"))
+	var key_top := box(Vector3(-7.5,0.81,-14.8),Vector3(0.5,0.06,0.35),HorrorArt.surface("damp_wood"),true,self)
+	key_top.get_child(0).hide()
+	var key_base := box(Vector3(-7.5,0.39,-14.8),Vector3(0.3,0.78,0.25),HorrorArt.surface("rotten_wood"))
+	key_base.get_child(0).hide()
+	ModelLibrary.fit("workbench",Vector3(0.5,0.84,0.35),geometry,Vector3(-7.5,0.42,-14.8),Game.settings.quality<1)
 	var door := interaction("door", "workshop", "Destrancar oficina", Vector3(2, 1.3, -16), Vector3(0.15, 2.6, 1.8), Color(0.3, 0.25, 0.2))
 	door.add_to_group("doors")
 	# Gate only the short central connector; the long loop remains usable without a key.
@@ -385,6 +417,7 @@ func _decor_box(parent: Node3D, pos: Vector3, size: Vector3, mat: Material) -> M
 	return mesh
 
 func _decorate_interaction(node: StaticBody3D) -> void:
+	if ModelLibrary.replace_interaction(node): return
 	var mesh: MeshInstance3D = node.mesh
 	var rust := HorrorArt.surface("rusted_iron")
 	var dark := HorrorArt.solid(Color("191d1b"))

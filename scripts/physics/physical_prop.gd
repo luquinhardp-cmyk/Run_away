@@ -35,6 +35,7 @@ func _ready() -> void:
 	mesh.name = "Visual"
 	add_child(mesh)
 	_build_shape()
+	ModelLibrary.replace_physical(self)
 	impact_audio = PhysicsImpactAudio.new()
 	impact_audio.material_id = profile.surface
 	add_child(impact_audio)

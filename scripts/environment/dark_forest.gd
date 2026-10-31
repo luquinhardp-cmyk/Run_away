@@ -35,7 +35,8 @@ func _ready() -> void:
 	for side in [-1,1]:
 		var transforms: Array[Transform3D] = []
 		for i in 20:
-			var point := Vector3(side*rng.randf_range(12.4,20),0,rng.randf_range(4,29))
+			var point := Vector3(side*rng.randf_range(13.4,20),0,rng.randf_range(8,29))
+			point.y = _terrain_height(point)
 			transforms.append(_transform(point,0.8,1.3))
 			if i < 5:
 				near_positions.append(point)
@@ -44,6 +45,7 @@ func _ready() -> void:
 		_layer(transforms,1 if side<0 else 2,"Front_%d"%side,90)
 	_horizon()
 	_boundaries()
+	_rocks()
 	Game.updated.connect(apply_quality)
 	apply_quality()
 func _transform(point: Vector3, low: float, high: float) -> Transform3D:
@@ -51,6 +53,23 @@ func _transform(point: Vector3, low: float, high: float) -> Transform3D:
 	return Transform3D(Basis(Vector3.UP,rng.randf()*TAU).scaled(Vector3(size*rng.randf_range(0.8,1.1),size,size)),point)
 func _append(tool: SurfaceTool, mesh: Mesh, transform: Transform3D) -> void:
 	tool.append_from(mesh,0,transform)
+func _ragged(mesh: Mesh, seed_value: float) -> ArrayMesh:
+	var arrays := mesh.surface_get_arrays(0)
+	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	for i in vertices.size():
+		var p := vertices[i]
+		var amount := 1+0.16*sin(p.x*4.3+p.z*3.7+seed_value)+0.11*cos(p.y*7+seed_value)
+		p.x *= amount
+		p.z *= amount
+		p.y += sin(p.x*6+p.z*3+seed_value)*0.12
+		vertices[i] = p
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	var surface := ArrayMesh.new()
+	surface.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
+	var tool := SurfaceTool.new()
+	tool.create_from(surface,0)
+	tool.generate_normals()
+	return tool.commit()
 func _segment(tool: SurfaceTool, a: Vector3, b: Vector3, radius: float) -> void:
 	var mesh := CylinderMesh.new()
 	mesh.top_radius = radius*0.55
@@ -74,29 +93,31 @@ func _tree(variant: int) -> Dictionary:
 		_segment(bark,end,end+Vector3(cos(angle+0.7)*0.7,0.8,sin(angle+0.7)*0.7),0.035)
 		if variant==1 and i>1:
 			var crown := SphereMesh.new()
-			crown.radius = 1.5
-			crown.height = 2.3
-			crown.radial_segments = 12
-			crown.rings = 5
-			_append(leaves,crown,Transform3D(Basis.IDENTITY,end))
+			crown.radius = 1.15
+			crown.height = 1.7
+			crown.radial_segments = 10
+			crown.rings = 4
+			_append(leaves,_ragged(crown,float(i)),Transform3D(Basis.IDENTITY,end))
 	if variant==2:
 		for i in 5:
 			var cone := CylinderMesh.new()
 			cone.top_radius = 0.05
 			cone.bottom_radius = 2.7-i*0.42
-			cone.height = 3.5
+			cone.height = 2.8
 			cone.radial_segments = 8
 			cone.rings = 1
-			_append(leaves,cone,Transform3D(Basis.IDENTITY,Vector3(0,4.5+i*1.5,0)))
+			_append(leaves,_ragged(cone,float(i)),Transform3D(Basis.IDENTITY,Vector3(sin(i*2.4)*0.15,4.5+i*1.5,cos(i*2.4)*0.17)))
 	return {"bark":bark.commit(),"leaves":leaves.commit() if variant>0 else null}
 func _layer(transforms: Array[Transform3D], variant: int, title: String, distance: float) -> void:
+	var source: Dictionary = tree_meshes[variant]
+	if title.begins_with("Front") or title in ["Near_0","Near_3"]: source = ModelLibrary.forest_mesh(variant,Game.settings.quality<2)
 	for part in ["bark","leaves"]:
-		if tree_meshes[variant][part] == null: continue
+		if source[part] == null: continue
 		var node := MultiMeshInstance3D.new()
 		node.name = title+"_"+part
 		var multi := MultiMesh.new()
 		multi.transform_format = MultiMesh.TRANSFORM_3D
-		multi.mesh = tree_meshes[variant][part]
+		multi.mesh = source[part]
 		multi.instance_count = transforms.size()
 		for i in transforms.size(): multi.set_instance_transform(i,transforms[i])
 		node.multimesh = multi
@@ -123,18 +144,45 @@ func _trunk_collider(point: Vector3) -> void:
 	add_child(body)
 func _ground() -> void:
 	var ground := MeshInstance3D.new()
+	ground.name = "UndulatingForestGround"
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	# Leave the building, ramp and basement cut-out untouched.
-	for rect in [Rect2(-100,-120,76,220),Rect2(16,-120,84,220),Rect2(-24,-120,40,75),Rect2(-24,25,40,75),Rect2(-24,22,40,3),Rect2(-24,2,13,20),Rect2(11,2,5,20)]:
-		var plane := PlaneMesh.new()
-		plane.size = rect.size
-		tool.append_from(plane,0,Transform3D(Basis.IDENTITY,Vector3(rect.get_center().x,-0.07,rect.get_center().y)))
+	for rect in [Rect2(-100,-120,76,220),Rect2(16,-120,84,220),Rect2(-24,-120,40,75),Rect2(-24,25,40,75),Rect2(-24,22,40,3),Rect2(-24,2,13,20),Rect2(11,2,5,20),Rect2(-24,-8,14,10)]:
+		var nx := maxi(1,ceili(rect.size.x/3))
+		var nz := maxi(1,ceili(rect.size.y/3))
+		for ix in nx:
+			for iz in nz:
+				var a := Vector3(rect.position.x+rect.size.x*ix/nx,0,rect.position.y+rect.size.y*iz/nz)
+				var b := a+Vector3(rect.size.x/nx,0,0)
+				var c := a+Vector3(0,0,rect.size.y/nz)
+				var d := b+Vector3(0,0,rect.size.y/nz)
+				for point in [a,b,c,b,d,c]:
+					point.y = _terrain_height(point)
+					tool.set_uv(Vector2(point.x,point.z)*0.6)
+					tool.add_vertex(point)
+	tool.generate_normals()
+	tool.generate_tangents()
 	ground.mesh = tool.commit()
 	var dirt := HorrorArt.surface("mud_leaves").duplicate()
 	dirt.albedo_color = Color(0.2,0.23,0.2)
 	ground.material_override = dirt
 	add_child(ground)
+func _terrain_height(point: Vector3) -> float:
+	# No elevation changes in the playable yard, basement, ramp or objective routes.
+	var edge := maxf(maxf(-12-point.x,point.x-16),maxf(-45-point.z,point.z-25))
+	return -0.07+clampf(edge/8,0,1)*absf(sin(point.x*0.29)*sin(point.z*0.23))*0.35
+func _rocks() -> void:
+	var details := Node3D.new()
+	add_child(details)
+	for i in 28:
+		var point := Vector3((-1 if i%2 else 1)*rng.randf_range(11.8,25),0,rng.randf_range(3,27))
+		point.y = _terrain_height(point)
+		var height := rng.randf_range(0.14,0.52)
+		point.y += height*0.45
+		var model := ModelLibrary.fit("rock",Vector3(height*1.7,height,height*1.3),details,point,true)
+		model.rotation.y = rng.randf()*TAU
+	HorrorArt.merge_static(details,self)
 func _horizon() -> void:
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)

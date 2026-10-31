@@ -1,0 +1,1473 @@
+{
+  "units": "metres",
+  "origin": "Original Blender procedural authored models; no third-party assets",
+  "models": {
+    "key": {
+      "triangles": 1116,
+      "triangles_low": 612,
+      "uv": true,
+      "parts": [
+        "Open key bow",
+        "Key shoulder",
+        "Key shaft",
+        "Cut tooth",
+        "Cut tooth.001",
+        "Cut tooth.002"
+      ],
+      "materials": [
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        0.20100000500679016,
+        0.0820000022649765,
+        0.014000000432133675
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "fuse": {
+      "triangles": 1432,
+      "triangles_low": 786,
+      "uv": true,
+      "parts": [
+        "Ceramic cartridge",
+        "Contact cap",
+        "Contact lip",
+        "Contact cap.001",
+        "Contact lip.001",
+        "Rating band"
+      ],
+      "materials": [
+        "torn_fabric",
+        "brushed_metal",
+        "aged_plastic"
+      ],
+      "dimensions_blender_xyz": [
+        0.17999999225139618,
+        0.06800000369548798,
+        0.06800000369548798
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "flashlight": {
+      "triangles": 3896,
+      "triangles_low": 2142,
+      "uv": true,
+      "parts": [
+        "Grip",
+        "Grip ring",
+        "Grip ring.001",
+        "Grip ring.002",
+        "Grip ring.003",
+        "Grip ring.004",
+        "Grip ring.005",
+        "Grip ring.006",
+        "Grip ring.007",
+        "Bezel",
+        "Recessed lens",
+        "Reflector",
+        "Tail cap",
+        "Switch",
+        "Lanyard"
+      ],
+      "materials": [
+        "worn_rubber",
+        "aged_plastic",
+        "brushed_metal",
+        "dirty_glass",
+        "rusted_iron"
+      ],
+      "dimensions_blender_xyz": [
+        0.3124641180038452,
+        0.11916825920343399,
+        0.11916825920343399
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "security_card": {
+      "triangles": 264,
+      "triangles_low": 144,
+      "uv": true,
+      "parts": [
+        "Card",
+        "Contact chip",
+        "Stripe",
+        "Engraved identity",
+        "Engraved identity.001",
+        "Engraved identity.002"
+      ],
+      "materials": [
+        "aged_plastic",
+        "brushed_metal",
+        "worn_rubber",
+        "torn_fabric"
+      ],
+      "dimensions_blender_xyz": [
+        0.20999999344348907,
+        0.13500000536441803,
+        0.00800000037997961
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "wrench": {
+      "triangles": 1008,
+      "triangles_low": 554,
+      "uv": true,
+      "parts": [
+        "Forged handle",
+        "Box end",
+        "Jaw heel",
+        "Jaw prong",
+        "Jaw prong.001"
+      ],
+      "materials": [
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        0.08505963534116745,
+        0.38368210196495056,
+        0.02199999988079071
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "bottle": {
+      "triangles": 580,
+      "triangles_low": 318,
+      "uv": true,
+      "parts": [
+        "Glass bottle",
+        "Bottle rim",
+        "Torn label"
+      ],
+      "materials": [
+        "dirty_glass",
+        "brushed_metal",
+        "torn_fabric"
+      ],
+      "dimensions_blender_xyz": [
+        0.12200000137090683,
+        0.12200000137090683,
+        0.3215000033378601
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "can": {
+      "triangles": 1436,
+      "triangles_low": 788,
+      "uv": true,
+      "parts": [
+        "Dented can",
+        "Rolled rim",
+        "Rolled rim.001",
+        "Pull tab"
+      ],
+      "materials": [
+        "industrial_sheet",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        0.17399999499320984,
+        0.17399999499320984,
+        0.2644999921321869
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "crate": {
+      "triangles": 2968,
+      "triangles_low": 1632,
+      "uv": true,
+      "parts": [
+        "Individual side plank",
+        "Individual side plank.001",
+        "Individual side plank.002",
+        "Individual side plank.003",
+        "Individual side plank.004",
+        "Individual side plank.005",
+        "Individual side plank.006",
+        "Individual side plank.007",
+        "End plank",
+        "End plank.001",
+        "End plank.002",
+        "End plank.003",
+        "End plank.004",
+        "End plank.005",
+        "End plank.006",
+        "End plank.007",
+        "Lid plank",
+        "Lid plank.001",
+        "Lid plank.002",
+        "Lid plank.003",
+        "Lid plank.004",
+        "Bottom",
+        "Corner brace",
+        "Hex bolt",
+        "Hex bolt.001",
+        "Corner brace.001",
+        "Hex bolt.002",
+        "Hex bolt.003",
+        "Corner brace.002",
+        "Hex bolt.004",
+        "Hex bolt.005",
+        "Corner brace.003",
+        "Hex bolt.006",
+        "Hex bolt.007"
+      ],
+      "materials": [
+        "rotten_wood",
+        "damp_wood",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        0.6850000023841858,
+        0.6130000352859497,
+        0.625
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "bucket": {
+      "triangles": 760,
+      "triangles_low": 418,
+      "uv": true,
+      "parts": [
+        "Bucket shell",
+        "Rolled bucket lip",
+        "Wire handle0",
+        "Wire handle1",
+        "Wire handle2",
+        "Wire handle3",
+        "Wire handle4",
+        "Wire handle5",
+        "Wire handle6",
+        "Wire handle7",
+        "Wire handle8",
+        "Wire handle9",
+        "Wire handle10",
+        "Wire handle11",
+        "Handle grip"
+      ],
+      "materials": [
+        "wet_steel",
+        "brushed_metal",
+        "rusted_iron",
+        "worn_rubber"
+      ],
+      "dimensions_blender_xyz": [
+        0.30591318011283875,
+        0.30399999022483826,
+        0.46593934297561646
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "chair": {
+      "triangles": 1632,
+      "triangles_low": 896,
+      "uv": true,
+      "parts": [
+        "Padded seat",
+        "Splayed leg0",
+        "Splayed leg0.001",
+        "Back upright0",
+        "Side brace0",
+        "Splayed leg0.002",
+        "Splayed leg0.003",
+        "Back upright0.001",
+        "Side brace0.001",
+        "Worn backrest",
+        "Hex bolt",
+        "Hex bolt.001"
+      ],
+      "materials": [
+        "old_upholstery",
+        "rusted_iron",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        0.4532710015773773,
+        0.44458144903182983,
+        0.911677896976471
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "trolley": {
+      "triangles": 1680,
+      "triangles_low": 924,
+      "uv": true,
+      "parts": [
+        "Rolled tray",
+        "Tray lip",
+        "Tray lip.001",
+        "Rolled tray.001",
+        "Tray lip.002",
+        "Tray lip.003",
+        "Tubular leg0",
+        "Caster wheel",
+        "Tubular leg0.001",
+        "Caster wheel.001",
+        "Tubular leg0.002",
+        "Caster wheel.002",
+        "Tubular leg0.003",
+        "Caster wheel.003",
+        "Push handle0",
+        "Push handle1",
+        "Push handle2",
+        "Push handle0.001",
+        "Push handle1.001",
+        "Push handle2.001"
+      ],
+      "materials": [
+        "wet_steel",
+        "rusted_iron",
+        "brushed_metal",
+        "worn_rubber"
+      ],
+      "dimensions_blender_xyz": [
+        0.6800000071525574,
+        0.5299999713897705,
+        0.8610000610351562
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "workbench": {
+      "triangles": 1484,
+      "triangles_low": 816,
+      "uv": true,
+      "parts": [
+        "Bench top",
+        "Separate top boards",
+        "Separate top boards.001",
+        "Separate top boards.002",
+        "Separate top boards.003",
+        "Separate top boards.004",
+        "Bench leg",
+        "Bench leg.001",
+        "Leg crossbar",
+        "Bench leg.002",
+        "Bench leg.003",
+        "Leg crossbar.001",
+        "Long stretcher",
+        "Hex bolt",
+        "Hex bolt.001",
+        "Hex bolt.002",
+        "Hex bolt.003"
+      ],
+      "materials": [
+        "damp_wood",
+        "rotten_wood",
+        "rusted_iron",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        1.7999999523162842,
+        0.8500000238418579,
+        0.7759999632835388
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "shelf": {
+      "triangles": 1644,
+      "triangles_low": 904,
+      "uv": true,
+      "parts": [
+        "Upright",
+        "Hex bolt",
+        "Hex bolt.001",
+        "Hex bolt.002",
+        "Hex bolt.003",
+        "Upright.001",
+        "Hex bolt.004",
+        "Hex bolt.005",
+        "Hex bolt.006",
+        "Hex bolt.007",
+        "Upright.002",
+        "Hex bolt.008",
+        "Hex bolt.009",
+        "Hex bolt.010",
+        "Hex bolt.011",
+        "Upright.003",
+        "Hex bolt.012",
+        "Hex bolt.013",
+        "Hex bolt.014",
+        "Hex bolt.015",
+        "Shelf deck",
+        "Folded front lip",
+        "Shelf deck.001",
+        "Folded front lip.001",
+        "Shelf deck.002",
+        "Folded front lip.002",
+        "Shelf deck.003",
+        "Folded front lip.003",
+        "Diagonal rear brace0"
+      ],
+      "materials": [
+        "rusted_iron",
+        "brushed_metal",
+        "industrial_sheet"
+      ],
+      "dimensions_blender_xyz": [
+        1.4500000476837158,
+        0.7089999914169312,
+        2.1600000858306885
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "locker": {
+      "triangles": 1972,
+      "triangles_low": 1084,
+      "uv": true,
+      "parts": [
+        "Locker side",
+        "Locker side.001",
+        "Locker back",
+        "Locker cap",
+        "Locker cap.001",
+        "Lower door",
+        "Upper door",
+        "Slanted louver",
+        "Slanted louver.001",
+        "Slanted louver.002",
+        "Slanted louver.003",
+        "Slanted louver.004",
+        "Front stile",
+        "Front stile.001",
+        "Locker handle0",
+        "Locker handle1",
+        "Locker handle2",
+        "Hinge barrel",
+        "Hinge barrel.001"
+      ],
+      "materials": [
+        "industrial_sheet",
+        "rusted_iron",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        1.0950000286102295,
+        1.0444999933242798,
+        2.0
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "diesel_generator": {
+      "triangles": 8080,
+      "triangles_low": 4444,
+      "uv": true,
+      "parts": [
+        "Skid rail",
+        "Skid rail.001",
+        "Frame crossmember",
+        "Frame crossmember.001",
+        "Engine block",
+        "Cylinder head",
+        "Valve cover",
+        "Fuel injection line0",
+        "Fuel injection line1",
+        "Cylinder head.001",
+        "Valve cover.001",
+        "Fuel injection line0.001",
+        "Fuel injection line1.001",
+        "Cylinder head.002",
+        "Valve cover.002",
+        "Fuel injection line0.002",
+        "Fuel injection line1.002",
+        "Alternator",
+        "Cooling fin",
+        "Cooling fin.001",
+        "Cooling fin.002",
+        "Cooling fin.003",
+        "Cooling fin.004",
+        "Radiator",
+        "Radiator grille",
+        "Radiator grille.001",
+        "Radiator grille.002",
+        "Radiator grille.003",
+        "Radiator grille.004",
+        "Radiator grille.005",
+        "Radiator grille.006",
+        "Radiator grille.007",
+        "Radiator grille.008",
+        "Radiator grille.009",
+        "Radiator grille.010",
+        "Exhaust manifold0",
+        "Exhaust manifold1",
+        "Exhaust manifold2",
+        "Muffler",
+        "Protective upright0",
+        "Protective upright0.001",
+        "Fuel reservoir",
+        "Fuel cap",
+        "Instrument enclosure",
+        "Gauge rim",
+        "Gauge face",
+        "Gauge needle",
+        "Gauge rim.001",
+        "Gauge face.001",
+        "Gauge needle.001",
+        "Control switch",
+        "Control switch.001",
+        "Control switch.002",
+        "Power cable0",
+        "Power cable1",
+        "Power cable2",
+        "Hex bolt",
+        "Hex bolt.001",
+        "Hex bolt.002",
+        "Hex bolt.003"
+      ],
+      "materials": [
+        "rusted_iron",
+        "wet_steel",
+        "brushed_metal",
+        "industrial_sheet",
+        "aged_plastic",
+        "dirty_glass",
+        "torn_fabric",
+        "worn_rubber"
+      ],
+      "dimensions_blender_xyz": [
+        1.253999948501587,
+        0.8394999504089355,
+        1.9474999904632568
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "fuse_panel": {
+      "triangles": 2412,
+      "triangles_low": 1326,
+      "uv": true,
+      "parts": [
+        "Panel back",
+        "Enclosure wall",
+        "Enclosure wall.001",
+        "Enclosure rim",
+        "Enclosure rim.001",
+        "Recessed insulated board",
+        "Fuse carrier",
+        "Spring contact",
+        "Spring contact.001",
+        "Installed cartridge",
+        "Wiring0",
+        "Wiring1",
+        "Fuse carrier.001",
+        "Spring contact.002",
+        "Spring contact.003",
+        "Wiring0.001",
+        "Wiring1.001",
+        "Fuse carrier.002",
+        "Spring contact.004",
+        "Spring contact.005",
+        "Installed cartridge.001",
+        "Wiring0.002",
+        "Wiring1.002",
+        "Breaker",
+        "Breaker lever",
+        "Hex bolt",
+        "Hex bolt.001",
+        "Hex bolt.002",
+        "Hex bolt.003"
+      ],
+      "materials": [
+        "industrial_sheet",
+        "rusted_iron",
+        "aged_plastic",
+        "torn_fabric",
+        "brushed_metal",
+        "worn_rubber"
+      ],
+      "dimensions_blender_xyz": [
+        0.7150000333786011,
+        0.2175000011920929,
+        0.9150000214576721
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "door_steel": {
+      "triangles": 2308,
+      "triangles_low": 1268,
+      "uv": true,
+      "parts": [
+        "Heavy steel leaf",
+        "Folded stile",
+        "Folded stile.001",
+        "Reinforcement",
+        "Reinforcement.001",
+        "Recessed vent slot",
+        "Recessed vent slot.001",
+        "Recessed vent slot.002",
+        "Recessed vent slot.003",
+        "Pin hinge",
+        "Hex bolt",
+        "Hex bolt.001",
+        "Pin hinge.001",
+        "Hex bolt.002",
+        "Hex bolt.003",
+        "Lock escutcheon",
+        "Keyhole rim",
+        "Lever handle0",
+        "Lever handle1",
+        "Keyhole void"
+      ],
+      "materials": [
+        "industrial_sheet",
+        "rusted_iron",
+        "worn_rubber",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        1.7546968460083008,
+        0.24549999833106995,
+        2.5199999809265137
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "door_wood": {
+      "triangles": 2308,
+      "triangles_low": 1268,
+      "uv": true,
+      "parts": [
+        "Door plank",
+        "Door plank.001",
+        "Door plank.002",
+        "Door plank.003",
+        "Door plank.004",
+        "Door plank.005",
+        "Door plank.006",
+        "Iron strap",
+        "Iron strap.001",
+        "Pin hinge",
+        "Hex bolt",
+        "Hex bolt.001",
+        "Pin hinge.001",
+        "Hex bolt.002",
+        "Hex bolt.003",
+        "Lock escutcheon",
+        "Keyhole rim",
+        "Lever handle0",
+        "Lever handle1",
+        "Keyhole void"
+      ],
+      "materials": [
+        "rotten_wood",
+        "rusted_iron",
+        "brushed_metal",
+        "worn_rubber"
+      ],
+      "dimensions_blender_xyz": [
+        1.7506967782974243,
+        0.24549999833106995,
+        2.5199999809265137
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "door_exit": {
+      "triangles": 2968,
+      "triangles_low": 1632,
+      "uv": true,
+      "parts": [
+        "Heavy steel leaf",
+        "Folded stile",
+        "Folded stile.001",
+        "Reinforcement",
+        "Reinforcement.001",
+        "Recessed vent slot",
+        "Recessed vent slot.001",
+        "Recessed vent slot.002",
+        "Recessed vent slot.003",
+        "Pin hinge",
+        "Hex bolt",
+        "Hex bolt.001",
+        "Pin hinge.001",
+        "Hex bolt.002",
+        "Hex bolt.003",
+        "Lock escutcheon",
+        "Keyhole rim",
+        "Lever handle0",
+        "Lever handle1",
+        "Keyhole void",
+        "Panic bar0",
+        "Panic bar1",
+        "Panic bar2"
+      ],
+      "materials": [
+        "industrial_sheet",
+        "rusted_iron",
+        "worn_rubber",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        1.7546968460083008,
+        0.2920517027378082,
+        2.5199999809265137
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "radio": {
+      "triangles": 1676,
+      "triangles_low": 920,
+      "uv": true,
+      "parts": [
+        "Radio case",
+        "Speaker recess",
+        "Speaker bar",
+        "Speaker bar.001",
+        "Speaker bar.002",
+        "Speaker bar.003",
+        "Speaker bar.004",
+        "Speaker bar.005",
+        "Speaker bar.006",
+        "Speaker bar.007",
+        "Tuning scale",
+        "Tuning knob",
+        "Tuning knob.001",
+        "Carrying handle0",
+        "Carrying handle1",
+        "Carrying handle2",
+        "Telescopic aerial0"
+      ],
+      "materials": [
+        "aged_plastic",
+        "worn_rubber",
+        "brushed_metal",
+        "dirty_glass",
+        "rusted_iron"
+      ],
+      "dimensions_blender_xyz": [
+        0.47999998927116394,
+        0.2549999952316284,
+        0.6006096601486206
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "alarm": {
+      "triangles": 876,
+      "triangles_low": 480,
+      "uv": true,
+      "parts": [
+        "Alarm mounting plate",
+        "Siren housing",
+        "Siren opening",
+        "Protective cage",
+        "Protective cage.001",
+        "Hex bolt",
+        "Hex bolt.001",
+        "Hex bolt.002",
+        "Hex bolt.003"
+      ],
+      "materials": [
+        "rusted_iron",
+        "industrial_sheet",
+        "worn_rubber",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        0.30000001192092896,
+        0.24250000715255737,
+        0.3400000035762787
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "battery": {
+      "triangles": 288,
+      "triangles_low": 158,
+      "uv": true,
+      "parts": [
+        "Battery cell",
+        "Battery terminal",
+        "Battery terminal.001",
+        "Positive nub"
+      ],
+      "materials": [
+        "aged_plastic",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        0.029999999329447746,
+        0.029999999329447746,
+        0.0625
+      ],
+      "classification_before": "D",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "rock": {
+      "triangles": 80,
+      "triangles_low": 44,
+      "uv": true,
+      "parts": [
+        "Fractured stone"
+      ],
+      "materials": [
+        "aged_concrete"
+      ],
+      "dimensions_blender_xyz": [
+        1.0482115745544434,
+        1.0010696649551392,
+        0.696317195892334
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "tank": {
+      "triangles": 1772,
+      "triangles_low": 974,
+      "uv": true,
+      "parts": [
+        "Pressure vessel",
+        "Vessel hoop",
+        "Vessel hoop.001",
+        "Tank foot",
+        "Tank foot.001",
+        "Outlet0",
+        "Outlet1",
+        "Valve handwheel",
+        "Valve spoke0",
+        "Valve spoke0.001",
+        "Valve spoke0.002",
+        "Valve spoke0.003"
+      ],
+      "materials": [
+        "industrial_sheet",
+        "rusted_iron",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        0.6449999809265137,
+        0.6259999871253967,
+        2.2403922080993652
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "motor": {
+      "triangles": 3920,
+      "triangles_low": 2156,
+      "uv": true,
+      "parts": [
+        "Motor housing",
+        "Cooling ring",
+        "Cooling ring.001",
+        "Cooling ring.002",
+        "Cooling ring.003",
+        "Cooling ring.004",
+        "Cooling ring.005",
+        "Cooling ring.006",
+        "Cooling ring.007",
+        "Cooling ring.008",
+        "Cooling ring.009",
+        "Cooling ring.010",
+        "Shaft",
+        "Mounting foot",
+        "Mounting foot.001",
+        "Terminal box"
+      ],
+      "materials": [
+        "wet_steel",
+        "industrial_sheet",
+        "brushed_metal",
+        "rusted_iron",
+        "aged_plastic"
+      ],
+      "dimensions_blender_xyz": [
+        0.7549999952316284,
+        0.5600000023841858,
+        0.6549999713897705
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "workshop_press": {
+      "triangles": 1188,
+      "triangles_low": 652,
+      "uv": true,
+      "parts": [
+        "Press base",
+        "Press upright",
+        "Press upright.001",
+        "Press crossbeam",
+        "Work bed",
+        "Hydraulic cylinder",
+        "Piston",
+        "Hydraulic hose0",
+        "Hydraulic hose1",
+        "Hex bolt",
+        "Hex bolt.001",
+        "Hex bolt.002",
+        "Hex bolt.003",
+        "Hex bolt.004",
+        "Hex bolt.005"
+      ],
+      "materials": [
+        "rusted_iron",
+        "industrial_sheet",
+        "brushed_metal",
+        "worn_rubber"
+      ],
+      "dimensions_blender_xyz": [
+        1.0,
+        0.6000000238418579,
+        1.6399999856948853
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "broken_window": {
+      "triangles": 762,
+      "triangles_low": 418,
+      "uv": true,
+      "parts": [
+        "Window jamb",
+        "Window jamb.001",
+        "Window sill",
+        "Window sill.001",
+        "Mullion",
+        "Broken glass",
+        "Broken glass.001",
+        "Security bar",
+        "Security bar.001"
+      ],
+      "materials": [
+        "rotten_wood",
+        "damp_wood",
+        "rusted_iron",
+        "dirty_glass"
+      ],
+      "dimensions_blender_xyz": [
+        1.5,
+        0.20999999344348907,
+        1.2599999904632568
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "drain": {
+      "triangles": 1308,
+      "triangles_low": 718,
+      "uv": true,
+      "parts": [
+        "Drain frame",
+        "Dark recess",
+        "Grate slat",
+        "Grate slat.001",
+        "Grate slat.002",
+        "Grate slat.003",
+        "Grate slat.004",
+        "Grate slat.005",
+        "Grate slat.006",
+        "Grate slat.007",
+        "Grate slat.008",
+        "Grate slat.009",
+        "Grate slat.010"
+      ],
+      "materials": [
+        "rusted_iron",
+        "worn_rubber",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        0.7200000286102295,
+        0.44999998807907104,
+        0.048500001430511475
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "roof_truss": {
+      "triangles": 1868,
+      "triangles_low": 1026,
+      "uv": true,
+      "parts": [
+        "Roof purlin",
+        "Triangulated truss0",
+        "Triangulated truss1",
+        "Triangulated truss0.001",
+        "Triangulated truss1.001",
+        "Truss web0",
+        "Truss web0.001",
+        "Truss web0.002",
+        "Truss web0.003"
+      ],
+      "materials": [
+        "rotten_wood",
+        "rusted_iron"
+      ],
+      "dimensions_blender_xyz": [
+        3.799999952316284,
+        0.11999999731779099,
+        0.5925718545913696
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "pallet": {
+      "triangles": 1080,
+      "triangles_low": 594,
+      "uv": true,
+      "parts": [
+        "Runner",
+        "Runner.001",
+        "Runner.002",
+        "Pallet deck",
+        "Pallet deck.001",
+        "Pallet deck.002",
+        "Pallet deck.003",
+        "Pallet deck.004",
+        "Pallet deck.005",
+        "Pallet deck.006"
+      ],
+      "materials": [
+        "damp_wood",
+        "rotten_wood"
+      ],
+      "dimensions_blender_xyz": [
+        1.0,
+        0.800000011920929,
+        0.2224999964237213
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "tree_dead": {
+      "triangles": 9324,
+      "triangles_low": 5128,
+      "uv": true,
+      "parts": [
+        "Bent trunk",
+        "Bent trunk.001",
+        "Bent trunk.002",
+        "Bent trunk.003",
+        "Exposed root0",
+        "Exposed root1",
+        "Exposed root0.001",
+        "Exposed root1.001",
+        "Exposed root0.002",
+        "Exposed root1.002",
+        "Exposed root0.003",
+        "Exposed root1.003",
+        "Exposed root0.004",
+        "Exposed root1.004",
+        "Exposed root0.005",
+        "Exposed root1.005",
+        "Asymmetric branch0",
+        "Asymmetric branch1",
+        "Fork0",
+        "Asymmetric branch0.001",
+        "Asymmetric branch1.001",
+        "Fork0.001",
+        "Asymmetric branch0.002",
+        "Asymmetric branch1.002",
+        "Fork0.002",
+        "Asymmetric branch0.003",
+        "Asymmetric branch1.003",
+        "Fork0.003",
+        "Asymmetric branch0.004",
+        "Asymmetric branch1.004",
+        "Fork0.004",
+        "Asymmetric branch0.005",
+        "Asymmetric branch1.005",
+        "Fork0.005",
+        "Asymmetric branch0.006",
+        "Asymmetric branch1.006",
+        "Fork0.006",
+        "Asymmetric branch0.007",
+        "Asymmetric branch1.007",
+        "Fork0.007",
+        "Asymmetric branch0.008",
+        "Asymmetric branch1.008",
+        "Fork0.008",
+        "Asymmetric branch0.009",
+        "Asymmetric branch1.009",
+        "Fork0.009",
+        "Asymmetric branch0.010",
+        "Asymmetric branch1.010",
+        "Fork0.010"
+      ],
+      "materials": [
+        "rotten_wood"
+      ],
+      "dimensions_blender_xyz": [
+        5.407810688018799,
+        4.039053440093994,
+        9.725242614746094
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "tree_broadleaf": {
+      "triangles": 9764,
+      "triangles_low": 5370,
+      "uv": true,
+      "parts": [
+        "Bent trunk",
+        "Bent trunk.001",
+        "Bent trunk.002",
+        "Bent trunk.003",
+        "Exposed root0",
+        "Exposed root1",
+        "Exposed root0.001",
+        "Exposed root1.001",
+        "Exposed root0.002",
+        "Exposed root1.002",
+        "Exposed root0.003",
+        "Exposed root1.003",
+        "Exposed root0.004",
+        "Exposed root1.004",
+        "Exposed root0.005",
+        "Exposed root1.005",
+        "Asymmetric branch0",
+        "Asymmetric branch1",
+        "Fork0",
+        "Irregular leaf cluster",
+        "Irregular leaf cluster.001",
+        "Asymmetric branch0.001",
+        "Asymmetric branch1.001",
+        "Fork0.001",
+        "Irregular leaf cluster.002",
+        "Irregular leaf cluster.003",
+        "Asymmetric branch0.002",
+        "Asymmetric branch1.002",
+        "Fork0.002",
+        "Irregular leaf cluster.004",
+        "Irregular leaf cluster.005",
+        "Asymmetric branch0.003",
+        "Asymmetric branch1.003",
+        "Fork0.003",
+        "Irregular leaf cluster.006",
+        "Irregular leaf cluster.007",
+        "Asymmetric branch0.004",
+        "Asymmetric branch1.004",
+        "Fork0.004",
+        "Irregular leaf cluster.008",
+        "Irregular leaf cluster.009",
+        "Asymmetric branch0.005",
+        "Asymmetric branch1.005",
+        "Fork0.005",
+        "Irregular leaf cluster.010",
+        "Irregular leaf cluster.011",
+        "Asymmetric branch0.006",
+        "Asymmetric branch1.006",
+        "Fork0.006",
+        "Irregular leaf cluster.012",
+        "Irregular leaf cluster.013",
+        "Asymmetric branch0.007",
+        "Asymmetric branch1.007",
+        "Fork0.007",
+        "Irregular leaf cluster.014",
+        "Irregular leaf cluster.015",
+        "Asymmetric branch0.008",
+        "Asymmetric branch1.008",
+        "Fork0.008",
+        "Irregular leaf cluster.016",
+        "Irregular leaf cluster.017",
+        "Asymmetric branch0.009",
+        "Asymmetric branch1.009",
+        "Fork0.009",
+        "Irregular leaf cluster.018",
+        "Irregular leaf cluster.019",
+        "Asymmetric branch0.010",
+        "Asymmetric branch1.010",
+        "Fork0.010",
+        "Irregular leaf cluster.020",
+        "Irregular leaf cluster.021"
+      ],
+      "materials": [
+        "rotten_wood",
+        "moss"
+      ],
+      "dimensions_blender_xyz": [
+        6.854951858520508,
+        5.699806213378906,
+        11.095592498779297
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "tree_pine": {
+      "triangles": 9429,
+      "triangles_low": 5185,
+      "uv": true,
+      "parts": [
+        "Bent trunk",
+        "Bent trunk.001",
+        "Bent trunk.002",
+        "Bent trunk.003",
+        "Exposed root0",
+        "Exposed root1",
+        "Exposed root0.001",
+        "Exposed root1.001",
+        "Exposed root0.002",
+        "Exposed root1.002",
+        "Exposed root0.003",
+        "Exposed root1.003",
+        "Exposed root0.004",
+        "Exposed root1.004",
+        "Exposed root0.005",
+        "Exposed root1.005",
+        "Asymmetric branch0",
+        "Asymmetric branch1",
+        "Fork0",
+        "Asymmetric branch0.001",
+        "Asymmetric branch1.001",
+        "Fork0.001",
+        "Asymmetric branch0.002",
+        "Asymmetric branch1.002",
+        "Fork0.002",
+        "Asymmetric branch0.003",
+        "Asymmetric branch1.003",
+        "Fork0.003",
+        "Asymmetric branch0.004",
+        "Asymmetric branch1.004",
+        "Fork0.004",
+        "Asymmetric branch0.005",
+        "Asymmetric branch1.005",
+        "Fork0.005",
+        "Asymmetric branch0.006",
+        "Asymmetric branch1.006",
+        "Fork0.006",
+        "Asymmetric branch0.007",
+        "Asymmetric branch1.007",
+        "Fork0.007",
+        "Asymmetric branch0.008",
+        "Asymmetric branch1.008",
+        "Fork0.008",
+        "Asymmetric branch0.009",
+        "Asymmetric branch1.009",
+        "Fork0.009",
+        "Asymmetric branch0.010",
+        "Asymmetric branch1.010",
+        "Fork0.010",
+        "Pine whorl",
+        "Pine whorl.001",
+        "Pine whorl.002",
+        "Pine whorl.003",
+        "Pine whorl.004",
+        "Pine whorl.005",
+        "Pine whorl.006"
+      ],
+      "materials": [
+        "rotten_wood",
+        "moss"
+      ],
+      "dimensions_blender_xyz": [
+        5.899003028869629,
+        6.016244888305664,
+        12.58932113647461
+      ],
+      "classification_before": "B",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "crt_monitor": {
+      "triangles": 1384,
+      "triangles_low": 760,
+      "uv": true,
+      "parts": [
+        "CRT enclosure",
+        "Recessed screen",
+        "Screen rim",
+        "Screen glass",
+        "Monitor knob",
+        "Monitor knob.001",
+        "Monitor neck",
+        "Monitor foot",
+        "Vent recess",
+        "Vent recess.001",
+        "Vent recess.002",
+        "Vent recess.003",
+        "Vent recess.004",
+        "Vent recess.005"
+      ],
+      "materials": [
+        "aged_plastic",
+        "dirty_glass",
+        "worn_rubber",
+        "brushed_metal",
+        "rusted_iron"
+      ],
+      "dimensions_blender_xyz": [
+        0.6060000061988831,
+        0.4710000157356262,
+        0.6325000524520874
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "door_frame": {
+      "triangles": 660,
+      "triangles_low": 362,
+      "uv": true,
+      "parts": [
+        "Folded jamb",
+        "Door stop",
+        "Folded jamb.001",
+        "Door stop.001",
+        "Lintel",
+        "Hex bolt",
+        "Hex bolt.001",
+        "Hex bolt.002",
+        "Hex bolt.003",
+        "Hex bolt.004",
+        "Hex bolt.005"
+      ],
+      "materials": [
+        "rusted_iron",
+        "industrial_sheet",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        1.9300000667572021,
+        0.2639999985694885,
+        2.690000057220459
+      ],
+      "classification_before": "D",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "drawer_handle": {
+      "triangles": 364,
+      "triangles_low": 200,
+      "uv": true,
+      "parts": [
+        "Handle mounting plate",
+        "Handle mounting plate.001",
+        "Drawer pull0",
+        "Drawer pull1",
+        "Drawer pull2",
+        "Hex bolt",
+        "Hex bolt.001"
+      ],
+      "materials": [
+        "rusted_iron",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        0.24000000953674316,
+        0.06705951690673828,
+        0.05000000074505806
+      ],
+      "classification_before": "D",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    },
+    "mechanical_part": {
+      "triangles": 2012,
+      "triangles_low": 1106,
+      "uv": true,
+      "parts": [
+        "Open shaft collar",
+        "Gear tooth",
+        "Gear tooth.001",
+        "Gear tooth.002",
+        "Gear tooth.003",
+        "Gear tooth.004",
+        "Gear tooth.005",
+        "Gear tooth.006",
+        "Gear tooth.007",
+        "Gear tooth.008",
+        "Gear tooth.009",
+        "Gear tooth.010",
+        "Gear tooth.011",
+        "Broken shaft"
+      ],
+      "materials": [
+        "rusted_iron",
+        "brushed_metal"
+      ],
+      "dimensions_blender_xyz": [
+        0.20100000500679016,
+        0.20100000500679016,
+        0.12250000238418579
+      ],
+      "classification_before": "C",
+      "classification_after": "B",
+      "note": "Authored procedural asset; visual polish and real-device profiling still required.",
+      "uv_density_repeats_per_metre": 2
+    }
+  }
+}

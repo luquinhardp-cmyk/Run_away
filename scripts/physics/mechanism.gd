@@ -35,6 +35,7 @@ func _ready() -> void:
 		owner_body.mesh.position.y = -0.1
 		owner_body.mesh.material_override = HorrorArt.surface("damp_wood")
 		for entry in [[Vector3(0,0.01,0.29),Vector3(1.26,0.23,0.035)], [Vector3(0,0.01,-0.29),Vector3(1.22,0.2,0.035)], [Vector3(-0.6,0.01,0),Vector3(0.035,0.2,0.56)], [Vector3(0.6,0.01,0),Vector3(0.035,0.2,0.56)]]: _drawer_panel(entry[0],entry[1])
+		ModelLibrary.fit("drawer_handle",Vector3(0.24,0.05,0.055),leaf,Vector3(0,0.01,0.335),Game.settings.quality<1)
 		var paper := MeshInstance3D.new()
 		var note := BoxMesh.new()
 		note.size = Vector3(0.25,0.005,0.16)

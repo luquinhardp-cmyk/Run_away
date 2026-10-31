@@ -3,7 +3,7 @@ extends RefCounted
 ## Shared PBR resources. ORM = red AO, green roughness, blue metallic.
 static var cache: Dictionary = {}
 static var quality := 1
-const NAMES := ["aged_concrete", "damp_concrete", "cracked_floor", "peeling_plaster", "rusted_iron", "rotten_wood", "mud_leaves", "torn_fabric", "organic_residue", "creature_skin", "brushed_metal", "wet_steel", "dirty_glass", "cracked_glass", "aged_plastic", "worn_rubber", "damp_wood", "industrial_sheet", "moss", "old_upholstery"]
+const NAMES := ["aged_concrete", "damp_concrete", "cracked_floor", "peeling_plaster", "rusted_iron", "rotten_wood", "mud_leaves", "torn_fabric", "organic_residue", "creature_skin", "brushed_metal", "wet_steel", "dirty_glass", "cracked_glass", "aged_plastic", "worn_rubber", "damp_wood", "industrial_sheet", "moss", "old_upholstery", "weathered_iron"]
 
 static func surface(name: String, world_space: bool = true) -> StandardMaterial3D:
 	var key := name + ("_world" if world_space else "_uv")

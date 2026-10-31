@@ -13,6 +13,7 @@ var device_time := 0.0
 var pulse := 0.0
 var device_audio: AudioStreamPlayer3D
 var indicator: MeshInstance3D
+var installed_cartridge: Node3D
 var open := false
 var mesh: MeshInstance3D
 var collider: CollisionShape3D
@@ -38,11 +39,14 @@ func _ready() -> void:
 	if kind == "throw_pickup" and item_id in Game.world.get("collected_props", []): queue_free()
 	if kind in ["fuse_panel", "generator", "exit"]:
 		indicator = MeshInstance3D.new()
-		var sphere := SphereMesh.new()
-		sphere.radius = 0.065
-		sphere.height = 0.13
-		indicator.mesh = sphere
-		indicator.position = Vector3(0.2, 0.2, 0.45 if kind == "generator" else 0.13)
+		var lens := CylinderMesh.new()
+		lens.top_radius = 0.018
+		lens.bottom_radius = 0.018
+		lens.height = 0.012
+		lens.radial_segments = 12
+		indicator.mesh = lens
+		indicator.rotation.x = PI/2
+		indicator.position = Vector3(0.21, 0.23, 0.416) if kind=="generator" else Vector3(0.25,0.30,0.111)
 		add_child(indicator)
 		Game.updated.connect(_visual_state)
 		_visual_state()
@@ -55,6 +59,7 @@ func _ready() -> void:
 func _visual_state() -> void:
 	var complete: bool = Game.world.get("fuse_installed", false) if kind == "fuse_panel" else Game.power
 	indicator.material_override = HorrorArt.solid(Color("77a56d") if complete else Color("a57736"), 0.5)
+	if is_instance_valid(installed_cartridge): installed_cartridge.visible = complete
 
 func get_prompt() -> String:
 	if kind in ["radio", "alarm"]: return ("Desligar " if enabled else "Ligar ") + ("rádio" if kind == "radio" else "alarme")
