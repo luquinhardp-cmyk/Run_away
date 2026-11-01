@@ -1,0 +1,38 @@
+{
+  "/": {
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "contentEncoding": null
+  },
+  "/play/": {
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "contentEncoding": null
+  },
+  "/version.json": {
+    "status": 200,
+    "contentType": "application/json",
+    "contentEncoding": null,
+    "data": {
+      "version": "0.11.0",
+      "commit": "ab9c5b48f847e5798512501b341ae4e19dcd615f",
+      "renderer": "Compatibility",
+      "apk": "https://run-away-ecos.pages.dev/baixar-apk",
+      "apk_versioned": "https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.11.0-tutorial-stability/ecos-android.apk"
+    }
+  },
+  "/play/index.wasm": {
+    "status": 200,
+    "contentType": "application/wasm",
+    "contentEncoding": null
+  },
+  "/baixar-apk": {
+    "status": 302,
+    "location": "https://github.com/luquinhardp-cmyk/Run_away/releases/download/v0.11.0-tutorial-stability/ecos-android.apk"
+  },
+  "apkDownload": {
+    "status": 200,
+    "bytes": 55323962,
+    "sha256": "a2f89fd32c1dc9fc31f05838d955a74c5e43257613c06fb14dac8dbd871e434f"
+  }
+}

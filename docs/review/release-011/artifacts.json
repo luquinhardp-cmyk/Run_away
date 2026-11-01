@@ -1,0 +1,12 @@
+[
+  {
+    "file": "builds\\release-0.11\\ecos-android.apk",
+    "bytes": 55323962,
+    "sha256": "a2f89fd32c1dc9fc31f05838d955a74c5e43257613c06fb14dac8dbd871e434f"
+  },
+  {
+    "file": "builds\\release-0.11\\site\\play\\index.wasm",
+    "bytes": 10054758,
+    "sha256": "2862a06f11ad1579c4ceb764f724013c1e62f8916d5d8d237fe5ee209c76f56e"
+  }
+]
