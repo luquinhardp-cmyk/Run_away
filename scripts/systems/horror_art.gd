@@ -3,6 +3,7 @@ extends RefCounted
 ## Shared PBR resources. ORM = red AO, green roughness, blue metallic.
 static var cache: Dictionary = {}
 static var quality := 1
+static var material_updates := 0
 const NAMES := ["aged_concrete", "damp_concrete", "cracked_floor", "peeling_plaster", "rusted_iron", "rotten_wood", "mud_leaves", "torn_fabric", "organic_residue", "creature_skin", "brushed_metal", "wet_steel", "dirty_glass", "cracked_glass", "aged_plastic", "worn_rubber", "damp_wood", "industrial_sheet", "moss", "old_upholstery", "weathered_iron"]
 
 static func surface(name: String, world_space: bool = true) -> StandardMaterial3D:
@@ -26,11 +27,14 @@ static func surface(name: String, world_space: bool = true) -> StandardMaterial3
 	return mat
 
 static func set_quality(value: int) -> void:
-	quality = clampi(value, 0, 2)
+	var next := clampi(value,0,2)
+	if next==quality: return
+	quality = next
 	for mat in cache.values():
 		if mat.has_meta("pbr_name"): _update(mat)
 
 static func _update(mat: StandardMaterial3D) -> void:
+	material_updates+=1
 	var name: String = mat.get_meta("pbr_name")
 	var suffix := "_low" if quality == 0 else ""
 	var prefix := "res://assets/textures/pbr/" + name
@@ -40,10 +44,20 @@ static func _update(mat: StandardMaterial3D) -> void:
 	mat.roughness_texture = orm
 	mat.metallic_texture = orm
 	mat.ao_texture = orm
-	mat.normal_enabled = quality > 0
+	# Web medium preserves close UV-mapped objects but avoids the costly
+	# triplanar normal variant across all architectural batches. High retains it.
+	mat.normal_enabled = quality > 0 and not (OS.has_feature("web") and quality==1 and mat.uv1_triplanar)
 	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC if quality>0 else BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	mat.ao_enabled = quality > 0
 	mat.ao_light_affect = 0.35
+
+static func tinted(name: String, color: Color) -> StandardMaterial3D:
+	var key := "tint_"+name+str(color)
+	if not cache.has(key):
+		var mat := surface(name).duplicate() as StandardMaterial3D
+		mat.albedo_color=color
+		cache[key]=mat
+	return cache[key]
 
 static func solid(color: Color, emission: float = 0.0) -> StandardMaterial3D:
 	var key := str(color) + str(emission)

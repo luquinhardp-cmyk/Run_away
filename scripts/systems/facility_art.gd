@@ -247,7 +247,7 @@ func _exterior() -> void:
 	box(Vector3(0, 2.7, 2.13), Vector3(4.6, 0.6, 0.14), wood)
 	# Gravel ruts: layered opaque patches, not a costly transparent decal stack.
 	for x in [-0.72, 0.72]: box(Vector3(x, -0.012, 12), Vector3(0.34, 0.018, 17), HorrorArt.surface("organic_residue"))
-	for z in range(4, 22, 2):
+	for z in range(0, 22, 2):
 		for side in [-1, 1]:
 			var x: float = side * 10.8
 			box(Vector3(x, 0.7, z), Vector3(0.12, 1.4, 0.13), wood, Vector3(0, 0, side * rng.randf_range(-0.09, 0.09)))

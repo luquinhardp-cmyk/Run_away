@@ -1,5 +1,8 @@
 extends Node3D
 signal message(text: String)
+signal build_finished
+signal build_stage(text: String)
+var staged_build := false
 var region: NavigationRegion3D
 var geometry: Node3D
 var cells: Dictionary = {}
@@ -52,12 +55,20 @@ func _ready() -> void:
 	# A slower industrial loop connects maintenance, workshop and security.
 	for z in range(2, 7): cells[Vector2i(3, z)] = "GALERIA LATERAL"
 	for x in [1, 2]: cells[Vector2i(x, 4)] = "OFICINA"
-	for cell in cells: _tile(cell)
+	var tile_count := 0
+	for cell in cells:
+		_tile(cell)
+		tile_count+=1
+		if staged_build and tile_count%4==0: await get_tree().process_frame
+	if staged_build:
+		build_stage.emit("Preparando objetos e interações…")
+		await get_tree().process_frame
 	_environment()
 	_props()
 	_annex_geometry()
 	_items()
 	started = _startup_mark("geometry", started)
+	if staged_build: await get_tree().process_frame
 	_doors()
 	_expansion_objects()
 	_navigation_furniture()
@@ -77,12 +88,16 @@ func _ready() -> void:
 	art.set_script(preload("res://scripts/systems/facility_art.gd"))
 	add_child(art)
 	started = _startup_mark("art", started)
+	if staged_build:
+		build_stage.emit("Preparando materiais e cenário…")
+		await get_tree().process_frame
 	# Keep geometry collision bodies for navigation/occlusion, batch their rendering.
 	var batches := Node3D.new()
 	batches.name = "ArchitectureBatches"
 	add_child(batches)
 	HorrorArt.merge_static(geometry, batches)
 	started = _startup_mark("batching", started)
+	if staged_build: await get_tree().process_frame
 	Game.updated.connect(_quality)
 	_quality()
 	var physics := Node.new()
@@ -92,12 +107,16 @@ func _ready() -> void:
 	night.set_script(preload("res://scripts/environment/night_world.gd"))
 	add_child(night)
 	started = _startup_mark("physics_forest", started)
+	if staged_build:
+		build_stage.emit("Preparando floresta e navegação…")
+		await get_tree().process_frame
 	# Include art colliders, restored events, furniture and locked-door proxies.
 	# Dynamic door colliders live outside the region and remain operable by AI.
 	region.bake_navigation_mesh(false)
 	nav_ready = true
 	nav_update_pending = false
 	_startup_mark("navigation", started)
+	build_finished.emit()
 
 func material(color: Color, emission: bool = false) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()
@@ -404,7 +423,18 @@ func _expansion_objects() -> void:
 func _annex_geometry() -> void:
 	# Connected additions leave all original objectives/rooms and chase widths intact.
 	box(Vector3(0, -0.16, 12), Vector3(22, 0.3, 20), HorrorArt.surface("mud_leaves"))
-	for side in [-1, 1]: box(Vector3(side * 11.1, 1.0, 12), Vector3(0.18, 2.0, 20), metal, true).visible = false
+	# The yard used to start at z=2 while the facade ends at x=2/-10.
+	# These two exposed entrance shoulders had visible dirt but no physical floor.
+	box(Vector3(6.5,-0.16,1),Vector3(9,0.3,2),HorrorArt.surface("mud_leaves")).name = "EntranceEastApron"
+	box(Vector3(-10.5,-0.16,1),Vector3(1,0.3,2),HorrorArt.surface("mud_leaves")).name = "EntranceWestApron"
+	for side in [-1, 1]:
+		box(Vector3(side * 11.1, 1.0, 12), Vector3(0.18, 2.0, 20), metal, true).visible = false
+		# Match the existing 1.3 m fence instead of obscuring the ward's window.
+		box(Vector3(side * 11.1,.65,1),Vector3(.18,1.3,2),metal).name="EntranceSideFence"
+	# Close the open route behind the shoulders with a visible rusted fence.
+	for entry in [[6.5,9.0],[-10.5,1.0]]:
+		var fence := box(Vector3(entry[0],1,-.08),Vector3(entry[1],2,.16),metal)
+		fence.name = "EntranceReturnFence"
 	box(Vector3(0, 1.0, 21.2), Vector3(22, 2, 0.18), metal, true).visible = false
 	_label("INSTALAÇÃO 04 / ACESSO INTERDITADO", Vector3(0, 2.72, 2.25), 0, 23)
 	_label("PORTÃO SEM ACESSO · USE A SAÍDA DE SERVIÇO", Vector3(0, 1.6, 19.7), 0, 18)

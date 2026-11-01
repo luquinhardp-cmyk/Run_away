@@ -1,0 +1,91 @@
+{
+  "nativePassed": 800,
+  "nativeFailed": 0,
+  "suites": [
+    {
+      "suite": "runner",
+      "passed": 80,
+      "failed": 0
+    },
+    {
+      "suite": "expansion_runner",
+      "passed": 41,
+      "failed": 0
+    },
+    {
+      "suite": "geometry_runner",
+      "passed": 229,
+      "failed": 0
+    },
+    {
+      "suite": "graphics_runner",
+      "passed": 20,
+      "failed": 0
+    },
+    {
+      "suite": "horror_runner",
+      "passed": 29,
+      "failed": 0
+    },
+    {
+      "suite": "night_runner",
+      "passed": 76,
+      "failed": 0
+    },
+    {
+      "suite": "physics_runner",
+      "passed": 47,
+      "failed": 0
+    },
+    {
+      "suite": "received_creature_runner",
+      "passed": 82,
+      "failed": 0
+    },
+    {
+      "suite": "macabre_runner",
+      "passed": 55,
+      "failed": 0
+    },
+    {
+      "suite": "inventory_runner",
+      "passed": 23,
+      "failed": 0
+    },
+    {
+      "suite": "tutorial_runner",
+      "passed": 41,
+      "failed": 0
+    },
+    {
+      "suite": "tutorial_persistence",
+      "passed": 12,
+      "failed": 0
+    },
+    {
+      "suite": "web_audit_runner",
+      "passed": 11,
+      "failed": 0
+    },
+    {
+      "suite": "stability_runner",
+      "passed": 47,
+      "failed": 0
+    },
+    {
+      "suite": "staged_start_runner",
+      "passed": 7,
+      "failed": 0
+    }
+  ],
+  "browserPlatform": "web-platform-tests.json",
+  "webPhysicsQA": "qa/chromium-qa.json",
+  "liveGame": "live/browser-results.json",
+  "physicalDevice": false,
+  "physicalMicrophone": false,
+  "iosMacBuild": false,
+  "desktopGame": "desktop/browser-results.json",
+  "webPhysicsPassed": 47,
+  "browserPlatformPassed": 14,
+  "unreleased": true
+}

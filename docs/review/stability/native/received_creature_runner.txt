@@ -1,0 +1,85 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS compatible 29 bone rig quality 1
+PASS 23 real imported clips quality 1
+PASS single skinned mesh with at most four surfaces
+PASS dedicated material surface 0
+PASS dedicated material surface 1
+PASS dedicated material surface 2
+PASS dedicated material surface 3
+PASS normalized skin weights without unbound vertices
+PASS world scale and floor origin
+PASS bounded sampled skeletal motion attack
+PASS bounded sampled skeletal motion breathe
+PASS bounded sampled skeletal motion capture
+PASS bounded sampled skeletal motion capture_chase
+PASS bounded sampled skeletal motion capture_corridor
+PASS bounded sampled skeletal motion capture_dark
+PASS bounded sampled skeletal motion capture_front
+PASS bounded sampled skeletal motion capture_hide
+PASS bounded sampled skeletal motion capture_rear
+PASS bounded sampled skeletal motion capture_side
+PASS bounded sampled skeletal motion capture_silent
+PASS bounded sampled skeletal motion chase
+PASS bounded sampled skeletal motion head_tilt
+PASS bounded sampled skeletal motion hide_search
+PASS bounded sampled skeletal motion idle
+PASS bounded sampled skeletal motion investigate
+PASS bounded sampled skeletal motion listen
+PASS bounded sampled skeletal motion lost
+PASS bounded sampled skeletal motion patrol
+PASS bounded sampled skeletal motion return
+PASS bounded sampled skeletal motion run
+PASS bounded sampled skeletal motion search
+PASS bounded sampled skeletal motion walk
+PASS listening visibly articulates head
+PASS listening keeps foot planted
+PASS presentation does not drive physical root motion
+PASS eight captures have distinct skeletal poses
+PASS capture timing independent of chase playback speed
+PASS nominal planted-foot speed matches patrol
+PASS nominal planted-foot speed matches chase
+PASS capture head anchor valid
+PASS compatible 29 bone rig quality 0
+PASS 23 real imported clips quality 0
+PASS single skinned mesh with at most four surfaces
+PASS dedicated material surface 0
+PASS dedicated material surface 1
+PASS dedicated material surface 2
+PASS dedicated material surface 3
+PASS normalized skin weights without unbound vertices
+PASS world scale and floor origin
+PASS bounded sampled skeletal motion attack
+PASS bounded sampled skeletal motion breathe
+PASS bounded sampled skeletal motion capture
+PASS bounded sampled skeletal motion capture_chase
+PASS bounded sampled skeletal motion capture_corridor
+PASS bounded sampled skeletal motion capture_dark
+PASS bounded sampled skeletal motion capture_front
+PASS bounded sampled skeletal motion capture_hide
+PASS bounded sampled skeletal motion capture_rear
+PASS bounded sampled skeletal motion capture_side
+PASS bounded sampled skeletal motion capture_silent
+PASS bounded sampled skeletal motion chase
+PASS bounded sampled skeletal motion head_tilt
+PASS bounded sampled skeletal motion hide_search
+PASS bounded sampled skeletal motion idle
+PASS bounded sampled skeletal motion investigate
+PASS bounded sampled skeletal motion listen
+PASS bounded sampled skeletal motion lost
+PASS bounded sampled skeletal motion patrol
+PASS bounded sampled skeletal motion return
+PASS bounded sampled skeletal motion run
+PASS bounded sampled skeletal motion search
+PASS bounded sampled skeletal motion walk
+PASS listening visibly articulates head
+PASS listening keeps foot planted
+PASS presentation does not drive physical root motion
+PASS eight captures have distinct skeletal poses
+PASS capture timing independent of chase playback speed
+PASS nominal planted-foot speed matches patrol
+PASS nominal planted-foot speed matches chase
+PASS capture head anchor valid
+PASS low mesh materially reduces triangle count
+PASS main mesh triangle budget
+RECEIVED CREATURE RESULT 82 passed; 0 failed

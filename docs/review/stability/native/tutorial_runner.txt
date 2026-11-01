@@ -1,0 +1,44 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS preparation uses real player and no creature AI
+PASS tutorial starts at first lesson
+PASS real backpack pauses the tutorial
+PASS closing backpack restores gameplay
+PASS exit stays locked before all lessons
+PASS training never replaces the gameplay checkpoint
+PASS waiting alone never completes movement
+PASS physical walking plus looking completes movement
+PASS real interaction ray reaches tutorial_key
+PASS real interaction ray reaches tutorial_cabinet
+PASS actual key, cabinet and inventory advance interaction
+PASS real interaction ray reaches lanterna
+PASS real interaction ray reaches tutorial_mark
+PASS real flashlight illuminates the marker and reveals collectible
+PASS low passage collision blocks standing player
+PASS actual crouched movement clears the low passage
+PASS real running distance advances sprint lesson
+PASS real interaction ray reaches tutorial_hide
+PASS existing locker is functional
+PASS hide, listen and exit complete the hiding lesson
+PASS real interaction ray reaches simulation
+PASS explicit simulation permits microphone-free play but still requires a real impact
+PASS real interaction ray reaches tutorial_can
+PASS tutorial throws the existing rigid body
+PASS actual thrown impact reaches NoiseBus and advances sound exercise
+PASS resting thrown object does not keep emitting impact noises
+PASS real interaction ray reaches mission
+PASS real interaction ray reaches fusivel
+PASS real interaction ray reaches tutorial_fuse_panel
+PASS reading objectives and using the actual fuse unlocks final door
+PASS tutorial resume snapshot contains training progress
+PASS real interaction ray reaches tutorial_exit
+PASS exit requires an explicit confirmation
+PASS cancel returns to preparation
+PASS real interaction ray reaches tutorial_exit
+PASS confirmed door opens with existing hinge physics
+PASS crossing closes the airlock, unloads training and activates the real creature
+PASS transition frees the preparation scene rather than leaving its collisions and audio behind
+PASS training items and solved training puzzle do not leak into gameplay
+PASS tutorial completion preference is recorded
+PASS restart and skip stay in the main phase without tutorial access
+TUTORIAL RESULT 41 passed; 0 failed

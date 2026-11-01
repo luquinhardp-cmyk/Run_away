@@ -1,0 +1,52 @@
+const {chromium}=require(require('path').resolve(__dirname,'../../.tools/browser/node_modules/playwright'));
+const fs=require('fs'),http=require('http'),path=require('path');
+const source=fs.readFileSync(path.join(__dirname,'../hosting/web-platform.js'),'utf8');
+const server=http.createServer((req,res)=>{res.setHeader('Content-Type','text/html');res.end('<meta name="viewport" content="width=device-width"><canvas id="canvas"></canvas><script>'+source+'</script>')});
+(async()=>{
+ await new Promise(r=>server.listen(8796,'127.0.0.1',r));
+ const browser=await chromium.launch({headless:true,args:['--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream']});
+ const rows=[];const check=(ok,name)=>{rows.push({name,passed:!!ok});if(!ok)throw Error(name)};
+ try{
+  const context=await browser.newContext({viewport:{width:960,height:540},hasTouch:true});
+  const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('http://127.0.0.1:8796');
+  await page.locator('#ecos-window').click();check(await page.locator('#ecos-entry').isHidden(),'window fallback enters without fullscreen');
+  await page.evaluate(()=>{window.sceneMarker={progress:7};});
+  await page.setViewportSize({width:540,height:960});await page.waitForTimeout(150);
+  check(await page.locator('#ecos-rotate').isVisible(),'portrait displays rotation message');
+  await page.setViewportSize({width:960,height:540});await page.waitForTimeout(150);
+  check(await page.locator('#ecos-rotate').isHidden()&&await page.evaluate(()=>sceneMarker.progress===7),'rotation preserves scene state');
+  await page.locator('#ecos-fullscreen').click();await page.waitForTimeout(150);
+  check(await page.evaluate(()=>!!document.fullscreenElement),'trusted button enters supported fullscreen');
+  await page.locator('#ecos-fullscreen').click();await page.waitForTimeout(100);
+  check(await page.evaluate(()=>!document.fullscreenElement),'same button exits fullscreen');
+  await page.evaluate(()=>{document.documentElement.requestFullscreen=()=>Promise.reject(new DOMException('test denial','NotAllowedError'));});
+  await page.locator('#ecos-fullscreen').click();await page.waitForTimeout(100);
+  check(await page.locator('#ecos-web-note').isVisible(),'fullscreen refusal has usable window fallback');
+  await page.evaluate(()=>{window.realGUM=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);navigator.mediaDevices.getUserMedia=async options=>{const result=await realGUM(options);window.testTracks=result.getTracks();return result};EcosWeb.startMic();});
+  await page.waitForFunction(()=>EcosWeb.micState==='active');await page.waitForTimeout(300);
+  check(await page.evaluate(()=>Number.isFinite(EcosWeb.micDb)&&testTracks.every(t=>t.readyState==='live')),'fake browser device captures actual local intensity');
+  await page.evaluate(()=>EcosWeb.stopMic());
+  check(await page.evaluate(()=>EcosWeb.micState==='off'&&EcosWeb.micDb===-80&&testTracks.every(t=>t.readyState==='ended')),'off stops tracks and resets intensity');
+  await page.evaluate(()=>{navigator.mediaDevices.getUserMedia=()=>Promise.reject(new DOMException('denied','NotAllowedError'));EcosWeb.startMic()});
+  await page.waitForFunction(()=>EcosWeb.micState==='denied');check(true,'permission denial represented explicitly');
+  await page.evaluate(()=>{navigator.mediaDevices.getUserMedia=()=>new Promise(r=>window.pendingResolve=r);EcosWeb.startMic();EcosWeb.stopMic();});
+  await page.evaluate(async()=>{const late=await realGUM({audio:true});window.lateTracks=late.getTracks();pendingResolve(late)});await page.waitForTimeout(100);
+  check(await page.evaluate(()=>EcosWeb.micState==='off'&&lateTracks.every(t=>t.readyState==='ended')),'late permission resolution cannot restart disabled mic');
+  await page.evaluate(()=>{navigator.mediaDevices.getUserMedia=async options=>{const s=await realGUM(options);window.testTracks=s.getTracks();return s};EcosWeb.startMic()});
+  await page.waitForFunction(()=>EcosWeb.micState==='active');
+  await page.evaluate(()=>testTracks[0].dispatchEvent(new Event('ended')));
+  check(await page.evaluate(()=>EcosWeb.micState==='ended'&&testTracks.every(t=>t.readyState==='ended')),'device interruption stops capture');
+  await page.evaluate(()=>EcosWeb.startMic());await page.waitForFunction(()=>EcosWeb.micState==='active');
+  await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'))});
+  check(await page.evaluate(()=>EcosWeb.micState==='off'&&testTracks.every(t=>t.readyState==='ended')),'hidden tab releases tracks');
+  await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'))});
+  check(await page.evaluate(()=>EcosWeb.resumeRequired&&EcosWeb.micState==='off'),'return keeps explicit resume required and never restarts microphone');
+  check(errors.length===0,'no browser runtime errors');
+ }finally{
+  fs.mkdirSync(path.join(__dirname,'../docs/review/stability'),{recursive:true});
+  fs.writeFileSync(path.join(__dirname,'../docs/review/stability/web-platform-tests.json'),JSON.stringify({physicalDevice:false,syntheticBrowserDevice:true,checks:rows},null,2));
+  await browser.close();server.close();
+ }
+ console.log('WEB PLATFORM',rows.length,'passed');
+})().catch(e=>{console.error(e);server.close();process.exitCode=1});

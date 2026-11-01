@@ -1,0 +1,62 @@
+{
+  "physicalDevice": false,
+  "syntheticBrowserDevice": true,
+  "checks": [
+    {
+      "name": "window fallback enters without fullscreen",
+      "passed": true
+    },
+    {
+      "name": "portrait displays rotation message",
+      "passed": true
+    },
+    {
+      "name": "rotation preserves scene state",
+      "passed": true
+    },
+    {
+      "name": "trusted button enters supported fullscreen",
+      "passed": true
+    },
+    {
+      "name": "same button exits fullscreen",
+      "passed": true
+    },
+    {
+      "name": "fullscreen refusal has usable window fallback",
+      "passed": true
+    },
+    {
+      "name": "fake browser device captures actual local intensity",
+      "passed": true
+    },
+    {
+      "name": "off stops tracks and resets intensity",
+      "passed": true
+    },
+    {
+      "name": "permission denial represented explicitly",
+      "passed": true
+    },
+    {
+      "name": "late permission resolution cannot restart disabled mic",
+      "passed": true
+    },
+    {
+      "name": "device interruption stops capture",
+      "passed": true
+    },
+    {
+      "name": "hidden tab releases tracks",
+      "passed": true
+    },
+    {
+      "name": "return keeps explicit resume required and never restarts microphone",
+      "passed": true
+    },
+    {
+      "name": "no browser runtime errors",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "previous": {
+    "package": "org.ecos.instalacaoabandonada",
+    "versionCode": 10,
+    "versionName": "0.10.0",
+    "signers": [
+      "5a7453d1630b88c34911986071411632d6aec0eada0c3b600aceccde6ffdae8e"
+    ],
+    "bytes": 55298395
+  },
+  "diagnostic": {
+    "package": "org.ecos.instalacaoabandonada",
+    "versionCode": 10,
+    "versionName": "0.10.0",
+    "signers": [
+      "5a7453d1630b88c34911986071411632d6aec0eada0c3b600aceccde6ffdae8e"
+    ],
+    "bytes": 55315770
+  },
+  "samePackage": true,
+  "sameVerifiedSigner": true,
+  "physicalInstall": false,
+  "unreleased": true,
+  "versionCodeNotIncreased": true
+}

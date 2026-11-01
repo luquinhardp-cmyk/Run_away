@@ -4,6 +4,7 @@ var model: Node3D
 var skeleton: Skeleton3D
 var animator: AnimationPlayer
 var low := false
+var quality_tier := -1
 var active_clip := ""
 var motion_state := 0
 var clip_names: Dictionary = {}
@@ -16,13 +17,14 @@ func _ready() -> void:
 	Game.updated.connect(_quality)
 
 func _quality() -> void:
-	if low != (Game.settings.quality < 1): _build()
+	if quality_tier != int(Game.settings.quality): _build()
 
 func _build() -> void:
 	var capture_clip := active_clip if active_clip.begins_with("capture") else ""
 	var capture_time := animator.current_animation_position if is_instance_valid(animator) and capture_clip != "" else 0.0
 	if is_instance_valid(model): model.free()
 	low = Game.settings.quality < 1
+	quality_tier=int(Game.settings.quality)
 	var path := "res://assets/models/escutador_macabre_low.glb" if low else "res://assets/models/escutador_macabre.glb"
 	model = load(path).instantiate()
 	add_child(model)
@@ -37,16 +39,22 @@ func _build() -> void:
 			animator.get_animation(name).loop_mode = Animation.LOOP_LINEAR
 	for mesh in model.find_children("*", "MeshInstance3D", true, false):
 		mesh.visibility_range_end = 42.0
+		if OS.has_feature("web") and Game.settings.quality<2:
+			mesh.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		for index in mesh.mesh.get_surface_count():
 			var imported: Material = mesh.mesh.surface_get_material(index)
 			if imported == null: continue
 			var name: String = imported.resource_name
 			if name.begins_with("Received_Macabre_"):
 				# Keep the supplied model's vertex colors, teeth and oral materials.
-				var material := imported.duplicate() as StandardMaterial3D
-				material.vertex_color_use_as_albedo = true
-				material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS if low else BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
-				if low: material.normal_enabled = false
+				var cache_key := "macabre_"+name+str(quality_tier)+str(OS.has_feature("web"))
+				var material: StandardMaterial3D = received_materials.get(cache_key)
+				if material==null:
+					material=imported.duplicate() as StandardMaterial3D
+					material.vertex_color_use_as_albedo = true
+					material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS if low else BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+					if low or (OS.has_feature("web") and Game.settings.quality<2): material.normal_enabled = false
+					received_materials[cache_key]=material
 				mesh.set_surface_override_material(index, material)
 				continue
 			mesh.set_surface_override_material(index, _received_material(name, low))

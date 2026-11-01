@@ -1,7 +1,8 @@
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE || require('path').resolve(__dirname,'../../.tools/browser/node_modules/playwright'));
 const fs=require('fs'),http=require('http'),path=require('path');
-const root=path.resolve(__dirname,'../builds/web-audit/site');
-const out=path.resolve(__dirname,'../docs/review/web-audit');
+const root=process.env.GAME_SMOKE_SITE?path.resolve(process.env.GAME_SMOKE_SITE):path.resolve(__dirname,'../builds/web-audit/site');
+const out=process.env.GAME_SMOKE_REPORTS?path.resolve(process.env.GAME_SMOKE_REPORTS):path.resolve(__dirname,'../docs/review/web-audit');
+fs.mkdirSync(out,{recursive:true});
 const server=http.createServer((req,res)=>{
  const pathname=new URL(req.url,'http://localhost').pathname;
  const file=path.join(root,pathname.endsWith('/')?pathname+'index.html':pathname);
@@ -30,6 +31,7 @@ const server=http.createServer((req,res)=>{
   if(t.startsWith('BENCH ')||t.startsWith('WEB_STARTUP'))console.log(t);
  });
  await page.goto('http://127.0.0.1:8790/play/',{waitUntil:'domcontentloaded'});
+ if(await page.locator('#ecos-window').count())await page.locator('#ecos-window').evaluate(button=>button.click());
  await page.mouse.click(30,30);
  let timer; const report=await Promise.race([done,new Promise((_,reject)=>timer=setTimeout(()=>reject(Error('Web benchmark timeout')),240000))]);clearTimeout(timer);
  fs.writeFileSync(path.join(out,'scenarios.log'),logs.join('\n'));

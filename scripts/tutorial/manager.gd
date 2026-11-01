@@ -17,6 +17,47 @@ var departed := false
 var player: CharacterBody3D
 var hud: CanvasLayer
 var sensor: Timer
+var generator_powered := false
+var generator_valid := false
+func power_ready() -> bool:
+	return generator_valid and generator_powered and Game.power and Game.world.get("generator_started",false) and Game.world.get("fuse_installed",false)
+func validate_generator() -> bool:
+	var generator: Node3D = items.get("tutorial_generator")
+	var valid: bool = is_instance_valid(generator) and generator.is_visible_in_tree()
+	if valid:
+		valid = generator.kind == "generator" and generator.tutorial_action == "generator" and generator.manager == self
+		valid = valid and generator.position.distance_to(Vector3(3.5,1,-29.5)) < .5
+		valid = valid and is_instance_valid(generator.collider) and not generator.collider.disabled and (generator.collision_layer & 8) != 0
+		valid = valid and generator.get_meta("detailed_model","") == "diesel_generator" and generator.mesh.get_child_count() > 0
+	if not valid: push_error("Tutorial: gerador ausente/invisível/deslocado ou interação inválida; saída bloqueada. Verifique tutorial_generator em room.gd.")
+	generator_valid = valid
+	return valid
+func update_power_visuals(animate := false) -> void:
+	var powered := power_ready()
+	exit_lens.material_override = HorrorArt.solid(Color("78bd76") if powered else Color("a34d38"),.5)
+	if powered:
+		lamps[-1].light_color = Color("83aa7b")
+		lamps[-1].light_energy = 1.1
+		if animate: create_tween().tween_property(exit_latch,"position:x",1.04,.35)
+		else: exit_latch.position.x = 1.04
+func start_generator(actor: CharacterBody3D) -> void:
+	if not validate_generator():
+		feedback.emit("Falha no gerador de treino. Reinicie a preparação pelo menu.")
+		return
+	if generator_powered: feedback.emit("ENERGIA RESTAURADA — gerador já ligado."); return
+	if step != 7: feedback.emit("Conclua a estação atual antes de ligar o gerador."); return
+	if not Game.world.get("fuse_installed",false):
+		feedback.emit("Instale primeiro o fusível no painel à esquerda do quadro SUA MISSÃO.")
+		return
+	# Use the same generator interaction and requirements as the main phase.
+	items.tutorial_generator.activate_generator(actor)
+	generator_powered = Game.power and Game.world.get("generator_started",false)
+	if not generator_powered: return
+	items.tutorial_generator.restore_motor()
+	Sound.at("switch",items.tutorial_exit.position,-24)
+	update_power_visuals(true)
+	Game.updated.emit()
+	feedback.emit("ENERGIA RESTAURADA — a porta de entrada está desbloqueada. Conclua as instruções e interaja com ela para entrar.")
 func _ready() -> void:
 	if restore_data.get("stage") == "tutorial":
 		step = clampi(int(restore_data.get("step",0)),0,8)
@@ -27,9 +68,18 @@ func _ready() -> void:
 			Game.doors["tutorial_cabinet"] = true
 			Game.world.unlocks["tutorial_cabinet"] = true
 		Game.world.fuse_installed = bool(restore_data.get("fuse_installed",false))
+		generator_powered = bool(restore_data.get("generator_powered",false)) and Game.world.fuse_installed
+		Game.power = generator_powered
+		Game.world.generator_started = generator_powered
+		if step == 8 and not generator_powered: step = 7
 		Game.world.throwables = clampi(int(restore_data.get("throwables",0)),0,8)
 		if Game.world.throwables>0: Game.world.collected_props.append("tutorial_can")
 	build_room()
+	items.tutorial_exit.requires_power = true
+	validate_generator()
+	update_power_visuals()
+	if generator_powered and generator_valid:
+		items.tutorial_generator.restore_motor()
 	Game.updated.connect(check_objectives)
 	Game.tutorial_save_requested.connect(save_progress)
 	NoiseBus.emitted.connect(_noise)
@@ -69,7 +119,7 @@ func check_objectives() -> void:
 	if departed or not Game.in_tutorial: return
 	if step == 1 and Game.inventory.has("tutorial_key") and items.tutorial_cabinet.open and flags.get("inventory_viewed",false): advance()
 	elif step == 2 and flags.get("light_seen",false) and Game.inventory.has("tutorial_mark"): advance()
-	elif step == 7 and flags.get("mission_read",false) and flags.get("objectives_viewed",false) and Game.world.get("fuse_installed",false): advance()
+	elif step == 7 and flags.get("mission_read",false) and flags.get("objectives_viewed",false) and power_ready(): advance()
 	save_progress()
 func advance() -> void:
 	if step >= 8 or departed: return
@@ -158,17 +208,20 @@ func recover_can() -> void:
 	spawn_can_pickup()
 	feedback.emit("Lata reposta sobre a bancada. Colete, mire no alvo e use Q / ARREMESSAR.")
 func request_exit() -> void:
+	validate_generator()
+	if not power_ready(): feedback.emit("PORTA SEM ENERGIA — é necessário instalar o fusível e ligar o gerador de emergência à direita do quadro."); return
 	if step < 8: feedback.emit("Conclua a estação atual antes de entrar no complexo."); return
 	if accepted: feedback.emit("A porta está liberada. Atravesse para entrar no complexo."); return
 	exit_requested.emit()
 func accept_exit() -> void:
-	if step != 8 or departed: return
+	if not validate_generator(): return
+	if step != 8 or departed or not power_ready(): return
 	accepted = true
 	items.tutorial_exit._set_open(true,.9)
 	Sound.at("metal",items.tutorial_exit.position,-22)
 	feedback.emit("Entrada liberada. Atravesse a porta. Você ainda pode permanecer na sala até atravessá-la.")
 func _airlock_entered(body: Node3D) -> void:
-	if body != player or not accepted or departing or step != 8: return
+	if body != player or not accepted or departing or step != 8 or not power_ready(): return
 	departing = true
 	# Crossing is the irreversible boundary, including a pause/quit mid-close.
 	Game.settings["tutorial_completed"] = true
@@ -195,7 +248,7 @@ func _finish_departure() -> void:
 	transition_requested.emit.call_deferred()
 func progress_data() -> Dictionary:
 	if departing or departed: return {"version":1,"stage":"entered","completed":true}
-	return {"version":1,"stage":"tutorial","step":step,"flags":flags.duplicate(true),"inventory":Game.inventory.duplicate(),"cabinet_open":bool(Game.doors.get("tutorial_cabinet",false)),"fuse_installed":Game.world.get("fuse_installed",false),"throwables":int(Game.world.get("throwables",0))}
+	return {"version":2,"stage":"tutorial","step":step,"generator_powered":generator_powered,"flags":flags.duplicate(true),"inventory":Game.inventory.duplicate(),"cabinet_open":bool(Game.doors.get("tutorial_cabinet",false)),"fuse_installed":Game.world.get("fuse_installed",false),"throwables":int(Game.world.get("throwables",0))}
 func save_progress() -> void:
 	if not departed and not Game.testing and Game.in_tutorial: Game.write_json(Game.tutorial_path(),progress_data())
 func _exit_tree() -> void:

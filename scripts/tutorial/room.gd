@@ -3,6 +3,8 @@ signal feedback(text: String)
 var geometry: Node3D
 var items: Dictionary = {}
 var lamps: Array[OmniLight3D] = []
+var exit_latch: Node3D
+var exit_lens: MeshInstance3D
 var move_target := Vector3(-4.83, 1.6, -1)
 var light_target := Vector3(3, 1.5, -12.6)
 func box(at: Vector3, size: Vector3, surface: String, solid := true, parent: Node3D = null) -> Node3D:
@@ -150,12 +152,29 @@ func build_room() -> void:
 	spawn_can_pickup()
 	item("pickup","fusivel","Fusível de treino",Vector3(-3,.9,-29),Vector3(.25,.13,.13))
 	item("fuse_panel","tutorial_fuse_panel","Instalar fusível de treino",Vector3(-4.8,1.4,-30),Vector3(.7,.9,.2),"",PI/2)
+	item("generator","tutorial_generator","GERADOR DE EMERGÊNCIA",Vector3(3.5,1,-29.5),Vector3(1.3,2,.8),"generator").prepare_switch()
+	var generator_sign := sign_text("GERADOR DE EMERGÊNCIA\nFUSÍVEL → PAINEL → LIGAR",Vector3(3.4,2.6,-29.8),0,24)
+	generator_sign.pixel_size = .003
+	var maintenance_light := OmniLight3D.new()
+	maintenance_light.position = Vector3(3.3,2.6,-28.8)
+	maintenance_light.light_color = Color("b5a17a")
+	maintenance_light.light_energy = .65
+	maintenance_light.omni_range = 3
+	maintenance_light.shadow_enabled = false
+	add_child(maintenance_light)
+	# Visible conduit connects the panel, generator and powered airlock.
+	box(Vector3(0,.07,-30.8),Vector3(9,.10,.10),"weathered_iron",false)
+	box(Vector3(3.5,.07,-30.2),Vector3(.10,.10,1.2),"weathered_iron",false)
+	box(Vector3(1,.07,-31.4),Vector3(.10,.10,1.2),"weathered_iron",false)
 	var board := item("document","mission","Ler SUA MISSÃO",Vector3(0,1.5,-30.5),Vector3(2,1.1,.12),"mission")
 	board.message = "SUA MISSÃO\n"
 	for definition in Game.objectives.definitions: board.message += definition.caption + "\n"
-	sign_text("08 / SUA MISSÃO\nExplore · restaure energia · escape\nE / LER",Vector3(0,1.7,-30.41))
+	var mission_sign := sign_text("08 / SUA MISSÃO\nExplore · restaure energia · escape\nE / LER",Vector3(0,1.7,-30.41))
+	mission_sign.pixel_size = .0025
 	item("door","tutorial_exit","Entrar no complexo — sem retorno",Vector3(0,1.3,-32),Vector3(.15,2.6,1.8),"exit",PI/2)
-	sign_text("COMPLEXO / ENTRADA DEFINITIVA",Vector3(0,2.8,-31.8))
+	exit_latch = box(Vector3(.92,1.4,-31.8),Vector3(.18,.30,.14),"weathered_iron",false,self)
+	exit_lens = box(Vector3(1.1,1.8,-31.8),Vector3(.12,.12,.04),"weathered_iron",false,self).get_child(0)
+	sign_text("COMPLEXO / ENTRADA DEFINITIVA",Vector3(0,2.8,-31.8)).pixel_size = .003
 	var trigger := Area3D.new()
 	trigger.name = "OneWayAirlock"
 	trigger.collision_layer = 0

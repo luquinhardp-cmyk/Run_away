@@ -8,6 +8,6 @@ const STEPS := [
 	["CORRIDA", "Levante e corra pelo trecho marcado até 05. Segure Shift / ative CORRER. Correr produz passos mais fortes.", "Não há limite de tempo ou resistência neste jogo. Corra alguns metros em direção ao armário grande."],
 	["ESCONDERIJO", "Entre no armário grande com E / INTERAGIR, espere os passos distantes e saia com o mesmo comando.", "Fique escondido por 2 segundos antes de sair. Não há criatura perseguindo você aqui."],
 	["SOM E MICROFONE", "No console, escolha microfone opcional ou SIMULAÇÃO. Observe som e silêncio. Colete a lata, mire no alvo e use Q / ARREMESSAR.", "A simulação é identificada e não acessa o microfone. RECUPERAR LATA permite repetir um arremesso perdido."],
-	["OBJETIVOS", "Leia o quadro SUA MISSÃO. Consulte MOCHILA / OBJETIVOS, pegue o fusível e instale no painel de treino.", "Na fase real: fusível → painel e gerador → cartão de segurança → saída. A chave da oficina abre um atalho."],
+	["RESTAURE A ENERGIA", "Leia SUA MISSÃO e consulte MOCHILA / OBJETIVOS. Pegue o fusível na bancada à esquerda, instale no painel e ligue o GERADOR DE EMERGÊNCIA à direita do quadro.", "Fusível na bancada à esquerda → painel na parede esquerda → gerador à direita do quadro. Mire no motor e use E / INTERAGIR. A porta precisa de energia."],
 	["ENTRADA NO COMPLEXO", "Preparação concluída. Interaja com a porta metálica e confirme ENTRAR. Atravesse quando ela abrir.", "Os objetos são de treino e ficam nesta sala. Depois de atravessar, a porta será trancada sem retorno nesta partida."]
 ]

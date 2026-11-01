@@ -20,6 +20,7 @@ var throw_selected := true
 var lamp_fault := 0.0
 var breathing_age := 0.0
 var manipulator: Node
+var fall_recovery: Node
 
 func _ready() -> void:
 	Game.player = self
@@ -51,6 +52,8 @@ func _ready() -> void:
 	manipulator = Node.new()
 	manipulator.set_script(preload("res://scripts/physics/manipulator.gd"))
 	add_child(manipulator)
+	fall_recovery = preload("res://scripts/player/fall_recovery.gd").new()
+	add_child(fall_recovery)
 
 func apply_settings() -> void:
 	camera.fov = Game.settings.fov
@@ -58,7 +61,7 @@ func apply_settings() -> void:
 	lamp.shadow_enabled = Graphics.shadow_tier>=1
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not Game.playing or Game.paused or Game.capture_in_progress: return
+	if not Game.playing or Game.loading or Game.paused or Game.capture_in_progress: return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED: look(event.relative)
 	if event.is_action_pressed("interact"): interact()
 	if event.is_action_pressed("flashlight"): toggle_lamp()
@@ -92,7 +95,10 @@ func toggle_lamp() -> void:
 	Sound.at("switch", global_position, -22)
 
 func _physics_process(delta: float) -> void:
-	if not Game.playing: return
+	if not Game.playing or Game.loading: return
+	if fall_recovery.blocked:
+		velocity=Vector3.ZERO
+		return
 	if Game.capture_in_progress:
 		velocity = Vector3.ZERO
 		return
@@ -115,6 +121,7 @@ func _physics_process(delta: float) -> void:
 			raised.origin.y += 0.18
 			if not test_move(global_transform, Vector3.UP * 0.18) and not test_move(raised, direction * 0.2): global_position.y += 0.18
 		move_and_slide()
+		fall_recovery.tick(delta)
 		if Game.in_tutorial:
 			var travelled := Vector2(global_position.x-before_move.x,global_position.z-before_move.z).length()
 			if travelled > 0.001: tutorial_action.emit("move", {"distance":travelled,"running":running,"crouched":crouched})

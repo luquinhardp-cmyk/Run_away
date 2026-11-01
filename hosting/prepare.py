@@ -37,8 +37,20 @@ landing = re.sub(r'href="https://github\.com/luquinhardp-cmyk/Run_away/releases/
 (output / "_redirects").write_text("\n".join(f"{path} {args.apk_url} 302" for path in ["/baixar-apk", "/baixar-apk/", "/ecos-android.apk"]) + "\n", encoding="utf-8")
 shutil.copyfile(root / "hosting/_headers", output / "_headers")
 shutil.copyfile(root / "hosting/wasm-loader.js", output / "play/wasm-loader.js")
+shutil.copyfile(root / "hosting/web-platform.js", output / "play/web-platform.js")
 page = output / "play/index.html"
 html = page.read_text(encoding="utf-8")
+html = html.replace('<script src="web-platform.js"></script>', '')
+# Present the entry choice before starting WASM/renderer initialization; shader
+# compilation must not make the initial entry button unresponsive.
+html = html.replace('<script src="index.js">', '<script src="web-platform.js"></script>\n<script src="index.js">')
+if 'window.ECOS_ENTRY_READY.then' not in html:
+    start = 'engine.startGame({'
+    complete = "}).then(() => {\n\t\t\tsetStatusMode('hidden');"
+    if start not in html or complete not in html:
+        raise SystemExit('Unsupported Godot HTML startup template; entry gate not applied')
+    html = html.replace(start, 'window.ECOS_ENTRY_READY.then(() => engine.startGame({', 1)
+    html = html.replace(complete, "})).then(() => {\n\t\t\tsetStatusMode('hidden');", 1)
 html = re.sub(r'<script>window.ECOS_PACK_PARTS=.*?</script>\s*', '', html)
 if 'src="wasm-loader.js"' not in html:
     html = html.replace('<script src="index.js">', '<script src="wasm-loader.js"></script>\n\t\t<script src="index.js">')

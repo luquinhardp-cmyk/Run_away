@@ -1,0 +1,15 @@
+{
+  "unreleased": true,
+  "files": [
+    {
+      "path": "builds\\stability\\ecos-web-stability.zip",
+      "bytes": 40551353,
+      "sha256": "5c9a0438edb6a062ce435923af7aaaa24104325e7660299ba61df8e5428b8c4e"
+    },
+    {
+      "path": "builds\\stability\\ecos-android-diagnostic.apk",
+      "bytes": 55315770,
+      "sha256": "178fa5149cc30efa209ed2a8e9be6b1cd9399fa41651a23e7c6dc02a456175fe"
+    }
+  ]
+}

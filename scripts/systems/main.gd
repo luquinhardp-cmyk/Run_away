@@ -10,12 +10,15 @@ var pause_was := false
 var menu_stage: Node3D
 var account_status: Label
 var menu_status: Label
+var force_staged_loading := false
 
 func _exit_tree() -> void:
 	if is_instance_valid(menu_stage): menu_stage.set_active(false)
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	var platform := preload("res://scripts/ui/web_platform.gd").new()
+	add_child(platform)
 	menu_stage = Node3D.new()
 	menu_stage.set_script(preload("res://scripts/systems/menu_stage.gd"))
 	add_child(menu_stage)
@@ -180,8 +183,27 @@ func start(resume: bool, microphone: bool) -> void:
 	menu_stage.set_active(false)
 	Game.begin(resume)
 	level = preload("res://scenes/levels/facility.tscn").instantiate()
+	level.staged_build = force_staged_loading or (OS.has_feature("web") and not Game.testing)
 	level.process_mode = Node.PROCESS_MODE_PAUSABLE
+	var loading_camera: Camera3D
+	if level.staged_build:
+		Game.loading=true
+		# Draw each construction stage behind the loading screen, warming visible
+		# material variants before releasing the real player controls.
+		loading_camera=Camera3D.new()
+		loading_camera.position=Vector3(-7,1.66,0)
+		loading_camera.rotation=Vector3(-.56,2.356,0)
+		loading_camera.current=true
+		level.add_child(loading_camera)
+		screen="loading"
+		clear()
+		text("PREPARANDO O COMPLEXO",30)
+		var loading_label := text("Preparando pisos e colisões…")
+		level.build_stage.connect(func(stage: String): loading_label.text=stage)
+		await get_tree().process_frame
+		await get_tree().process_frame
 	add_child(level)
+	if level.staged_build: await level.build_finished
 	var player := preload("res://scenes/player/player.tscn").instantiate()
 	player.position = Vector3(-7, 0.1, 0)
 	level.add_child(player)
@@ -195,11 +217,19 @@ func start(resume: bool, microphone: bool) -> void:
 	hud.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(hud)
 	level.message.connect(hud.show_message)
+	if level.staged_build:
+		await get_tree().process_frame
+		await get_tree().process_frame
+		loading_camera.queue_free()
+	Game.update_clock()
+	Game.loading=false
 	screen = "playing"
 	ui.hide()
-	if not Game.testing and not DisplayServer.is_touchscreen_available(): Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if not Game.testing and not OS.has_feature("web") and not DisplayServer.is_touchscreen_available(): Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if microphone: Mic.request_enable()
 	else: Mic.disable()
+	if Game.paused: _updated()
+	if OS.has_feature("web"): print("ECOS_LEVEL_READY facility")
 
 func start_tutorial(resume: bool, microphone: bool) -> void:
 	_remove_level()
@@ -223,9 +253,10 @@ func start_tutorial(resume: bool, microphone: bool) -> void:
 	level.transition_requested.connect(_tutorial_transition,CONNECT_DEFERRED)
 	screen = "playing"
 	ui.hide()
-	if not Game.testing and not DisplayServer.is_touchscreen_available(): Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if not Game.testing and not OS.has_feature("web") and not DisplayServer.is_touchscreen_available(): Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if microphone: Mic.request_enable()
 	else: Mic.disable()
+	if OS.has_feature("web"): print("ECOS_LEVEL_READY tutorial")
 
 func tutorial_confirmation() -> void:
 	if not Game.in_tutorial or screen != "playing": return
@@ -251,6 +282,7 @@ func _tutorial_transition() -> void:
 	if Game.record_results: Game.save_checkpoint()
 
 func _remove_level() -> void:
+	Game.loading=false
 	Mic.disable()
 	Sound.stop_all()
 	if is_instance_valid(level):
@@ -263,6 +295,7 @@ func _remove_level() -> void:
 	Game.enemy = null
 
 func _unhandled_input(event: InputEvent) -> void:
+	if screen=="loading": return
 	if event.is_action_pressed("pause") and Game.playing:
 		Game.set_paused(not Game.paused)
 		get_viewport().set_input_as_handled()
@@ -338,6 +371,8 @@ func settings_screen(back: String) -> void:
 	_graphics_choice("Sombras","shadow_quality",["Pelo perfil","Desativadas","Lanterna","Lanterna e lua"],[-1,0,1,2])
 	_graphics_choice("Distância da vegetação","vegetation_distance",["Pelo perfil","60 m","90 m","115 m"],[0.0,60.0,90.0,115.0])
 	var adaptive := CheckBox.new()
+	if OS.has_feature("web"):
+		_graphics_choice("Perfil Web","quality",["WEB BAIXO · estabilidade","WEB MÉDIO · equilíbrio","WEB ALTO · qualidade"],[0,1,2])
 	adaptive.text = "Ajustar resolução gradualmente para manter fluidez"
 	adaptive.button_pressed = Game.settings.get("adaptive_resolution",false)
 	adaptive.toggled.connect(func(value: bool): Game.settings.adaptive_resolution=value;Game.save_settings())
@@ -358,6 +393,7 @@ func settings_screen(back: String) -> void:
 	camera_motion.value_changed.connect(func(value: float): Game.settings.camera_motion = value; Game.save_settings())
 	column.add_child(camera_motion)
 	for data in [["sensitivity", "Sensibilidade da câmera", 0.001, 0.008, 0.0002], ["fov", "Campo de visão", 65, 95, 1], ["master", "Volume geral", 0, 1, 0.05], ["effects", "Efeitos", 0, 1, 0.05], ["music", "Música", 0, 1, 0.05], ["mic_sensitivity", "Sensibilidade do microfone", 0.5, 3, 0.1], ["scares", "Intensidade dos sustos", 0, 1, 0.1], ["quality", "Qualidade: 0 baixa / 1 média / 2 alta", 0, 2, 1], ["controls", "Tamanho dos controles", 0.8, 1.3, 0.1], ["opacity", "Opacidade dos botões", 0.2, 1, 0.05], ["control_x", "Posição horizontal dos controles", -20, 100, 5], ["control_y", "Posição vertical dos controles", -80, 0, 5]]:
+		if data[0]=="quality" and OS.has_feature("web"): continue
 		var caption := text(data[1] + " : " + str(Game.settings[data[0]]), 17)
 		var slider := HSlider.new()
 		slider.min_value = data[2]

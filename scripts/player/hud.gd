@@ -119,13 +119,21 @@ func _ready() -> void:
 	mute.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	mute.position = Vector2(-330, 24)
 	mute.size = Vector2(154, 52)
-	mute.pressed.connect(func(): Mic.disable())
+	mute.pressed.connect(func():
+		if Mic.consent: Mic.disable()
+		else: Mic.request_enable())
 	root.add_child(mute)
 	mute.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	mute.position = Vector2(root.size.x - 330, 24)
 	Game.updated.connect(apply_layout)
 	root.resized.connect(apply_layout)
 	apply_layout()
+	if is_instance_valid(Game.player) and is_instance_valid(Game.player.fall_recovery):
+		Game.player.fall_recovery.recovered.connect(func(incident: Dictionary):
+			stick_id=-1
+			look_id=-1
+			move=Vector2.ZERO
+			if incident.recovered: show_message("Posição segura restaurada. Ocorrência registrada para diagnóstico."))
 	show_message("WASD mover · mouse olhar · Shift correr · C agachar · E interagir · F lanterna\nNo celular: arraste à esquerda para mover e à direita para olhar.")
 
 func label(text: String, pos: Vector2, font_size: int) -> Label:
@@ -167,7 +175,7 @@ func button(text: String, offset: Vector2, callback: Callable) -> void:
 func apply_layout() -> void:
 	var scale_value: float = Game.settings.controls
 	# Transform native safe areas into the current canvas size (including iPad).
-	var inset := Vector2(24, 24)
+	var inset := IndustrialUI.insets(root.size)
 	if OS.has_feature("android") or OS.has_feature("ios"):
 		var safe := DisplayServer.get_display_safe_area()
 		var screen := DisplayServer.screen_get_size()
@@ -177,12 +185,13 @@ func apply_layout() -> void:
 			inset = Vector2(maxf(24, margin_x * root.size.x / screen.x), maxf(24, margin_y * root.size.y / screen.y))
 	stick.scale = Vector2.ONE * scale_value
 	objective.position = Vector2(inset.x, inset.y)
-	objective.size.x = maxf(200,root.size.x-inset.x*2-340)
+	var web_space := 84 if OS.has_feature("web") else 0
+	objective.size.x = maxf(200,root.size.x-inset.x*2-340-web_space)
 	objective.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	mic_label.position = Vector2(inset.x,inset.y+30)
 	noise_meter.position = Vector2(inset.x,inset.y+54)
-	pause_button.position = Vector2(root.size.x-inset.x-140,inset.y)
-	mute_button.position = Vector2(root.size.x-inset.x-306,inset.y)
+	pause_button.position = Vector2(root.size.x-inset.x-140-web_space,inset.y)
+	mute_button.position = Vector2(root.size.x-inset.x-306-web_space,inset.y)
 	stick.position = Vector2(inset.x + Game.settings.control_x, root.size.y - inset.y - 150 * scale_value + Game.settings.control_y)
 	for result in actions:
 		result.scale = Vector2.ONE * scale_value
@@ -266,7 +275,12 @@ func _process(delta: float) -> void:
 		Game.player.touch_run = false
 	Game.player.touch_move = move
 	noise_meter.value = Mic.level if Mic.active else 0
-	mute_button.disabled = not Mic.consent
+	mute_button.disabled = Game.capture_in_progress or not Mic.available
+	mute_button.text = "DESLIGAR MIC" if Mic.active else ("CANCELAR MIC" if Mic.consent else ("PERMITIR MIC" if Mic.permission_required else "LIGAR MIC"))
+	if not Mic.available: mute_button.text="SEM MICROFONE"
+	mute_button.icon = IndustrialUI.icon("mic_unavailable" if not Mic.available else ("mic" if Mic.active else ("mic_permission" if Mic.permission_required or Mic.consent else "mic_off")))
+	mute_button.tooltip_text = Mic.status + ". Somente o microfone real; os sons do jogo continuam ativos."
+	if not Mic.available: mute_button.tooltip_text="Captura indisponível neste navegador. Use HTTPS e um navegador com suporte à entrada de áudio. Os sons do jogo continuam ativos."
 	for i in [0,1,3]: actions[i].set_pressed_no_signal([Game.player.touch_run or Input.is_action_pressed("run"),Game.player.crouched,Game.player.lamp_on][[0,1,3].find(i)])
 	actions[3].disabled = not Game.inventory.has("lanterna")
 	actions[2].disabled = not Game.player.hidden and not is_instance_valid(Game.player.focus)

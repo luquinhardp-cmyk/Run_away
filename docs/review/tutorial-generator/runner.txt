@@ -1,0 +1,83 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS menu inicial conectado
+PASS sem captura antes do consentimento
+PASS cenas jogador / criatura / fase conectadas
+PASS planta original preservada e circuito lateral conectado
+PASS navigation mesh construída
+PASS caminho navegável entre enfermaria e saída
+PASS movimento físico do jogador
+PASS corrida mais rápida que caminhada
+PASS agachamento reduz cápsula
+PASS câmera FPS
+PASS parede bloqueia cápsula
+PASS multitouch: dedos independentes
+PASS contrato unificado de ruídos
+PASS coleta e lanterna real
+PASS interruptor da lanterna
+PASS segurança bloqueada sem energia
+PASS gerador exige fusível
+PASS fusível restaura energia
+PASS checkpoint persistido
+PASS porta desbloqueada e colisão liberada
+PASS inventário recebe cartão
+PASS entrada em esconderijo
+PASS esconderijo bloqueia visão
+PASS saída do esconderijo
+PASS câmera do armário permanece na altura dos olhos
+PASS visão com linha livre
+PASS parede impede detecção visual
+PASS IA reage a ruído espacial
+PASS oclusão reduz audição através da parede
+PASS RMS conhecido: amplitude 0,1 = -20 dB
+PASS RMS vazio retorna silêncio
+PASS noise gate e quatro níveis relativos ao piso
+PASS pausa suspende microfone e física
+PASS modo sem consentimento não retoma captura
+PASS segundo plano suspende captura e pausa
+PASS patrulha com NavigationAgent e física
+PASS alerta transita para investigação
+PASS perseguição perde alvo sem visão
+PASS perda de alvo leva à busca
+PASS busca expira e retorna
+PASS pátio externo conectado à navegação
+PASS rampa conecta subsolo à navegação
+PASS rig real com 29 ossos
+PASS 23 animações glTF importadas, incluindo capturas contextuais
+PASS mesh associado ao Skin e Skeleton3D
+PASS UVs reais no modelo
+PASS escala da criatura cabe no corredor
+PASS escuta inclina o osso da cabeça
+PASS escuta articula a cartilagem auditiva
+PASS animação não teletransporta a criatura
+PASS ruído percebido dispara apresentação de escuta
+PASS ruídos repetidos não reiniciam a animação de escuta
+PASS PBR carregado: aged_concrete
+PASS PBR carregado: damp_concrete
+PASS PBR carregado: cracked_floor
+PASS PBR carregado: peeling_plaster
+PASS PBR carregado: rusted_iron
+PASS PBR carregado: rotten_wood
+PASS PBR carregado: mud_leaves
+PASS PBR carregado: torn_fabric
+PASS PBR carregado: organic_residue
+PASS PBR carregado: creature_skin
+PASS PBR carregado: brushed_metal
+PASS PBR carregado: wet_steel
+PASS PBR carregado: dirty_glass
+PASS PBR carregado: cracked_glass
+PASS PBR carregado: aged_plastic
+PASS PBR carregado: worn_rubber
+PASS PBR carregado: damp_wood
+PASS PBR carregado: industrial_sheet
+PASS PBR carregado: moss
+PASS PBR carregado: old_upholstery
+PASS PBR carregado: weathered_iron
+PASS LOD baixo preserva rig e animações
+PASS perfil baixo usa mapas 256 e simplifica material
+PASS perfil médio restaura modelo e texturas 512
+PASS objetivo completo termina em vitória
+PASS checkpoint restaura progresso sem perder itens
+PASS ataque termina em derrota
+PASS retorno ao menu limpa a sessão
+RESULT 80 passed; 0 failed. Hardware microphone/Android not exercised.

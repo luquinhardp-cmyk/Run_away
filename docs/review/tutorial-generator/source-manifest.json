@@ -1,0 +1,37 @@
+[
+  {
+    "file": "scripts/tutorial/room.gd",
+    "sha256": "230679426f50758508de9c47a83dcd40c6d98759534194c02d9bd55529af79d7",
+    "webSourceMatches": true
+  },
+  {
+    "file": "scripts/tutorial/manager.gd",
+    "sha256": "0b6ddda23c9d9d49f0db84407f25629cc3cdcf67339d97877b3f8185db6d05fa",
+    "webSourceMatches": true
+  },
+  {
+    "file": "scripts/tutorial/interaction.gd",
+    "sha256": "446a4d54ec3f9f6cacb138b9b6ad65cf27157172cbdd72154719b5e3d1004895",
+    "webSourceMatches": true
+  },
+  {
+    "file": "scripts/tutorial/lesson.gd",
+    "sha256": "643e2b0152ff16dcb926d4592956e6d8f894ec7ff50ae05b7caf5667e2789b06",
+    "webSourceMatches": true
+  },
+  {
+    "file": "scripts/systems/game.gd",
+    "sha256": "d24c04e8ad57ec5e27d66d9ac392b02644f13ab700b4b10ad0583bc05acc43ea",
+    "webSourceMatches": true
+  },
+  {
+    "file": "tests/tutorial_runner.gd",
+    "sha256": "42ecf36402b448af68d165fb37cdb213ede7c1786feb66b7701408db80a8fe94",
+    "webSourceMatches": true
+  },
+  {
+    "file": "tests/tutorial_persistence.gd",
+    "sha256": "d2d72f70152e905e4aa27dc220241d42b6a60537aa8e9e13d5de8b69ca240c64",
+    "webSourceMatches": true
+  }
+]

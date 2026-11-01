@@ -124,8 +124,7 @@ func _layer(transforms: Array[Transform3D], variant: int, title: String, distanc
 		node.multimesh = multi
 		if part=="leaves": node.material_override = leaf_material
 		else:
-			var material := HorrorArt.surface("rotten_wood").duplicate()
-			material.albedo_color = Color(0.22,0.25,0.22)
+			var material := HorrorArt.tinted("rotten_wood",Color(0.22,0.25,0.22))
 			node.material_override = material
 		node.visibility_range_end = distance
 		node.set_meta("layer_type",title)

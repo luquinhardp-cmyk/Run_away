@@ -1,0 +1,116 @@
+{
+  "beforeLoadMs": 2174.4,
+  "afterLoadMs": 2182.3,
+  "physicalDevice": false,
+  "repetitionsPerConfiguration": 1,
+  "metrics": [
+    {
+      "scenario": "room",
+      "beforeP95Ms": 18,
+      "afterP95Ms": 17.9,
+      "beforeMaxMs": 18.6,
+      "afterMaxMs": 19.6,
+      "beforeDrawCalls": 124,
+      "afterDrawCalls": 124
+    },
+    {
+      "scenario": "corridor",
+      "beforeP95Ms": 26.8,
+      "afterP95Ms": 29.4,
+      "beforeMaxMs": 28.8,
+      "afterMaxMs": 35.3,
+      "beforeDrawCalls": 467,
+      "afterDrawCalls": 469
+    },
+    {
+      "scenario": "forest",
+      "beforeP95Ms": 17.8,
+      "afterP95Ms": 17.8,
+      "beforeMaxMs": 30.7,
+      "afterMaxMs": 41.7,
+      "beforeDrawCalls": 71,
+      "afterDrawCalls": 71
+    },
+    {
+      "scenario": "moon",
+      "beforeP95Ms": 17.5,
+      "afterP95Ms": 17.6,
+      "beforeMaxMs": 19.4,
+      "afterMaxMs": 19.5,
+      "beforeDrawCalls": 42,
+      "afterDrawCalls": 40
+    },
+    {
+      "scenario": "flashlight_off",
+      "beforeP95Ms": 17.7,
+      "afterP95Ms": 17.8,
+      "beforeMaxMs": 18.2,
+      "afterMaxMs": 18,
+      "beforeDrawCalls": 31,
+      "afterDrawCalls": 29
+    },
+    {
+      "scenario": "flashlight_on",
+      "beforeP95Ms": 18.3,
+      "afterP95Ms": 17.6,
+      "beforeMaxMs": 19,
+      "afterMaxMs": 19.9,
+      "beforeDrawCalls": 42,
+      "afterDrawCalls": 40
+    },
+    {
+      "scenario": "flying_shadow",
+      "beforeP95Ms": 20.9,
+      "afterP95Ms": 23.5,
+      "beforeMaxMs": 473.2,
+      "afterMaxMs": 407.5,
+      "beforeDrawCalls": 43,
+      "afterDrawCalls": 41
+    },
+    {
+      "scenario": "chase",
+      "beforeP95Ms": 1471.2,
+      "afterP95Ms": 33.4,
+      "beforeMaxMs": 1471.2,
+      "afterMaxMs": 593.7,
+      "beforeDrawCalls": 419,
+      "afterDrawCalls": 415
+    },
+    {
+      "scenario": "falling_props",
+      "beforeP95Ms": 44.6,
+      "afterP95Ms": 23.8,
+      "beforeMaxMs": 788.1,
+      "afterMaxMs": 769.9,
+      "beforeDrawCalls": 347,
+      "afterDrawCalls": 345
+    },
+    {
+      "scenario": "microphone_simulated",
+      "beforeP95Ms": 28.4,
+      "afterP95Ms": 30.1,
+      "beforeMaxMs": 30.1,
+      "afterMaxMs": 30.2,
+      "beforeDrawCalls": 463,
+      "afterDrawCalls": 462
+    },
+    {
+      "scenario": "steady_exploration",
+      "beforeP95Ms": 25.6,
+      "afterP95Ms": 28.4,
+      "beforeMaxMs": 31.2,
+      "afterMaxMs": 31.8,
+      "beforeDrawCalls": 124,
+      "afterDrawCalls": 124
+    },
+    {
+      "scenario": "capture",
+      "beforeP95Ms": 25.9,
+      "afterP95Ms": 26.1,
+      "beforeMaxMs": 26.1,
+      "afterMaxMs": 30.1,
+      "beforeDrawCalls": 372,
+      "afterDrawCalls": 370
+    }
+  ]
+}

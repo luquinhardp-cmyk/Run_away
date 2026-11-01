@@ -2,6 +2,8 @@ extends Node
 signal status_changed
 var consent := false
 var active := false
+var available := true
+var permission_required := true
 var status := "MIC DESLIGADO"
 var level := 0
 var volume_db := -80.0
@@ -22,6 +24,8 @@ var gate_open := false
 var last_rms_usec := 0
 var output_guard := 0.0
 var sample_clock := 0.0
+var web_bridge
+var web_state := "off"
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -51,6 +55,13 @@ func _notification(what: int) -> void:
 
 func request_enable() -> void:
 	consent = true
+	if OS.has_feature("web"):
+		web_bridge = JavaScriptBridge.get_interface("EcosWeb")
+		if web_bridge == null:
+			consent=false
+			status="MIC INDISPONÍVEL · carregador Web ausente"
+			status_changed.emit()
+			return
 	if OS.has_feature("android"):
 		if "android.permission.RECORD_AUDIO" not in OS.get_granted_permissions():
 			status = "AGUARDANDO PERMISSÃO"
@@ -61,6 +72,8 @@ func request_enable() -> void:
 
 func _permission_result(permission: String, granted: bool) -> void:
 	if permission.ends_with("RECORD_AUDIO"):
+		if not consent: return
+		permission_required=not granted
 		if granted and consent: resume_capture()
 		else:
 			consent = false
@@ -69,10 +82,19 @@ func _permission_result(permission: String, granted: bool) -> void:
 
 func resume_capture() -> void:
 	if not consent or not Game.playing or Game.paused or not focused: return
+	if OS.has_feature("web"):
+		web_bridge = JavaScriptBridge.get_interface("EcosWeb")
+		if web_bridge == null: return
+		web_bridge.startMic()
+		web_state="pending"
+		status="AGUARDANDO PERMISSÃO"
+		status_changed.emit()
+		return
 	if OS.has_feature("android") and "android.permission.RECORD_AUDIO" not in OS.get_granted_permissions(): return
 	capture.clear_buffer()
 	stream.play()
 	active = true
+	permission_required=false
 	silent_time = 0.0
 	status = "MIC ATIVO"
 	calibrate()
@@ -83,6 +105,10 @@ func disable() -> void:
 	suspend()
 
 func suspend() -> void:
+	if OS.has_feature("web"):
+		var bridge = JavaScriptBridge.get_interface("EcosWeb")
+		if bridge != null: bridge.stopMic()
+		web_state="off"
 	sample_clock=0
 	gate_open = false
 	stable_time = 0
@@ -132,6 +158,12 @@ func update_gate(db: float, delta: float) -> int:
 	return result
 
 func _process(delta: float) -> void:
+	if OS.has_feature("web"):
+		var bridge = JavaScriptBridge.get_interface("EcosWeb")
+		available=bridge!=null and bool(bridge.micSupported)
+	if OS.has_feature("web") and consent:
+		_poll_web(delta)
+		return
 	if not active: return
 	sample_clock+=delta
 	output_guard = maxf(0, output_guard - delta)
@@ -154,6 +186,37 @@ func _process_samples(frames: PackedVector2Array, delta: float) -> void:
 	var started := Time.get_ticks_usec()
 	var db := rms_db(frames)
 	last_rms_usec = Time.get_ticks_usec() - started
+	_process_db(db,delta)
+
+func _poll_web(delta: float) -> void:
+	if web_bridge == null or Game.paused or not focused: return
+	var state := str(web_bridge.micState)
+	if state != web_state:
+		web_state=state
+		if state=="active":
+			active=true
+			permission_required=false
+			calibrate()
+		elif state in ["denied","unavailable","ended"]:
+			permission_required=state=="denied"
+			disable()
+			status={"denied":"PERMISSÃO NEGADA · toque para tentar","unavailable":"MIC INDISPONÍVEL · confira o dispositivo","ended":"MIC INTERROMPIDO · toque para tentar"}[state]
+		elif state=="off":
+			active=false
+			level=0
+			sustained=0
+			status="MIC SUSPENSO"
+		status_changed.emit()
+	if state!="active" or not active: return
+	sample_clock+=delta
+	if sample_clock<.05: return
+	var elapsed := sample_clock
+	sample_clock=0
+	cooldown=maxf(0,cooldown-elapsed)
+	output_guard=maxf(0,output_guard-elapsed)
+	_process_db(float(web_bridge.micDb),elapsed)
+
+func _process_db(db: float, delta: float) -> void:
 	volume_db = lerpf(volume_db, db, 1.0 - exp(-delta * 14.0))
 	if calibrating > 0:
 		calibration_samples.append(db)

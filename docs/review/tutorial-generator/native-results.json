@@ -1,0 +1,44 @@
+[
+  {
+    "suite": "tutorial_runner",
+    "exitCode": 0,
+    "results": [
+      "TUTORIAL RESULT 53 passed; 0 failed"
+    ]
+  },
+  {
+    "suite": "tutorial_persistence",
+    "exitCode": 0,
+    "results": [
+      "TUTORIAL PERSISTENCE RESULT 16 passed; 0 failed"
+    ]
+  },
+  {
+    "suite": "inventory_runner",
+    "exitCode": 0,
+    "results": [
+      "INVENTORY RESULT 23 passed; 0 failed"
+    ]
+  },
+  {
+    "suite": "runner",
+    "exitCode": 0,
+    "results": [
+      "RESULT 80 passed; 0 failed. Hardware microphone/Android not exercised."
+    ]
+  },
+  {
+    "suite": "expansion_runner",
+    "exitCode": 0,
+    "results": [
+      "EXPANSION RESULT 41 passed; 0 failed"
+    ]
+  },
+  {
+    "suite": "stability_runner",
+    "exitCode": 0,
+    "results": [
+      "STABILITY RESULT 47 passed; 0 failed"
+    ]
+  }
+]

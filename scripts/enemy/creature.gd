@@ -151,7 +151,7 @@ func _search_hides(delta: float) -> bool:
 	return true
 
 func _physics_process(delta: float) -> void:
-	if not Game.playing: return
+	if not Game.playing or Game.loading: return
 	if Game.capture_in_progress:
 		velocity = Vector3.ZERO
 		return

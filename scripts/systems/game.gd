@@ -3,6 +3,7 @@ signal updated
 signal tutorial_save_requested
 signal ended(won: bool)
 var playing := false
+var loading := false
 var in_tutorial := false
 var inventory_open := false
 var paused := false
@@ -38,7 +39,7 @@ func new_world(seed_value: int) -> Dictionary:
 
 func _process(delta: float) -> void:
 	update_clock()
-	if playing and not paused and record_results:
+	if playing and not loading and not paused and record_results:
 		_autosave += delta
 		if _autosave >= 15:
 			_autosave = 0
@@ -46,7 +47,7 @@ func _process(delta: float) -> void:
 
 func update_clock() -> void:
 	var now := Time.get_ticks_msec()
-	if playing and not paused and not in_tutorial and _tick > 0: elapsed_ms += now - _tick
+	if playing and not loading and not paused and not in_tutorial and _tick > 0: elapsed_ms += now - _tick
 	_tick = now
 
 func checkpoint_path() -> String:
@@ -61,7 +62,7 @@ func tutorial_path() -> String:
 func tutorial_progress() -> Dictionary:
 	if not FileAccess.file_exists(tutorial_path()): return {}
 	var data = JSON.parse_string(FileAccess.get_file_as_string(tutorial_path()))
-	if not data is Dictionary or data.get("version") != 1.0: return {}
+	if not supported_checkpoint(data): return {}
 	return data if data.get("stage") in ["tutorial", "entered"] else {}
 
 static func supported_checkpoint(data: Variant) -> bool:
@@ -120,6 +121,9 @@ func _ready() -> void:
 	var config := ConfigFile.new()
 	if config.load("user://settings.cfg") == OK:
 		for key in settings: settings[key] = config.get_value("settings", key, settings[key])
+	if OS.has_feature("web") and not config.has_section_key("settings","quality"):
+		if bool(JavaScriptBridge.eval("navigator.maxTouchPoints > 0 && matchMedia('(pointer:coarse)').matches")):
+			settings.quality=0
 	if FileAccess.file_exists("user://checkpoint.json"):
 		var data = JSON.parse_string(FileAccess.get_file_as_string("user://checkpoint.json"))
 		if supported_checkpoint(data): checkpoint = data
@@ -134,6 +138,9 @@ func _ready() -> void:
 		InputMap.action_add_event(action, event)
 
 func begin(resume: bool = false) -> void:
+	if OS.has_feature("web"):
+		var bridge = JavaScriptBridge.get_interface("EcosWeb")
+		if bridge!=null: bridge.resumeRequired=false
 	in_tutorial = false
 	inventory_open = false
 	capture_in_progress = false
@@ -206,6 +213,9 @@ func set_paused(value: bool) -> void:
 	update_clock()
 	if value and playing and record_results: save_checkpoint()
 	paused = value
+	if not value and OS.has_feature("web"):
+		var bridge = JavaScriptBridge.get_interface("EcosWeb")
+		if bridge!=null: bridge.resumeRequired=false
 	get_tree().paused = value
 	if value: Mic.suspend()
 	else: Mic.resume_capture()

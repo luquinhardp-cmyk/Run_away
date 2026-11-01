@@ -32,6 +32,29 @@ func run() -> void:
 		for i in 12: await get_tree().process_frame
 		check(main.hud.inventory_window.panel.size.y<=size.y-40,"backpack remains within viewport height "+str(size))
 	main.hud.close_inventory()
+	main.level.step=7
+	Game.collect("fusivel")
+	Game.world.fuse_installed=true
+	main.level.flags["mission_read"]=true
+	main.level.flags["objectives_viewed"]=true
+	Game.write_json(path,main.level.progress_data())
+	main.to_menu()
+	main.start_tutorial(true,false)
+	check(not Game.power and main.level.step==7,"save before activation preserves unpowered puzzle")
+	main.level.start_generator(Game.player)
+	Game.write_json(path,main.level.progress_data())
+	main.to_menu()
+	main.start_tutorial(true,false)
+	check(main.level.power_ready() and main.level.step==8,"save after activation restores power and completed objective")
+	check(main.level.items.tutorial_generator.motor.playing and not main.level.items.tutorial_exit.open,"resume restores motor but requires deliberate entry confirmation")
+	var legacy: Dictionary=main.level.progress_data()
+	legacy.erase("generator_powered")
+	legacy.version=1
+	Game.write_json(path,legacy)
+	main.to_menu()
+	main.start_tutorial(true,false)
+	check(main.level.step==7 and not Game.power,"old saves without a generator return to energy lesson without bypass")
+	main.level.start_generator(Game.player)
 	main.level.step=8
 	main.level.accept_exit()
 	main.level._airlock_entered(Game.player)

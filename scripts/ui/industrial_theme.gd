@@ -3,6 +3,11 @@ extends RefCounted
 static var icons: Dictionary = {}
 static func insets(size: Vector2) -> Vector2:
 	var margin := Vector2(24,24)
+	if OS.has_feature("web"):
+		var bridge = JavaScriptBridge.get_interface("EcosWeb")
+		if bridge != null:
+			margin.x=maxf(24,float(bridge.safeX)*size.x/maxf(1,float(bridge.viewportWidth)))
+			margin.y=maxf(24,float(bridge.safeY)*size.y/maxf(1,float(bridge.viewportHeight)))
 	if OS.has_feature("android") or OS.has_feature("ios"):
 		var safe := DisplayServer.get_display_safe_area()
 		var screen := DisplayServer.screen_get_size()
